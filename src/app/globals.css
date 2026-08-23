@@ -1,26 +1,216 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fdf0f4;
+  --background-deep: #eeb8cf;
+  --foreground: #2b1512;
+  --muted: #7a3a56;
+
+  --surface: #fff8ef;
+  --surface-warm: #ffeee0;
+  --cherry: #c81846;
+  --cherry-bright: #ff2d55;
+
+  --lime: #cbff4d;
+  --grape: #b084ff;
+  --sunshine: #ffd23f;
+  --skypop: #6fd3ff;
+
+  --burgundy: #6d2733;
+  --lilac: #c6b3da;
+  --mocha: #a9926f;
+  --sky: #9cc6e8;
+  --butter: #f2d879;
+  --denim: #5b7bab;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-deep: var(--background-deep);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-muted: var(--muted);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-surface: var(--surface);
+  --color-surface-warm: var(--surface-warm);
+  --color-cherry: var(--cherry);
+  --color-cherry-bright: var(--cherry-bright);
+
+  --color-lime: var(--lime);
+  --color-grape: var(--grape);
+  --color-sunshine: var(--sunshine);
+  --color-skypop: var(--skypop);
+
+  --color-burgundy: var(--burgundy);
+  --color-lilac: var(--lilac);
+  --color-mocha: var(--mocha);
+  --color-sky: var(--sky);
+  --color-butter: var(--butter);
+  --color-denim: var(--denim);
+
+  --font-display: var(--font-bagel);
+  --font-script: var(--font-caveat);
+  --font-sans: var(--font-fredoka);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), ui-rounded, "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+::selection {
+  background: var(--cherry);
+  color: var(--surface);
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--cherry);
+  border-radius: 999px;
+  border: 3px solid var(--background-deep);
+}
+
+:focus-visible {
+  outline: 3px solid var(--cherry);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body,
+  a,
+  button {
+    cursor: none;
+  }
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.image-outline {
+  outline: 1px solid oklch(0 0 0 / 0.08);
+  outline-offset: -1px;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 22s linear infinite;
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 10s linear infinite;
+}
+
+@keyframes float-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--float-rot, 0deg));
+  }
+  50% {
+    transform: translateY(-14px) rotate(var(--float-rot-alt, 0deg));
+  }
+}
+
+.animate-float {
+  animation: float-bob 5.5s ease-in-out infinite;
+}
+
+@keyframes sparkle-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+.animate-sparkle {
+  animation: sparkle-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes ribbon-wave {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+
+.animate-ribbon {
+  animation: ribbon-wave 3.2s ease-in-out infinite;
+}
+
+@keyframes kenburns {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+.animate-kenburns {
+  animation: kenburns 9s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-spin-slow,
+  .animate-float,
+  .animate-sparkle,
+  .animate-ribbon,
+  .animate-kenburns {
+    animation: none;
+  }
 }

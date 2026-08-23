@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-radius",
+        "value": "4px",
+        "createdAt": "2026-08-22T19:51:08.302Z",
+        "reason": "one-off focus-ring corner radius, not a reusable system token (matches document.md's skip-one-offs rule)"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "oklch(0 0 0 / 0.08)",
+        "createdAt": "2026-08-22T19:51:08.359Z",
+        "reason": "one-off near-black outline for photo-inset edges, not a reusable system token (matches document.md's skip-one-offs rule)"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "10px",
+        "createdAt": "2026-08-22T19:52:35.270Z",
+        "reason": "one-off micro-caption on the circular sticker badge, not a reusable type-ramp step (matches document.md's skip-one-offs rule)"
+      }
+    ]
+  }
+}

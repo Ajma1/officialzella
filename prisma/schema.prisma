@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ProductCategory {
+  SHIRT
+  TROUSER
+  BUNDLE
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  COD
+}
+
+model Product {
+  id          String          @id @default(cuid())
+  name        String
+  slug        String          @unique
+  description String
+  priceCents  Int
+  category    ProductCategory
+  colorway    String?
+  active      Boolean         @default(true)
+  images      ProductImage[]
+  orderItems  OrderItem[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  url       String
+  alt       String?
+  position  Int     @default(0)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+
+  @@index([productId])
+}
+
+model Address {
+  id         String  @id @default(cuid())
+  fullName   String
+  phone      String
+  line1      String
+  line2      String?
+  city       String
+  state      String?
+  postalCode String?
+  country    String
+  order      Order?
+}
+
+model Order {
+  id            String        @id @default(cuid())
+  status        OrderStatus   @default(PENDING)
+  paymentMethod PaymentMethod @default(COD)
+  totalCents    Int
+  customerName  String
+  customerPhone String
+  customerEmail String?
+  notes         String?
+  address       Address       @relation(fields: [addressId], references: [id])
+  addressId     String        @unique
+  items         OrderItem[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model OrderItem {
+  id         String  @id @default(cuid())
+  order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId    String
+  product    Product @relation(fields: [productId], references: [id])
+  productId  String
+  quantity   Int
+  priceCents Int
+
+  @@index([orderId])
+}
