@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "motion/react";
 import { ArrowIcon } from "@/components/icons";
 
@@ -16,21 +17,23 @@ const categories: Category[] = [
     id: "shirts",
     name: "Shirts",
     blurb: "Relaxed shirts, cut from breathable cotton — soft against the skin, roomy where it counts.",
-    href: "#shirts",
+    href: "/shirts",
   },
   {
     id: "trousers",
     name: "Trousers",
     blurb: "Easy trousers built to move with you, all day long.",
-    href: "#trousers",
+    href: "/trousers",
   },
   {
     id: "bundles",
     name: "Bundles",
     blurb: "Shirt + trousers, bundled together — the whole fit, sorted in one go.",
-    href: "#bundles",
+    href: "/bundles",
   },
 ];
+
+const MotionLink = motion.create(Link);
 
 export default function CategoryRows() {
   return (
@@ -48,8 +51,7 @@ export default function CategoryRows() {
 
 function CategoryRow({ category, index }: { category: Category; index: number }) {
   return (
-    <motion.a
-      id={category.id}
+    <MotionLink
       href={category.href}
       data-cursor-label="View"
       initial={{ opacity: 0, y: 24 }}
@@ -76,7 +78,7 @@ function CategoryRow({ category, index }: { category: Category; index: number })
           <ArrowIcon className="h-4 w-4 sm:h-5 sm:w-5" />
         </span>
       </div>
-    </motion.a>
+    </MotionLink>
   );
 }
 

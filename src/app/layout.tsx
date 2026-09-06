@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Bagel_Fat_One, Caveat, Fredoka } from "next/font/google";
+import { MotionConfig } from "motion/react";
 import CustomCursor from "@/components/CustomCursor";
+import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
+import Ticker from "@/components/Ticker";
 import "./globals.css";
 
 const bagel = Bagel_Fat_One({
@@ -51,8 +55,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           finish review, the verdict, DESIGN.md, and every shipping raster carrying
           its provenance.
         */}
-        <CustomCursor />
-        {children}
+        <MotionConfig reducedMotion="user">
+          <CustomCursor />
+          <SiteHeader />
+          <div className="flex flex-1 flex-col">{children}</div>
+          <Ticker />
+          <SiteFooter />
+        </MotionConfig>
       </body>
     </html>
   );

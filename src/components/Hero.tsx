@@ -2,10 +2,9 @@
 
 import Image from "next/image";
 import { useRef, useState, type MouseEvent, type ReactNode } from "react";
-import { motion, MotionConfig, type Variants } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import {
   ArrowIcon,
-  BagIcon,
   BowIcon,
   CherryIcon,
   HeartIcon,
@@ -19,14 +18,6 @@ const swatches = [
   { name: "Sky stripe", className: "bg-sky" },
   { name: "Yellow stripe", className: "bg-butter" },
   { name: "Blue stripe", className: "bg-denim" },
-];
-
-const tickerItems = [
-  "100% cotton",
-  "relaxed fit",
-  "shirts & trousers",
-  "for girls who move",
-  "new season",
 ];
 
 const stickers = [
@@ -57,8 +48,7 @@ const fadeUp: Variants = {
 
 export default function Hero() {
   return (
-    <MotionConfig reducedMotion="user">
-      <section className="relative flex min-h-[100svh] flex-col overflow-hidden bg-background">
+    <section className="relative flex min-h-[calc(100svh-5rem)] flex-col overflow-hidden bg-background">
         <div
           aria-hidden
           className="pointer-events-none absolute -right-32 -top-40 h-[32rem] w-[32rem] rounded-full bg-background-deep/40 blur-[100px]"
@@ -87,59 +77,6 @@ export default function Hero() {
             <Icon size={size} />
           </div>
         ))}
-
-        <header className="relative z-10 px-4 pt-5 sm:px-8 sm:pt-6 lg:px-14">
-          <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 rounded-full bg-surface/95 py-2.5 pl-5 pr-2.5 shadow-lg shadow-background-deep/20 backdrop-blur-sm">
-            <a
-              href="#"
-              data-cursor-label="Home"
-              className="flex items-center gap-1.5 font-display text-2xl tracking-tight text-foreground"
-            >
-              Zella
-              <BowIcon size={16} className="translate-y-[-2px] text-cherry" />
-            </a>
-
-            <nav className="hidden items-center gap-1 text-sm font-semibold text-foreground/80 md:flex">
-              <a
-                href="#shirts"
-                data-cursor-label="View"
-                className="rounded-full px-4 py-2 transition-colors duration-150 hover:bg-surface-warm hover:text-cherry"
-              >
-                Shirts
-              </a>
-              <a
-                href="#trousers"
-                data-cursor-label="View"
-                className="rounded-full px-4 py-2 transition-colors duration-150 hover:bg-surface-warm hover:text-cherry"
-              >
-                Trousers
-              </a>
-              <a
-                href="#bundles"
-                data-cursor-label="View"
-                className="rounded-full px-4 py-2 transition-colors duration-150 hover:bg-surface-warm hover:text-cherry"
-              >
-                Bundles
-              </a>
-              <a
-                href="#story"
-                data-cursor-label="Read"
-                className="rounded-full px-4 py-2 transition-colors duration-150 hover:bg-surface-warm hover:text-cherry"
-              >
-                Our Story
-              </a>
-            </nav>
-
-            <MagneticLink
-              href="#cart"
-              label="Cart · 0"
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-cherry text-surface transition-transform duration-150"
-            >
-              <BagIcon className="h-5 w-5" strokeWidth={2} />
-              <span className="sr-only">Cart, 0 items</span>
-            </MagneticLink>
-          </div>
-        </header>
 
         <div className="relative z-10 mx-auto grid w-full max-w-7xl flex-1 grid-cols-1 items-center gap-14 px-6 py-10 sm:px-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 lg:px-16">
           <motion.div
@@ -201,7 +138,7 @@ export default function Hero() {
               className="mt-9 flex flex-wrap items-center gap-5"
             >
               <MagneticLink
-                href="#shop"
+                href="/shirts"
                 label="Shop now"
                 className="group flex h-14 items-center gap-2.5 rounded-full bg-cherry pl-6 pr-5 text-sm font-bold text-surface shadow-lg shadow-cherry/30 transition-transform duration-150"
               >
@@ -210,7 +147,7 @@ export default function Hero() {
               </MagneticLink>
 
               <a
-                href="#lookbook"
+                href="/lookbook"
                 data-cursor-label="Watch"
                 className="inline-flex items-center gap-1.5 rounded-full border-2 border-dashed border-foreground/40 px-4 py-2.5 font-script text-lg font-semibold text-foreground transition-colors duration-150 hover:border-cherry hover:text-cherry"
               >
@@ -293,25 +230,7 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        <div className="relative z-10 overflow-hidden border-t-4 border-surface/40 bg-surface py-4">
-          <div className="flex w-max animate-marquee gap-10">
-            {[0, 1].map((rep) => (
-              <div key={rep} className="flex items-center gap-10 pr-10">
-                {tickerItems.map((item) => (
-                  <span
-                    key={item}
-                    className="flex items-center gap-10 whitespace-nowrap text-sm font-bold uppercase tracking-[0.25em] text-cherry"
-                  >
-                    {item}
-                    <HeartIcon size={14} className="text-foreground/40" />
-                  </span>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
       </section>
-    </MotionConfig>
   );
 }
 
