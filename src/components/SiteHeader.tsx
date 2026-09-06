@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { BagIcon, BowIcon, CloseIcon, SearchIcon } from "@/components/icons";
+import Drawer from "@/components/Drawer";
 
 const NAV_LINKS = [
   { label: "Shirts", href: "/shirts" },
@@ -139,47 +140,38 @@ export default function SiteHeader() {
         </div>
       </div>
 
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] bg-background md:hidden"
+      <Drawer open={menuOpen} onClose={() => setMenuOpen(false)} side="full" label="Menu">
+        <div className="flex items-center justify-between px-6 py-6">
+          <span className="font-display text-2xl text-foreground">Zella</span>
+          <button
+            type="button"
+            onClick={() => setMenuOpen(false)}
+            aria-label="Close menu"
+            data-cursor-label="Close"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-foreground hover:bg-surface-warm hover:text-cherry"
           >
-            <div className="flex items-center justify-between px-6 py-6">
-              <span className="font-display text-2xl text-foreground">Zella</span>
-              <button
-                type="button"
-                onClick={() => setMenuOpen(false)}
-                aria-label="Close menu"
-                data-cursor-label="Close"
-                className="flex h-11 w-11 items-center justify-center rounded-full text-foreground hover:bg-surface-warm hover:text-cherry"
+            <CloseIcon />
+          </button>
+        </div>
+        <nav className="flex flex-col gap-2 px-6 pt-6">
+          {NAV_LINKS.map((link, i) => (
+            <motion.div
+              key={link.href}
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.05 + i * 0.05 }}
+            >
+              <Link
+                href={link.href}
+                onClick={closeMenus}
+                className="block font-display text-4xl text-foreground transition-colors hover:text-cherry"
               >
-                <CloseIcon />
-              </button>
-            </div>
-            <nav className="flex flex-col gap-2 px-6 pt-6">
-              {NAV_LINKS.map((link, i) => (
-                <motion.div
-                  key={link.href}
-                  initial={{ opacity: 0, x: -16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.05 + i * 0.05 }}
-                >
-                  <Link
-                    href={link.href}
-                    onClick={closeMenus}
-                    className="block font-display text-4xl text-foreground transition-colors hover:text-cherry"
-                  >
-                    {link.label}
-                  </Link>
-                </motion.div>
-              ))}
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                {link.label}
+              </Link>
+            </motion.div>
+          ))}
+        </nav>
+      </Drawer>
     </header>
   );
 }
