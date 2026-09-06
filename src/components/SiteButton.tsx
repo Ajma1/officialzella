@@ -86,6 +86,7 @@ export default function SiteButton({
       <MotionLink
         ref={ref as ComponentProps<typeof MotionLink>["ref"]}
         href={href}
+        onClick={onClick}
         {...motionProps}
       >
         {content}

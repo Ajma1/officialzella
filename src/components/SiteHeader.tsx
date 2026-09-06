@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { BagIcon, BowIcon, CloseIcon, SearchIcon } from "@/components/icons";
 import Drawer from "@/components/Drawer";
+import { useCart } from "@/lib/cart/useCart";
+import { useCartUi } from "@/lib/cart/cart-ui";
 
 const NAV_LINKS = [
   { label: "Shirts", href: "/shirts" },
@@ -18,6 +20,8 @@ const NAV_LINKS = [
 export default function SiteHeader() {
   const pathname = usePathname();
   const router = useRouter();
+  const { count } = useCart();
+  const { open: openCart } = useCartUi();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -115,14 +119,20 @@ export default function SiteHeader() {
             </button>
           )}
 
-          <Link
-            href="/cart"
+          <button
+            type="button"
+            onClick={openCart}
             data-cursor-label="Bag"
-            aria-label="Shopping bag"
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-cherry text-surface transition-transform duration-150 hover:scale-105"
+            aria-label={`Shopping bag, ${count} item${count === 1 ? "" : "s"}`}
+            className="relative flex h-11 w-11 items-center justify-center rounded-full bg-cherry text-surface transition-transform duration-150 hover:scale-105"
           >
             <BagIcon className="h-5 w-5" strokeWidth={2} />
-          </Link>
+            {count > 0 && (
+              <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-foreground px-1 text-[11px] font-bold tabular-nums text-surface">
+                {count}
+              </span>
+            )}
+          </button>
 
           <button
             type="button"

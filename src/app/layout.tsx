@@ -5,6 +5,8 @@ import CustomCursor from "@/components/CustomCursor";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Ticker from "@/components/Ticker";
+import CartDrawer from "@/components/CartDrawer";
+import { CartUiProvider } from "@/lib/cart/cart-ui";
 import "./globals.css";
 
 const bagel = Bagel_Fat_One({
@@ -56,11 +58,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           its provenance.
         */}
         <MotionConfig reducedMotion="user">
-          <CustomCursor />
-          <SiteHeader />
-          <div className="flex flex-1 flex-col">{children}</div>
-          <Ticker />
-          <SiteFooter />
+          <CartUiProvider>
+            <CustomCursor />
+            <SiteHeader />
+            <div className="flex flex-1 flex-col">{children}</div>
+            <Ticker />
+            <SiteFooter />
+            <CartDrawer />
+          </CartUiProvider>
         </MotionConfig>
       </body>
     </html>
