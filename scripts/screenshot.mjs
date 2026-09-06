@@ -49,8 +49,9 @@ await page.evaluate(async () => {
     await wait(180);
   }
   window.scrollTo(0, 0);
-  await wait(500);
+  await wait(700);
 });
+await page.mouse.move(2, 2); // park the custom cursor out of frame
 await page.screenshot({ path: out, fullPage });
 await browser.close();
 console.log("shot →", out);
