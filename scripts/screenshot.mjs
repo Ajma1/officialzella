@@ -50,8 +50,11 @@ await page.evaluate(async () => {
   }
   window.scrollTo(0, 0);
   await wait(700);
+  // Drop the fine-pointer custom cursor — it's meaningless in a static shot.
+  document
+    .querySelectorAll('div[class*="z-[100]"]')
+    .forEach((el) => el.remove());
 });
-await page.mouse.move(2, 2); // park the custom cursor out of frame
 await page.screenshot({ path: out, fullPage });
 await browser.close();
 console.log("shot →", out);

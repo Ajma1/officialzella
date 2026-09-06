@@ -25,6 +25,7 @@ export default function Polaroid({
   sizes = "(min-width: 1024px) 22rem, 45vw",
   priority = false,
   aspect = "4 / 5",
+  placeholderText = true,
   className = "",
   children,
 }: {
@@ -40,6 +41,7 @@ export default function Polaroid({
   sizes?: string;
   priority?: boolean;
   aspect?: string;
+  placeholderText?: boolean;
   className?: string;
   children?: ReactNode;
 }) {
@@ -70,9 +72,11 @@ export default function Polaroid({
               className="h-1/3 max-h-28 min-h-12 w-1/3 min-w-12 max-w-28 rounded-full shadow-inner ring-4 ring-surface"
               style={{ background: swatch }}
             />
-            <span className="px-1 font-script text-xs leading-tight text-foreground/55 sm:text-sm">
-              photo coming soon
-            </span>
+            {placeholderText && (
+              <span className="px-1 font-script text-xs leading-tight text-foreground/55 sm:text-sm">
+                photo coming soon
+              </span>
+            )}
           </div>
         )}
         {children}

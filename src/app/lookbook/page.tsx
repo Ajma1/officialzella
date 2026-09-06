@@ -79,6 +79,7 @@ export default function LookbookPage() {
               caption={c.name}
               rotate={[-4, 3, -2][i % 3]}
               aspect="1 / 1"
+              placeholderText={false}
             />
           </Link>
         ))}
