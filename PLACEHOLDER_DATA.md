@@ -45,8 +45,15 @@ Placeholder: "2–5 days". Confirm real courier lead time.
 
 ## Our Story prose (`src/app/our-story/page.tsx`)
 
-All body copy is placeholder describing what belongs in each section. No founder
-name, dates, or history invented. Needs the real brand story.
+The `SECTIONS` array holds three placeholder chapters ("Where it started", "The
+fit philosophy", "One edit at a time") written to *describe* the brand without
+inventing a founder name, dates, or specific history. Marked with a `TODO(copy)`
+comment. Replace with the real brand story.
+
+## Delivery next-steps (`src/app/checkout/confirmation/page.tsx`)
+
+The `STEPS` array ("we'll call → courier in 2–5 days → pay cash") is placeholder.
+Confirm the real process and lead time.
 
 ## Contact / social / legal (`src/components/SiteFooter.tsx`)
 

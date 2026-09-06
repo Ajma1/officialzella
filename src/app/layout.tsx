@@ -28,6 +28,9 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  ),
   title: "Zella — Loose Cotton, Made to Move",
   description:
     "Zella makes relaxed, breathable cotton shirts and trousers for girls — soft fabric, room to move, made for every day.",
