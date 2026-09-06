@@ -15,3 +15,10 @@ export function parsePriceCents(raw: FormDataEntryValue | null) {
 export function formatCents(cents: number) {
   return (cents / 100).toFixed(2);
 }
+
+// PLACEHOLDER currency — no market stated in PRODUCT.md. See PLACEHOLDER_DATA.md.
+const CURRENCY_SYMBOL = "$";
+
+export function formatPrice(cents: number) {
+  return `${CURRENCY_SYMBOL}${formatCents(cents)}`;
+}
