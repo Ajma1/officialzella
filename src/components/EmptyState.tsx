@@ -1,34 +1,35 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import PageHeading from "@/components/PageHeading";
 import Polaroid from "@/components/Polaroid";
 import { CATEGORIES } from "@/lib/categories";
 
 /**
  * The shared coquette empty / dead-end surface — empty cart, empty category,
- * no search results, 404, missing confirmation. Sticker + display headline +
+ * no search results, 404, missing confirmation. Sticker + display line +
  * handwritten note + an action, with an optional row of the three categories
  * as mini Polaroids.
+ *
+ * The display line is a <p>, not a heading — callers own the page <h1>.
  */
 export default function EmptyState({
   sticker,
   heading,
-  accent,
   note,
   action,
   showCategories = false,
 }: {
   sticker: ReactNode;
   heading: string;
-  accent?: string;
   note: string;
   action?: ReactNode;
   showCategories?: boolean;
 }) {
   return (
-    <section className="mx-auto flex max-w-2xl flex-col items-center px-6 py-20 text-center sm:py-28">
+    <section className="mx-auto flex max-w-2xl flex-col items-center px-6 py-20 text-center sm:py-24">
       <div className="mb-6">{sticker}</div>
-      <PageHeading accent={accent}>{heading}</PageHeading>
+      <p className="text-balance font-display text-4xl leading-[0.95] tracking-tight text-foreground sm:text-5xl">
+        {heading}
+      </p>
       <p className="mt-4 font-script text-xl text-foreground/70">{note}</p>
       {action && <div className="mt-8">{action}</div>}
 
