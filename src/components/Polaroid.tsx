@@ -65,12 +65,12 @@ export default function Polaroid({
             className={`object-cover ${kenburns ? "animate-kenburns" : ""}`}
           />
         ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center gap-3 px-4 text-center">
+          <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-[radial-gradient(circle_at_50%_38%,rgba(255,255,255,0.55),transparent_60%)] px-4 text-center">
             <span
-              className="h-16 w-16 rounded-full shadow-inner ring-2 ring-surface"
+              className="h-1/3 max-h-28 min-h-12 w-1/3 min-w-12 max-w-28 rounded-full shadow-inner ring-4 ring-surface"
               style={{ background: swatch }}
             />
-            <span className="font-script text-base text-foreground/60">
+            <span className="font-script text-base text-foreground/55">
               photo coming soon
             </span>
           </div>
