@@ -2,6 +2,7 @@
 
 import type { CartItem } from "@/lib/cart/useCart";
 import { formatPrice } from "@/lib/format";
+import { SHIPPING_CENTS, orderTotalCents } from "@/lib/checkout/shipping";
 import CartLineItem from "@/components/CartLineItem";
 import SiteButton from "@/components/SiteButton";
 
@@ -38,12 +39,12 @@ export default function OrderSummary({
           <dd className="tabular-nums text-foreground">{formatPrice(subtotalCents)}</dd>
         </div>
         <div className="flex justify-between">
-          <dt className="text-foreground/70">Shipping</dt>
-          <dd className="text-foreground/70">Confirmed at delivery</dd>
+          <dt className="text-foreground/70">Delivery</dt>
+          <dd className="tabular-nums text-foreground">{formatPrice(SHIPPING_CENTS)}</dd>
         </div>
-        <div className="flex justify-between pt-1.5 text-base font-bold">
+        <div className="flex justify-between pt-1.5 text-lg font-bold text-cherry">
           <dt>Total</dt>
-          <dd className="tabular-nums">{formatPrice(subtotalCents)}</dd>
+          <dd className="tabular-nums">{formatPrice(orderTotalCents(subtotalCents))}</dd>
         </div>
       </dl>
 
@@ -62,7 +63,7 @@ export default function OrderSummary({
           arrow={false}
           className="w-full"
         >
-          {pending ? "Placing…" : `Place order · ${formatPrice(subtotalCents)}`}
+          {pending ? "Placing…" : `Place order · ${formatPrice(orderTotalCents(subtotalCents))}`}
         </SiteButton>
       </div>
       <p className="mt-3 text-center font-script text-base text-foreground/60">

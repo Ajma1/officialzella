@@ -16,9 +16,9 @@ export function formatCents(cents: number) {
   return (cents / 100).toFixed(2);
 }
 
-// PLACEHOLDER currency — no market stated in PRODUCT.md. See PLACEHOLDER_DATA.md.
-const CURRENCY_SYMBOL = "$";
-
+// Currency: Pakistani Rupee. `cents` are paisa (Rs × 100); retail prices are
+// whole rupees, so we render "Rs 2,990" with no decimals. See PLACEHOLDER_DATA.md.
 export function formatPrice(cents: number) {
-  return `${CURRENCY_SYMBOL}${formatCents(cents)}`;
+  const rupees = Math.round(cents / 100);
+  return `Rs ${rupees.toLocaleString("en-US")}`;
 }

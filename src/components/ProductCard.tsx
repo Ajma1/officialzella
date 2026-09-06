@@ -1,7 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/data/catalog.seed";
 import { isSoldOut } from "@/lib/catalog.helpers";
 import { formatPrice } from "@/lib/format";
+import { coinFor } from "@/lib/coins";
 import Polaroid from "@/components/Polaroid";
 
 const REST_ROTATIONS = [-1.5, 1, -1, 1.5, -0.5];
@@ -15,6 +17,10 @@ export default function ProductCard({
 }) {
   const soldOut = isSoldOut(product);
   const image = product.images[0]?.url;
+  const onSale =
+    typeof product.compareAtCents === "number" &&
+    product.compareAtCents > product.priceCents;
+  const coin = coinFor(product.id);
 
   return (
     <Link
@@ -46,12 +52,25 @@ export default function ProductCard({
         )}
       </Polaroid>
 
+      {onSale && !soldOut && (
+        <span className="absolute -right-2 bottom-16 z-20 h-9 w-9 rotate-6 overflow-hidden rounded-full ring-2 ring-surface shadow-md shadow-background-deep/30 sm:bottom-20">
+          <Image src={coin.src} alt={coin.label} fill sizes="36px" className="object-cover" />
+        </span>
+      )}
+
       <div className="mt-3 px-1">
         <h3 className="font-semibold text-foreground transition-colors duration-150 group-hover:text-cherry">
           {product.name}
         </h3>
-        <p className="mt-0.5 text-sm tabular-nums text-foreground/80">
-          {formatPrice(product.priceCents)}
+        <p className="mt-1 flex items-baseline gap-2">
+          <span className="text-base font-bold tabular-nums text-cherry">
+            {formatPrice(product.priceCents)}
+          </span>
+          {onSale && (
+            <span className="text-xs tabular-nums text-foreground/45 line-through decoration-foreground/40">
+              {formatPrice(product.compareAtCents!)}
+            </span>
+          )}
         </p>
       </div>
     </Link>

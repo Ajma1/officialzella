@@ -174,6 +174,25 @@ export function CloseIcon({ size = 20, className }: { size?: number; className?:
   );
 }
 
+export function RulerIcon({ size = 20, className }: { size?: number; className?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <rect x="2" y="7" width="20" height="10" rx="2" transform="rotate(-8 12 12)" />
+      <path d="M7 8v3M11 7.5v4M15 7v3M19 6.5v4" />
+    </svg>
+  );
+}
+
 export function InstagramIcon({ size = 20, className }: { size?: number; className?: string }) {
   return (
     <svg

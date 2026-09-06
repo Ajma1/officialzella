@@ -33,8 +33,12 @@ export interface Product {
   /** Hex sampling the real photo colour (Colorway-Swatch Rule); also the
    *  fill for the placeholder Polaroid when `images` is empty. */
   colorwaySwatch: string;
-  /** PLACEHOLDER price in minor units — see PLACEHOLDER_DATA.md. */
+  /** PLACEHOLDER price in minor units (PKR paisa — Rs × 100). See PLACEHOLDER_DATA.md. */
   priceCents: number;
+  /** Optional "was" / compare-at price in the same units; must be > priceCents.
+   *  Rendered struck-through next to the current price.
+   *  TODO(admin): add a "Compare-at price (was)" field to the admin product form. */
+  compareAtCents?: number;
   images: ProductImage[];
   variants: Variant[];
   isNew?: boolean;
@@ -53,7 +57,8 @@ export const SEED_PRODUCTS: Product[] = [
     category: "SHIRT",
     colorway: "Sky stripe",
     colorwaySwatch: "#9cc6e8",
-    priceCents: 2400,
+    priceCents: 299000,
+    compareAtCents: 399000,
     images: [
       { url: "/shirt-sky-stripe.jpg", alt: "Zella sky-stripe relaxed-fit cotton shirt, flat lay" },
     ],
@@ -69,7 +74,7 @@ export const SEED_PRODUCTS: Product[] = [
     category: "SHIRT",
     colorway: "Burgundy",
     colorwaySwatch: "#6d2733",
-    priceCents: 2400,
+    priceCents: 249000,
     images: [
       { url: "/shirt-burgundy.jpg", alt: "Zella burgundy relaxed-fit cotton shirt, flat lay" },
     ],
@@ -84,7 +89,8 @@ export const SEED_PRODUCTS: Product[] = [
     category: "SHIRT",
     colorway: "Lilac",
     colorwaySwatch: "#c6b3da",
-    priceCents: 2400,
+    priceCents: 289000,
+    compareAtCents: 349000,
     images: [
       { url: "/shirt-lilac.jpg", alt: "Zella lilac relaxed-fit cotton shirt, flat lay" },
     ],
@@ -100,7 +106,7 @@ export const SEED_PRODUCTS: Product[] = [
     category: "SHIRT",
     colorway: "Mocha stripe",
     colorwaySwatch: "#a9926f",
-    priceCents: 2400,
+    priceCents: 279000,
     images: [
       { url: "/shirt-mocha-stripe.jpg", alt: "Zella mocha-stripe relaxed-fit cotton shirt, flat lay" },
     ],
@@ -115,7 +121,7 @@ export const SEED_PRODUCTS: Product[] = [
     category: "SHIRT",
     colorway: "Butter stripe",
     colorwaySwatch: "#f2d879",
-    priceCents: 2400,
+    priceCents: 299000,
     images: [
       { url: "/shirt-yellow-stripe.jpg", alt: "Zella butter-stripe relaxed-fit cotton shirt, flat lay" },
     ],
@@ -130,7 +136,8 @@ export const SEED_PRODUCTS: Product[] = [
     category: "SHIRT",
     colorway: "Denim stripe",
     colorwaySwatch: "#5b7bab",
-    priceCents: 2400,
+    priceCents: 329000,
+    compareAtCents: 399000,
     images: [
       { url: "/shirt-blue-stripe.jpg", alt: "Zella denim-stripe relaxed-fit cotton shirt, flat lay" },
     ],
@@ -145,7 +152,7 @@ export const SEED_PRODUCTS: Product[] = [
     category: "TROUSER",
     colorway: "Mocha",
     colorwaySwatch: "#a9926f",
-    priceCents: 3200,
+    priceCents: 399000,
     images: [],
     variants: fullRun({ XS: 4, S: 6, M: 8, L: 6, XL: 3 }),
   },
@@ -158,7 +165,8 @@ export const SEED_PRODUCTS: Product[] = [
     category: "TROUSER",
     colorway: "Denim",
     colorwaySwatch: "#5b7bab",
-    priceCents: 3200,
+    priceCents: 399000,
+    compareAtCents: 499000,
     images: [],
     variants: fullRun({ XS: 5, S: 7, M: 9, L: 5, XL: 4 }),
     isNew: true,
@@ -172,7 +180,8 @@ export const SEED_PRODUCTS: Product[] = [
     category: "BUNDLE",
     colorway: "Sky / Mocha",
     colorwaySwatch: "#9cc6e8",
-    priceCents: 5000,
+    priceCents: 649000,
+    compareAtCents: 798000,
     images: [],
     variants: fullRun({ XS: 3, S: 5, M: 6, L: 4, XL: 2 }),
   },

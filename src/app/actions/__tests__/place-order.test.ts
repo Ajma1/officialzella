@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { placeOrder } from "@/app/actions/place-order";
+import { SHIPPING_CENTS } from "@/lib/checkout/shipping";
 import { SEED_PRODUCTS } from "@/data/catalog.seed";
 import type { CartItem } from "@/lib/cart/store";
 
@@ -29,7 +30,7 @@ const validFields = {
   email: "ava@example.com",
   line1: "12 Cotton Lane",
   city: "Portland",
-  country: "United States",
+  country: "Pakistan",
 };
 
 describe("placeOrder", () => {
@@ -63,7 +64,8 @@ describe("placeOrder", () => {
     );
     expect(res?.ok).toBe(true);
     if (res?.ok) {
-      expect(res.totalCents).toBe(shirt.priceCents * 2); // source price, not the client's 1
+      // source price (not the client's 1) × 2, plus flat delivery
+      expect(res.totalCents).toBe(shirt.priceCents * 2 + SHIPPING_CENTS);
       expect(res.orderNumber).toMatch(/^ZELLA-[0-9A-HJKMNP-TV-Z]{5}$/);
     }
   });

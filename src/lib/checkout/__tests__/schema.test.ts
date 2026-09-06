@@ -7,7 +7,7 @@ const valid = {
   email: "ava@example.com",
   line1: "12 Cotton Lane",
   city: "Portland",
-  country: "United States",
+  country: "Pakistan",
 };
 
 describe("checkoutSchema", () => {

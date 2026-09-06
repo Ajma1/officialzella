@@ -5,16 +5,16 @@ import { useRef, useState } from "react";
 import type { Product, Size } from "@/data/catalog.seed";
 import { canAddToCart, isSoldOut, variantStock } from "@/lib/catalog.helpers";
 import { categoryMeta } from "@/lib/categories";
-import { formatPrice } from "@/lib/format";
 import { useCart } from "@/lib/cart/useCart";
 import { useCartUi } from "@/lib/cart/cart-ui";
 import Polaroid from "@/components/Polaroid";
+import PriceTag from "@/components/PriceTag";
 import SiteButton from "@/components/SiteButton";
 import StickerBadge from "@/components/StickerBadge";
 import ProductCard from "@/components/ProductCard";
 import Drawer from "@/components/Drawer";
 import SizeGuideContent from "@/components/SizeGuideContent";
-import { CloseIcon } from "@/components/icons";
+import { CloseIcon, RulerIcon } from "@/components/icons";
 
 const ALL_SIZES: Size[] = ["XS", "S", "M", "L", "XL"];
 const LOW_STOCK = 4;
@@ -137,9 +137,13 @@ export default function ProductDetail({
             {product.name}
           </h1>
 
-          <p className="mt-3 text-xl tabular-nums text-foreground">
-            {formatPrice(product.priceCents)}
-          </p>
+          <div className="mt-4">
+            <PriceTag
+              priceCents={product.priceCents}
+              compareAtCents={product.compareAtCents}
+              coinKey={product.id}
+            />
+          </div>
 
           {product.colorway && (
             <div className="mt-4 flex items-center gap-2.5">
@@ -157,7 +161,7 @@ export default function ProductDetail({
 
           {/* Size */}
           <div className="mt-8">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-foreground">
                 Size
               </span>
@@ -165,9 +169,10 @@ export default function ProductDetail({
                 type="button"
                 onClick={() => setGuideOpen(true)}
                 data-cursor-label="Open"
-                className="font-script text-base text-foreground/60 underline decoration-dashed underline-offset-4 transition-colors hover:text-cherry"
+                className="inline-flex items-center gap-1.5 rounded-full border-2 border-dashed border-cherry/50 px-3.5 py-1.5 text-sm font-bold text-cherry transition-colors hover:border-cherry hover:bg-cherry hover:text-surface"
               >
-                size guide
+                <RulerIcon size={15} />
+                Size guide
               </button>
             </div>
             <div role="group" aria-label="Size" className="mt-3 flex flex-wrap gap-2">

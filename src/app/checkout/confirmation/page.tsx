@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { CartItem } from "@/lib/cart/useCart";
 import { formatPrice } from "@/lib/format";
+import { SHIPPING_CENTS } from "@/lib/checkout/shipping";
 import PageHeading from "@/components/PageHeading";
 import EmptyState from "@/components/EmptyState";
 import SiteButton from "@/components/SiteButton";
@@ -118,10 +119,22 @@ export default function ConfirmationPage() {
             />
           ))}
         </div>
-        <div className="mt-3 flex justify-between border-t-2 border-dashed border-foreground/15 pt-3 text-base font-bold">
-          <span>Total</span>
-          <span className="tabular-nums">{formatPrice(order.totalCents)}</span>
-        </div>
+        <dl className="mt-3 space-y-1 border-t-2 border-dashed border-foreground/15 pt-3 text-sm">
+          <div className="flex justify-between">
+            <dt className="text-foreground/60">Subtotal</dt>
+            <dd className="tabular-nums text-foreground/80">
+              {formatPrice(Math.max(0, order.totalCents - SHIPPING_CENTS))}
+            </dd>
+          </div>
+          <div className="flex justify-between">
+            <dt className="text-foreground/60">Delivery</dt>
+            <dd className="tabular-nums text-foreground/80">{formatPrice(SHIPPING_CENTS)}</dd>
+          </div>
+          <div className="flex justify-between pt-1 text-base font-bold text-cherry">
+            <dt>Total (cash on delivery)</dt>
+            <dd className="tabular-nums">{formatPrice(order.totalCents)}</dd>
+          </div>
+        </dl>
       </div>
 
       <p className="mt-6 text-sm text-foreground/60">

@@ -5,23 +5,48 @@ content. Everything below is fabricated to make the storefront function and is
 **clearly marked in code** (`{/* TODO(copy) */}`, `// PLACEHOLDER`). Swap each in
 one place.
 
-## Prices (`src/data/catalog.seed.ts` → `priceCents`)
+## Currency
 
-| Product type | Placeholder price |
-|---|---|
-| Shirts | $24.00 (`2400`) |
-| Trousers | $32.00 (`3200`) |
-| Bundle | $50.00 (`5000`) |
+**PKR (Pakistani Rupee).** `priceCents` / `compareAtCents` in
+`src/data/catalog.seed.ts` are **paisa** (Rs × 100); `formatPrice` in
+`src/lib/format.ts` renders whole rupees as `Rs 2,990`. Confirm the exact
+retail prices.
 
-## Currency (`src/lib/format.ts` → `formatPrice`)
+## Prices (`src/data/catalog.seed.ts` → `priceCents` / `compareAtCents`)
 
-Placeholder symbol: `$`, 2 decimal places, symbol-prefixed. No market stated in
-`PRODUCT.md` — confirm currency + locale.
+| Product | Price | Was (compare-at) |
+|---|---|---|
+| Sky Stripe Shirt | Rs 2,990 | Rs 3,990 |
+| Burgundy Shirt | Rs 2,490 | — |
+| Lilac Shirt | Rs 2,890 | Rs 3,490 |
+| Mocha Stripe Shirt | Rs 2,790 | — |
+| Butter Stripe Shirt | Rs 2,990 | — |
+| Denim Stripe Shirt | Rs 3,290 | Rs 3,990 |
+| Mocha Everyday Trouser | Rs 3,990 | — |
+| Denim Everyday Trouser | Rs 3,990 | Rs 4,990 |
+| Sky + Mocha Bundle | Rs 6,490 | Rs 7,980 |
+
+`compareAtCents` renders as a struck-through "was" price + a "save X%" pill
+(`src/components/PriceTag.tsx`, `ProductCard.tsx`).
+**TODO(admin):** add a "Compare-at price (was)" field to the admin product form
+(`src/app/admin/products/ProductForm.tsx` + `actions.ts`) and a
+`compareAtCents` column to the Prisma schema.
+
+## Delivery charge (`src/lib/checkout/shipping.ts` → `SHIPPING_CENTS`)
+
+Flat **Rs 250** per order, added to the total on the cart + checkout screens.
+Confirm with the courier.
+
+## Coin images (`public/coin-1re.png`, `coin-5re.png`, `coin-10re.png`)
+
+Real Pakistani coin photos, used as decorative "these are Rupees" stickers on
+sale product cards and the PDP price hangtag (`src/lib/coins.ts`). Swap for
+better-cut-out / transparent versions if desired.
 
 ## Market / country (`src/lib/checkout/schema.ts` → `COUNTRIES`)
 
 Placeholder allow-list: a single entry, `"United States"`. Replace with the real
-shipping destinations.
+shipping destinations (likely `"Pakistan"` + cities).
 
 ## Size chart (`src/components/SizeGuideContent.tsx` → `SIZE_CHART_CM`)
 

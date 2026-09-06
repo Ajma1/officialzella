@@ -2,6 +2,7 @@
 
 import { checkoutSchema } from "@/lib/checkout/schema";
 import { generateOrderNumber } from "@/lib/checkout/order-number";
+import { orderTotalCents } from "@/lib/checkout/shipping";
 import { revalidateCart } from "@/app/actions/revalidate-cart";
 import type { CartItem } from "@/lib/cart/store";
 
@@ -60,8 +61,9 @@ export async function placeOrder(
     };
   }
 
-  // Total is computed server-side from revalidated source prices, never the client's.
-  const totalCents = revalidated.subtotalCents;
+  // Total is computed server-side: revalidated source prices + flat delivery,
+  // never the client's numbers.
+  const totalCents = orderTotalCents(revalidated.subtotalCents);
   const orderNumber = generateOrderNumber();
 
   // TODO(db): when Supabase/Postgres lands, replace this block with:

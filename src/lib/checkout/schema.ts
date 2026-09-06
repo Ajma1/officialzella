@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-// PLACEHOLDER — real shipping destinations needed (PLACEHOLDER_DATA.md).
-export const COUNTRIES = ["United States"] as const;
+// PLACEHOLDER — confirm the full list of shipping destinations (PLACEHOLDER_DATA.md).
+export const COUNTRIES = ["Pakistan"] as const;
 
 const phone = z
   .string()
