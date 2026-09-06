@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "motion/react";
+import { ArrowIcon } from "@/components/icons";
 
 type Category = {
   id: string;
@@ -131,18 +132,3 @@ function BundleThumb() {
   );
 }
 
-function ArrowIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M4 12L12 4M12 4H6M12 4V10" />
-    </svg>
-  );
-}

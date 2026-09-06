@@ -3,6 +3,14 @@
 import Image from "next/image";
 import { useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { motion, MotionConfig, type Variants } from "motion/react";
+import {
+  ArrowIcon,
+  BagIcon,
+  BowIcon,
+  CherryIcon,
+  HeartIcon,
+  SparkleIcon,
+} from "@/components/icons";
 
 const swatches = [
   { name: "Burgundy", className: "bg-burgundy" },
@@ -22,9 +30,9 @@ const tickerItems = [
 ];
 
 const stickers = [
-  { Icon: BowIconOuter, top: "14%", left: "44%", size: 34, delay: 0, rotate: -8 },
-  { Icon: HeartIconOuter, top: "72%", left: "38%", size: 26, delay: 0.6, rotate: 10 },
-  { Icon: CherryIconOuter, top: "8%", left: "8%", size: 30, delay: 1.1, rotate: -4 },
+  { Icon: BowIcon, top: "14%", left: "44%", size: 34, delay: 0, rotate: -8 },
+  { Icon: HeartIcon, top: "72%", left: "38%", size: 26, delay: 0.6, rotate: 10 },
+  { Icon: CherryIcon, top: "8%", left: "8%", size: 30, delay: 1.1, rotate: -4 },
 ];
 
 const container: Variants = {
@@ -88,7 +96,7 @@ export default function Hero() {
               className="flex items-center gap-1.5 font-display text-2xl tracking-tight text-foreground"
             >
               Zella
-              <BowIconOuter size={16} className="translate-y-[-2px] text-cherry" />
+              <BowIcon size={16} className="translate-y-[-2px] text-cherry" />
             </a>
 
             <nav className="hidden items-center gap-1 text-sm font-semibold text-foreground/80 md:flex">
@@ -207,7 +215,7 @@ export default function Hero() {
                 className="inline-flex items-center gap-1.5 rounded-full border-2 border-dashed border-foreground/40 px-4 py-2.5 font-script text-lg font-semibold text-foreground transition-colors duration-150 hover:border-cherry hover:text-cherry"
               >
                 see the lookbook
-                <HeartIconOuter size={14} />
+                <HeartIcon size={14} />
               </a>
             </motion.div>
 
@@ -272,7 +280,7 @@ export default function Hero() {
               className="animate-float absolute left-[38%] top-[2%] z-20 flex h-24 w-24 flex-col items-center justify-center gap-0.5 rounded-full bg-cherry text-center text-surface shadow-xl shadow-background-deep/40"
               style={{ "--float-rot": "-8deg", "--float-rot-alt": "-4deg" } as React.CSSProperties}
             >
-              <SparkleIconOuter size={16} className="animate-sparkle" />
+              <SparkleIcon size={16} className="animate-sparkle" />
               <span className="font-script text-xl leading-none">new</span>
               <span className="text-[10px] font-bold uppercase tracking-[0.1em]">
                 season edit
@@ -295,7 +303,7 @@ export default function Hero() {
                     className="flex items-center gap-10 whitespace-nowrap text-sm font-bold uppercase tracking-[0.25em] text-cherry"
                   >
                     {item}
-                    <HeartIconOuter size={14} className="text-foreground/40" />
+                    <HeartIcon size={14} className="text-foreground/40" />
                   </span>
                 ))}
               </div>
@@ -412,110 +420,9 @@ function RotatingBadge() {
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
         <span className="flex h-16 w-16 items-center justify-center rounded-full bg-cherry text-surface shadow-lg shadow-background-deep/40">
-          <HeartIconOuter size={22} filled />
+          <HeartIcon size={22} filled />
         </span>
       </div>
     </div>
-  );
-}
-
-function ArrowIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M4 12L12 4M12 4H6M12 4V10" />
-    </svg>
-  );
-}
-
-function BagIcon({
-  className,
-  strokeWidth = 2,
-}: {
-  className?: string;
-  strokeWidth?: number;
-}) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={strokeWidth}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M6 8h12l-1 12H7L6 8Z" />
-      <path d="M9 8V6a3 3 0 0 1 6 0v2" />
-    </svg>
-  );
-}
-
-function HeartIconOuter({
-  size = 20,
-  className,
-  filled = true,
-}: {
-  size?: number;
-  className?: string;
-  filled?: boolean;
-}) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill={filled ? "currentColor" : "none"}
-      stroke="currentColor"
-      strokeWidth={2}
-      className={className}
-    >
-      <path d="M12 20.5c-.3 0-.6-.1-.8-.3C7.6 17 3.5 13.2 3.5 9.1 3.5 6.3 5.7 4 8.5 4c1.5 0 2.9.7 3.5 1.8C12.6 4.7 14 4 15.5 4 18.3 4 20.5 6.3 20.5 9.1c0 4.1-4.1 7.9-7.7 11.1-.2.2-.5.3-.8.3Z" />
-    </svg>
-  );
-}
-
-function SparkleIconOuter({ size = 20, className }: { size?: number; className?: string }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
-      <path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2L12 2Z" />
-    </svg>
-  );
-}
-
-function BowIconOuter({ size = 20, className }: { size?: number; className?: string }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-      <path
-        d="M12 12c-1.5-3.5-4-5.5-7-5.5C2.7 6.5 1.5 8 1.5 9.8c0 2.6 3 3.9 5.7 3.2M12 12c1.5-3.5 4-5.5 7-5.5 2.3 0 3.5 1.5 3.5 3.3 0 2.6-3 3.9-5.7 3.2M12 12c-1.5 3.5-4 5.5-7 5.5-2.3 0-3.5-1.5-3.5-3.3 0-1.4 1-2.5 2.4-2.9M12 12c1.5 3.5 4 5.5 7 5.5 2.3 0 3.5-1.5 3.5-3.3 0-1.4-1-2.5-2.4-2.9"
-        stroke="currentColor"
-        strokeWidth={1.8}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="12" cy="12" r="1.6" fill="currentColor" />
-    </svg>
-  );
-}
-
-function CherryIconOuter({ size = 20, className }: { size?: number; className?: string }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-      <path
-        d="M13 3c1.8 1.4 2.8 3 3 5"
-        stroke="currentColor"
-        strokeWidth={1.8}
-        strokeLinecap="round"
-      />
-      <circle cx="7.5" cy="17.5" r="4" fill="currentColor" />
-      <circle cx="16" cy="16" r="4" fill="currentColor" />
-    </svg>
   );
 }
