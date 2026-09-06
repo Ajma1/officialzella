@@ -70,7 +70,7 @@ export default function Polaroid({
               className="h-1/3 max-h-28 min-h-12 w-1/3 min-w-12 max-w-28 rounded-full shadow-inner ring-4 ring-surface"
               style={{ background: swatch }}
             />
-            <span className="font-script text-base text-foreground/55">
+            <span className="px-1 font-script text-xs leading-tight text-foreground/55 sm:text-sm">
               photo coming soon
             </span>
           </div>
