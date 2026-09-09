@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import { Bagel_Fat_One, Caveat, Fredoka } from "next/font/google";
+import { MotionConfig } from "motion/react";
 import CustomCursor from "@/components/CustomCursor";
+import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
+import Ticker from "@/components/Ticker";
+import CartDrawer from "@/components/CartDrawer";
+import { CartUiProvider } from "@/lib/cart/cart-ui";
 import "./globals.css";
 
 const bagel = Bagel_Fat_One({
@@ -22,6 +28,9 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  ),
   title: "Zella — Loose Cotton, Made to Move",
   description:
     "Zella makes relaxed, breathable cotton shirts and trousers for girls — soft fabric, room to move, made for every day.",
@@ -51,8 +60,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           finish review, the verdict, DESIGN.md, and every shipping raster carrying
           its provenance.
         */}
-        <CustomCursor />
-        {children}
+        <MotionConfig reducedMotion="user">
+          <CartUiProvider>
+            <CustomCursor />
+            <SiteHeader />
+            <div className="flex flex-1 flex-col">{children}</div>
+            <Ticker />
+            <SiteFooter />
+            <CartDrawer />
+          </CartUiProvider>
+        </MotionConfig>
       </body>
     </html>
   );

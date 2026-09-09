@@ -11,6 +11,12 @@
   --cherry: #c81846;
   --cherry-bright: #ff2d55;
 
+  /* The one semantic error color — cherry carries actions, so it can't
+     double as danger. Deep brick, verified >= 6.7:1 on both blush and
+     cream-surface. Validation errors, unavailable-item notices, and
+     destructive confirms only. */
+  --danger: #9a2f2f;
+
   --lime: #cbff4d;
   --grape: #b084ff;
   --sunshine: #ffd23f;
@@ -34,6 +40,7 @@
   --color-surface-warm: var(--surface-warm);
   --color-cherry: var(--cherry);
   --color-cherry-bright: var(--cherry-bright);
+  --color-danger: var(--danger);
 
   --color-lime: var(--lime);
   --color-grape: var(--grape);
@@ -118,6 +125,32 @@ p {
 
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+}
+
+/* Form input sub-system — a deliberate third radius (14px) between the
+   10px photo-inset and the 18px card. Cream-warm fill, cherry on focus
+   (plus the global focus-visible ring), --danger on invalid. */
+.field {
+  width: 100%;
+  background: var(--surface-warm);
+  color: var(--foreground);
+  border: 2px solid transparent;
+  border-radius: 14px;
+  padding: 12px 16px;
+  font: inherit;
+  transition: border-color 150ms ease;
+}
+
+.field::placeholder {
+  color: var(--muted);
+}
+
+.field:hover {
+  border-color: oklch(0 0 0 / 0.12);
+}
+
+.field[aria-invalid="true"] {
+  border-color: var(--danger);
 }
 
 @keyframes marquee {

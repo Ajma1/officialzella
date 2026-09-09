@@ -56,6 +56,9 @@ async function uniqueSlug(name: string, ignoreId?: string) {
   return slug;
 }
 
+// TODO(admin): read a `compareAt` field here (parsePriceCents) and pass
+// `compareAtCents` through to prisma.product.create / update once the schema
+// column exists. The storefront already consumes Product.compareAtCents.
 function readProductFields(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();

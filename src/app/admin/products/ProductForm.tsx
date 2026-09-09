@@ -1,5 +1,11 @@
 "use client";
 
+// TODO(admin): add a "Compare-at price (was)" field here + in actions.ts
+// (readProductFields / the Prisma create/update). The storefront already
+// renders `Product.compareAtCents` as a struck-through "was" price with a
+// "save X%" pill (see src/components/PriceTag.tsx, ProductCard.tsx). Currency
+// is now PKR (paisa) — see src/lib/format.ts.
+
 import Image from "next/image";
 import { useActionState } from "react";
 import type { FormState } from "./actions";

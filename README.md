@@ -1,37 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Zella
 
-## Getting Started
+Storefront for Zella — relaxed-fit cotton shirts and trousers. Next.js 16 (App
+Router) · React 19 · TypeScript · Tailwind v4 · Motion · Prisma (Postgres) ·
+Supabase.
 
-First, run the development server:
+## Getting started
+
+Requires **Node ≥ 22.12** (Prisma 7).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm test           # Vitest unit tests
+npm run build      # production build
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Copy the keys into `.env` (git-ignored):
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+DATABASE_URL=              # pooled Postgres connection
+DIRECT_URL=                # direct (non-pooled) — migrations only
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY= # admin image uploads only
+```
 
-## Learn More
+The **storefront runs without any env** — it reads an in-repo seed catalog
+(`src/data/catalog.seed.ts`) through `src/lib/catalog.ts`. Only `/admin` needs
+Supabase + Postgres.
 
-To learn more about Next.js, take a look at the following resources:
+## Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Path | What |
+|---|---|
+| `src/app/page.tsx` | Home — `Hero` + `CategoryRows` |
+| `src/app/shirts`, `trousers`, `bundles` | Category listing (`?sort=new\|price-asc\|price-desc`) |
+| `src/app/products/[slug]` | Product detail (SSG per slug) |
+| `src/app/cart`, `checkout`, `checkout/confirmation` | Guest cart → single-page COD checkout |
+| `src/app/our-story`, `lookbook`, `size-guide`, `search` | Supporting pages |
+| `src/app/admin/*` | Admin dashboard (Supabase auth, needs env) |
+| `src/data/catalog.seed.ts` | Seed products + per-size variant stock — **swap point for the DB** |
+| `src/lib/catalog.ts` | Async data-access; today reads the seed, tomorrow Prisma (same signatures) |
+| `src/lib/cart/` | `localStorage` guest cart (`useCart`) + `cart-ui` drawer context |
+| `src/app/actions/` | `revalidateCart`, `placeOrder` — server actions with `// TODO(db):` seams |
+| `docs/superpowers/` | Design spec + implementation plan |
+| `PLACEHOLDER_DATA.md` | Every fabricated value (prices, sizing, copy) to replace before launch |
+| `DESIGN.md` | The "Coquette Dream Board" design system |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Going to a real database
 
-## Deploy on Vercel
+The seed layer was designed for a mechanical swap. When Supabase access lands:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Add `ProductVariant` (`product` + `size` + `stock`) and a `size` on `OrderItem`
+   to `prisma/schema.prisma`; run migrations.
+2. Rewrite the ~5 function bodies in `src/lib/catalog.ts` plus the `// TODO(db):`
+   blocks in `revalidate-cart.ts` and `place-order.ts` as Prisma queries.
+3. Seed real product rows + Supabase Storage image URLs from `catalog.seed.ts`.
+4. Add Playwright E2E for the cart → checkout → confirmation path.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# officialzella
+See `docs/superpowers/specs/2026-09-07-storefront-frontend-design.md` §10.

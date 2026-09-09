@@ -114,6 +114,14 @@ Four functional roles plus a small set of decorative "pop" accents pulled from t
 - **Espresso Ink** (`#2b1512`): all text. Verified at 16:1 against both Blush and Cream Surface — safe to set body copy directly on the ground without fading it.
 - **Muted Plum** (`#7a3a56`): reserved for future secondary text on cream surfaces only; not used at reduced opacity on the pink ground (see the Contrast Rule below).
 
+### Semantic
+- **Danger** (`#9a2f2f`, `--danger`): the one error colour, added with the
+  storefront build (2026-09-07). Cherry carries every *action*, so it cannot also
+  mean *error* — Danger is a deep brick that clears AA on both Blush (6.7:1) and
+  Cream Surface (7.1:1). Used only for form-validation messages, the
+  "no longer available" cart notice, and destructive-confirm affordances
+  ("remove" on hover). Never a decorative fill.
+
 ### Named Rules
 **The No-Fade-On-Pink Rule.** Text sitting directly on the ground is always full-opacity Espresso Ink, never a translucent tint of it. This mattered most when the ground was full-saturation hot pink (opacity blending pulled the effective color below 4.5:1 within a few steps); the rule stays even now that Blush is near-white, since it's the reason hierarchy comes from size, weight, and letter-spacing instead of fading the ink.
 
@@ -134,7 +142,17 @@ Four functional roles plus a small set of decorative "pop" accents pulled from t
 - **Script** (600, 1.25rem): the dashed-border secondary link and Polaroid photo captions.
 
 ### Named Rules
-**The One-Display-Face Rule.** Bagel Fat One appears only on the H1. Every other "loud" moment (badges, the rotating circular tagline, the ticker) stays in Fredoka at heavier weight, so the bubble display face keeps its impact instead of being diluted across the page.
+**The One-Display-Face Rule.** Bagel Fat One is reserved for **the one big
+headline of a page or major section** — the hero H1, a listing/story/checkout
+page title, a story chapter's opening line, the cart/confirmation heading. It
+always carries the page's single loudest moment, optionally with the cherry
+accent-word + underline-squiggle device. Everything *below* that level —
+sub-section headings ("You might also like"), form/section labels, result
+counts, badges, the rotating circular tagline, the ticker — stays in Fredoka
+(heavier weight) or the label/script styles, so the bubble face keeps its
+impact instead of being diluted. (Amended 2026-09-07: the original rule said
+"only the hero H1"; `CategoryRows` already used the display face for section
+headings and the storefront build extended that to every page title.)
 
 ## Layout
 
@@ -179,6 +197,18 @@ A small circular Cherry badge (sparkle icon + Caveat "new" + label caption) that
 
 ### Custom Cursor
 A filled Cherry heart (Cream outline) replaces the system cursor on fine-pointer devices; on hover over a labeled element it shrinks away and a Cherry pill with Cream label text takes over.
+
+### Form Inputs (added 2026-09-07)
+The storefront's checkout introduced the first real form fields. They use a
+**third radius (`14px`)** — deliberately between the 10px photo-inset and the
+18px card — so inputs read as their own material, neither photo nor card. Fill is
+**Cream Warm**, border is a 2px transparent stroke that turns **Cherry** on
+focus (on top of the global 3px Cherry focus-visible ring), and **Danger** when
+`aria-invalid`. Labels sit above the field in Label type (uppercase, 0.12em
+tracking); hints and error lines sit below in small Fredoka, the error line in
+Danger with an `aria-describedby` link. Field cards group related inputs on a
+Cream Surface panel with a bold Fredoka `<legend>`. The `.field` utility class
+in `globals.css` is the single source.
 
 ## Do's and Don'ts
 
