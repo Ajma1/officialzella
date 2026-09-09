@@ -10,11 +10,12 @@ import {
   ensureProductImagesBucket,
   PRODUCT_IMAGES_BUCKET,
 } from "@/lib/supabase/admin";
-import { ProductCategory } from "@/generated/prisma";
+import { ProductCategory, Size } from "@/generated/prisma";
 
 export type FormState = { error?: string } | undefined;
 
 const CATEGORIES = Object.values(ProductCategory);
+const SIZES = Object.values(Size);
 
 async function uploadImages(files: File[]) {
   const realFiles = files.filter((f) => f.size > 0);
@@ -56,30 +57,39 @@ async function uniqueSlug(name: string, ignoreId?: string) {
   return slug;
 }
 
-// TODO(admin): read a `compareAt` field here (parsePriceCents) and pass
-// `compareAtCents` through to prisma.product.create / update once the schema
-// column exists. The storefront already consumes Product.compareAtCents.
 function readProductFields(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
   const category = String(formData.get("category") ?? "");
   const colorway = String(formData.get("colorway") ?? "").trim();
+  const colorwaySwatch = String(formData.get("colorwaySwatch") ?? "").trim();
   const priceCents = parsePriceCents(formData.get("price"));
+  const compareAtRaw = String(formData.get("compareAt") ?? "").trim();
+  const compareAtCents = compareAtRaw ? parsePriceCents(compareAtRaw) : null;
   const active = formData.get("active") === "on";
+  const variants = SIZES.map((size) => ({
+    size,
+    stock: Math.max(0, Math.floor(Number(formData.get(`stock_${size}`)) || 0)),
+  }));
 
   if (!name) return { error: "Name is required." } as const;
   if (!description) return { error: "Description is required." } as const;
   if (!CATEGORIES.includes(category as ProductCategory))
     return { error: "Pick a category." } as const;
   if (priceCents === null) return { error: "Enter a valid price." } as const;
+  if (compareAtRaw && (compareAtCents === null || compareAtCents <= priceCents))
+    return { error: "Compare-at price must be greater than the price." } as const;
 
   return {
     name,
     description,
     category: category as ProductCategory,
     colorway: colorway || null,
+    colorwaySwatch: colorwaySwatch || "#e8ded1",
     priceCents,
+    compareAtCents,
     active,
+    variants,
   } as const;
 }
 
@@ -104,14 +114,16 @@ export async function createProduct(
   }
 
   const slug = await uniqueSlug(fields.name);
+  const { variants, ...productFields } = fields;
 
   const product = await prisma.product.create({
     data: {
-      ...fields,
+      ...productFields,
       slug,
       images: {
         create: imageUrls.map((url, position) => ({ url, position })),
       },
+      variants: { create: variants },
     },
   });
 
@@ -141,6 +153,7 @@ export async function updateProduct(
   }
 
   const slug = await uniqueSlug(fields.name, productId);
+  const { variants, ...productFields } = fields;
   const existingCount = await prisma.productImage.count({
     where: { productId },
   });
@@ -148,7 +161,7 @@ export async function updateProduct(
   await prisma.product.update({
     where: { id: productId },
     data: {
-      ...fields,
+      ...productFields,
       slug,
       images: {
         create: imageUrls.map((url, i) => ({
@@ -156,6 +169,7 @@ export async function updateProduct(
           position: existingCount + i,
         })),
       },
+      variants: { deleteMany: {}, create: variants },
     },
   });
 

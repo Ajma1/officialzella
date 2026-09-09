@@ -31,7 +31,7 @@ export default async function OrderDetailPage({
 
   return (
     <div className="max-w-2xl">
-      <h1 className="text-xl font-semibold">Order {order.id.slice(0, 8)}</h1>
+      <h1 className="text-xl font-semibold">Order {order.orderNumber}</h1>
       <p className="mt-1 text-sm text-neutral-500">
         Placed {order.createdAt.toLocaleString()}
       </p>

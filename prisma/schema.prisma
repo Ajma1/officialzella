@@ -13,6 +13,14 @@ enum ProductCategory {
   BUNDLE
 }
 
+enum Size {
+  XS
+  S
+  M
+  L
+  XL
+}
+
 enum OrderStatus {
   PENDING
   CONFIRMED
@@ -33,11 +41,24 @@ model Product {
   priceCents  Int
   category    ProductCategory
   colorway    String?
+  colorwaySwatch String       @default("#e8ded1")
+  compareAtCents Int?
   active      Boolean         @default(true)
   images      ProductImage[]
+  variants    ProductVariant[]
   orderItems  OrderItem[]
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
+}
+
+model ProductVariant {
+  id        String  @id @default(cuid())
+  size      Size
+  stock     Int     @default(0)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+
+  @@unique([productId, size])
 }
 
 model ProductImage {
@@ -66,6 +87,7 @@ model Address {
 
 model Order {
   id            String        @id @default(cuid())
+  orderNumber   String        @unique
   status        OrderStatus   @default(PENDING)
   paymentMethod PaymentMethod @default(COD)
   totalCents    Int
@@ -86,6 +108,7 @@ model OrderItem {
   orderId    String
   product    Product @relation(fields: [productId], references: [id])
   productId  String
+  size       Size
   quantity   Int
   priceCents Int
 

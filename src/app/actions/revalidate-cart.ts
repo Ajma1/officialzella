@@ -21,8 +21,6 @@ export interface RevalidateResult {
 /**
  * Re-checks each cart line's price + availability against source of truth.
  * `subtotalCents` is recomputed from **source** prices for available lines.
- *
- * // TODO(db): swap getProductBySlug for a Prisma lookup when the DB lands.
  */
 export async function revalidateCart(
   items: CartItem[],

@@ -34,7 +34,10 @@ export default async function OrdersPage() {
             >
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">
-                  {order.customerName}
+                  {order.customerName}{" "}
+                  <span className="font-normal text-neutral-400">
+                    {order.orderNumber}
+                  </span>
                 </p>
                 <p className="truncate text-xs text-neutral-500">
                   {order.address.city}

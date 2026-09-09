@@ -10,7 +10,7 @@ export default async function EditProductPage({
 
   const product = await prisma.product.findUnique({
     where: { id },
-    include: { images: { orderBy: { position: "asc" } } },
+    include: { images: { orderBy: { position: "asc" } }, variants: true },
   });
 
   if (!product) notFound();
@@ -46,11 +46,17 @@ export default async function EditProductPage({
             description: product.description,
             category: product.category,
             colorway: product.colorway ?? "",
+            colorwaySwatch: product.colorwaySwatch,
             priceCents: product.priceCents,
+            compareAtCents: product.compareAtCents,
             active: product.active,
             images: product.images.map((img) => ({
               id: img.id,
               url: img.url,
+            })),
+            variants: product.variants.map((v) => ({
+              size: v.size,
+              stock: v.stock,
             })),
           }}
         />

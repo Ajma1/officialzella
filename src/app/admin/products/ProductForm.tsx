@@ -1,11 +1,5 @@
 "use client";
 
-// TODO(admin): add a "Compare-at price (was)" field here + in actions.ts
-// (readProductFields / the Prisma create/update). The storefront already
-// renders `Product.compareAtCents` as a struck-through "was" price with a
-// "save X%" pill (see src/components/PriceTag.tsx, ProductCard.tsx). Currency
-// is now PKR (paisa) — see src/lib/format.ts.
-
 import Image from "next/image";
 import { useActionState } from "react";
 import type { FormState } from "./actions";
@@ -13,6 +7,7 @@ import { deleteProductImage } from "./actions";
 import { formatCents } from "@/lib/format";
 
 type ExistingImage = { id: string; url: string };
+const SIZES = ["XS", "S", "M", "L", "XL"] as const;
 
 export type ProductFormValues = {
   id?: string;
@@ -20,9 +15,12 @@ export type ProductFormValues = {
   description: string;
   category: "SHIRT" | "TROUSER" | "BUNDLE";
   colorway: string;
+  colorwaySwatch: string;
   priceCents: number;
+  compareAtCents: number | null;
   active: boolean;
   images: ExistingImage[];
+  variants: { size: (typeof SIZES)[number]; stock: number }[];
 };
 
 const CATEGORY_OPTIONS: { value: ProductFormValues["category"]; label: string }[] = [
@@ -109,17 +107,80 @@ export default function ProductForm({
         </div>
       </div>
 
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="colorway" className="block text-sm font-medium">
+            Colorway (optional)
+          </label>
+          <input
+            id="colorway"
+            name="colorway"
+            defaultValue={initial?.colorway}
+            placeholder="e.g. Burgundy"
+            className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="compareAt" className="block text-sm font-medium">
+            Compare-at price (was, optional)
+          </label>
+          <input
+            id="compareAt"
+            name="compareAt"
+            type="number"
+            min="0"
+            step="0.01"
+            defaultValue={
+              initial?.compareAtCents ? formatCents(initial.compareAtCents) : undefined
+            }
+            className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
+          />
+        </div>
+      </div>
+
       <div>
-        <label htmlFor="colorway" className="block text-sm font-medium">
-          Colorway (optional)
+        <label htmlFor="colorwaySwatch" className="block text-sm font-medium">
+          Colorway swatch
         </label>
-        <input
-          id="colorway"
-          name="colorway"
-          defaultValue={initial?.colorway}
-          placeholder="e.g. Burgundy"
-          className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
-        />
+        <div className="mt-1 flex items-center gap-2">
+          <input
+            id="colorwaySwatch"
+            name="colorwaySwatch"
+            type="color"
+            defaultValue={initial?.colorwaySwatch || "#e8ded1"}
+            className="h-9 w-14 rounded-md border border-neutral-300"
+          />
+          <span className="text-xs text-neutral-500">
+            Fills the placeholder photo frame when no image is uploaded.
+          </span>
+        </div>
+      </div>
+
+      <div>
+        <p className="block text-sm font-medium">Stock per size</p>
+        <div className="mt-1 grid grid-cols-5 gap-2">
+          {SIZES.map((size) => {
+            const stock =
+              initial?.variants.find((v) => v.size === size)?.stock ?? 0;
+            return (
+              <div key={size}>
+                <label htmlFor={`stock_${size}`} className="block text-xs text-neutral-500">
+                  {size}
+                </label>
+                <input
+                  id={`stock_${size}`}
+                  name={`stock_${size}`}
+                  type="number"
+                  min="0"
+                  step="1"
+                  defaultValue={stock}
+                  className="mt-1 w-full rounded-lg border border-neutral-300 px-2 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       <div className="flex items-center gap-2">
