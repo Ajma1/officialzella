@@ -15,6 +15,7 @@ const NAV_LINKS = [
   { label: "Bundles", href: "/bundles" },
   { label: "Our Story", href: "/our-story" },
   { label: "Lookbook", href: "/lookbook" },
+  { label: "Account", href: "/account" },
 ];
 
 export default function SiteHeader() {

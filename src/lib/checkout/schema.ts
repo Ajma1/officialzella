@@ -13,9 +13,7 @@ export const checkoutSchema = z
   .object({
     fullName: z.string().trim().min(2, "Enter your full name"),
     phone,
-    email: z
-      .union([z.string().trim().email("Enter a valid email"), z.literal("")])
-      .optional(),
+    email: z.string().trim().toLowerCase().email("Enter a valid email"),
     line1: z.string().trim().min(3, "Enter your street address"),
     line2: z.string().trim().optional(),
     city: z.string().trim().min(2, "Enter your city"),

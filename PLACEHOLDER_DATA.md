@@ -80,6 +80,13 @@ comment. Replace with the real brand story.
 The `STEPS` array ("we'll call → courier in 2–5 days → pay cash") is placeholder.
 Confirm the real process and lead time.
 
+## Login-PIN email delivery (`src/lib/email.ts`)
+
+Without a real `RESEND_API_KEY` set, `sendLoginPin` logs the 6-digit code to
+the server console instead of emailing it — checkout and `/account/login`
+stay usable in local dev. Set `RESEND_API_KEY` + `EMAIL_FROM` (see README
+Environment) to send real emails.
+
 ## Contact / social / legal (`src/components/SiteFooter.tsx`)
 
 Placeholder `#` links: Instagram, TikTok, Contact, Privacy, Terms. Needs real

@@ -26,11 +26,13 @@ DIRECT_URL=                # direct (non-pooled) — migrations only
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY= # admin image uploads only
+PIN_PEPPER=                # required — peppers the customer login-PIN hash; generate once, never reuse across envs
+RESEND_API_KEY=            # PLACEHOLDER — unset in dev logs the login PIN to the server console instead of emailing it
+EMAIL_FROM=                # PLACEHOLDER — "Name <address>" sender for login-PIN emails
 ```
 
-The **storefront runs without any env** — it reads an in-repo seed catalog
-(`src/data/catalog.seed.ts`) through `src/lib/catalog.ts`. Only `/admin` needs
-Supabase + Postgres.
+The storefront and checkout need Postgres (`DATABASE_URL`); only image
+uploads in `/admin` need the Supabase service role key.
 
 ## Structure
 
@@ -39,13 +41,15 @@ Supabase + Postgres.
 | `src/app/page.tsx` | Home — `Hero` + `CategoryRows` |
 | `src/app/shirts`, `trousers`, `bundles` | Category listing (`?sort=new\|price-asc\|price-desc`) |
 | `src/app/products/[slug]` | Product detail (SSG per slug) |
-| `src/app/cart`, `checkout`, `checkout/confirmation` | Guest cart → single-page COD checkout |
+| `src/app/cart`, `checkout`, `checkout/confirmation` | Cart → single-page COD checkout (email verified via PIN) |
+| `src/app/account/login`, `account` | Passwordless customer login + order history / cancel |
 | `src/app/our-story`, `lookbook`, `size-guide`, `search` | Supporting pages |
-| `src/app/admin/*` | Admin dashboard (Supabase auth, needs env) |
+| `src/app/admin/*` | Admin dashboard (Supabase auth, needs env) — unrelated to customer login |
 | `src/data/catalog.seed.ts` | Seed products + per-size variant stock — **swap point for the DB** |
 | `src/lib/catalog.ts` | Async data-access; today reads the seed, tomorrow Prisma (same signatures) |
 | `src/lib/cart/` | `localStorage` guest cart (`useCart`) + `cart-ui` drawer context |
-| `src/app/actions/` | `revalidateCart`, `placeOrder` — server actions with `// TODO(db):` seams |
+| `src/lib/customer/` | Login-PIN hashing (`pin.ts`) + cookie session (`session.ts`) |
+| `src/app/actions/` | `revalidateCart`, `placeOrder`, `customer-auth` (`requestPin`/`verifyPin`) |
 | `docs/superpowers/` | Design spec + implementation plan |
 | `PLACEHOLDER_DATA.md` | Every fabricated value (prices, sizing, copy) to replace before launch |
 | `DESIGN.md` | The "Coquette Dream Board" design system |

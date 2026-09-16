@@ -153,6 +153,10 @@ p {
   border-color: var(--danger);
 }
 
+.field:read-only {
+  opacity: 0.7;
+}
+
 @keyframes marquee {
   from {
     transform: translateX(0);

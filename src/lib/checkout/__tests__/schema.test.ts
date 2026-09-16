@@ -15,14 +15,14 @@ describe("checkoutSchema", () => {
     expect(checkoutSchema.safeParse(valid).success).toBe(true);
   });
 
-  it("accepts a missing email", () => {
+  it("rejects a missing email", () => {
     const { email, ...rest } = valid;
     void email;
-    expect(checkoutSchema.safeParse(rest).success).toBe(true);
+    expect(checkoutSchema.safeParse(rest).success).toBe(false);
   });
 
-  it("accepts an empty-string email", () => {
-    expect(checkoutSchema.safeParse({ ...valid, email: "" }).success).toBe(true);
+  it("rejects an empty-string email", () => {
+    expect(checkoutSchema.safeParse({ ...valid, email: "" }).success).toBe(false);
   });
 
   it("rejects a bad email", () => {

@@ -98,8 +98,46 @@ model Order {
   address       Address       @relation(fields: [addressId], references: [id])
   addressId     String        @unique
   items         OrderItem[]
+  customer      Customer?     @relation(fields: [customerId], references: [id])
+  customerId    String?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+
+  @@index([customerId])
+}
+
+model Customer {
+  id        String            @id @default(cuid())
+  email     String            @unique
+  name      String?
+  createdAt DateTime          @default(now())
+  orders    Order[]
+  pins      LoginPin[]
+  sessions  CustomerSession[]
+}
+
+model LoginPin {
+  id         String    @id @default(cuid())
+  customer   Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId String
+  codeHash   String
+  expiresAt  DateTime
+  attempts   Int       @default(0)
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([customerId])
+}
+
+model CustomerSession {
+  id         String   @id @default(cuid())
+  tokenHash  String   @unique
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  @@index([customerId])
 }
 
 model OrderItem {
