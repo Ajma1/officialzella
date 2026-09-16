@@ -443,7 +443,7 @@ Confirm it matches: six rules each declaring their multi-column `grid-template-c
 }
 ```
 
-Note this is functionally identical to the current rendered behavior at every breakpoint (same values, same breakpoints) — only the authoring direction inverts. `.grid-products` (line 174-178, just above this block) is untouched — it already uses `repeat(auto-fill, minmax(...))`, which is inherently responsive with no breakpoint needed.
+Note this changes two breakpoint boundaries slightly, correcting them to match this plan's own scale rather than the 2026-09-16 stopgap's ad-hoc numbers: `760px` → `768px` (the `m` breakpoint) for hero/split/pdp/footer/fabric, meaning 761–767px now renders single-column where it previously went multi-column; and `.grid-2`'s `max-width: 480` → `min-width: 480` flips its own transition to trigger AT 480px instead of just below it. Both new numbers match this spec's stated `s`/`m` scale — this is a correction, not a regression, but it is a real, intentional behavior change at those two narrow ranges, not a byte-identical rendering at every width. `.grid-products` (line 174-178, just above this block) is untouched — it already uses `repeat(auto-fill, minmax(...))`, which is inherently responsive with no breakpoint needed.
 
 - [ ] **Step 3: Verify no other page/component broke**
 
