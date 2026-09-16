@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { prisma } from "@zella/db";
+import { prisma, type Prisma } from "@zella/db";
 import { formatCents } from "@zella/core/format";
 import { updateOrderStatus } from "../actions";
 import { OrderStatus } from "@zella/db";
@@ -11,6 +11,28 @@ const STATUS_OPTIONS: OrderStatus[] = [
   "DELIVERED",
   "CANCELLED",
 ];
+
+type OrderItemWithProduct = Prisma.OrderItemGetPayload<{
+  include: { product: true };
+}>;
+
+function groupOrderItems(items: OrderItemWithProduct[]) {
+  const groups: { pairGroupId: string | null; items: OrderItemWithProduct[] }[] = [];
+  const seenPairGroups = new Map<string, number>();
+
+  for (const item of items) {
+    if (item.pairGroupId && seenPairGroups.has(item.pairGroupId)) {
+      groups[seenPairGroups.get(item.pairGroupId)!].items.push(item);
+    } else if (item.pairGroupId) {
+      seenPairGroups.set(item.pairGroupId, groups.length);
+      groups.push({ pairGroupId: item.pairGroupId, items: [item] });
+    } else {
+      groups.push({ pairGroupId: null, items: [item] });
+    }
+  }
+
+  return groups;
+}
 
 export default async function OrderDetailPage({
   params,
@@ -67,24 +89,64 @@ export default async function OrderDetailPage({
 
       <div className="mt-6 rounded-xl border border-neutral-200 bg-white p-5">
         <h2 className="text-sm font-semibold text-neutral-500">Items</h2>
-        <div className="mt-3 divide-y divide-neutral-100">
-          {order.items.map((item) => (
-            <div
-              key={item.id}
-              className="flex items-center justify-between py-2 text-sm"
-            >
-              <span>
-                {item.product.name} × {item.quantity}
-              </span>
-              <span className="tabular-nums text-neutral-600">
-                {formatCents(item.priceCents * item.quantity)}
+        <div className="mt-3 space-y-3">
+          {groupOrderItems(order.items).map((group) =>
+            group.pairGroupId ? (
+              <div
+                key={group.pairGroupId}
+                className="rounded-lg border border-cherry/30 bg-cherry/5 p-3"
+              >
+                <p className="text-xs font-semibold uppercase tracking-wide text-cherry">
+                  Paired outfit
+                </p>
+                <div className="mt-2 divide-y divide-neutral-100">
+                  {group.items.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between py-1.5 text-sm"
+                    >
+                      <span>
+                        {item.product.name} × {item.quantity}
+                      </span>
+                      <span className="tabular-nums text-neutral-600">
+                        {formatCents(item.priceCents * item.quantity)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              group.items.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex items-center justify-between py-2 text-sm"
+                >
+                  <span>
+                    {item.product.name} × {item.quantity}
+                  </span>
+                  <span className="tabular-nums text-neutral-600">
+                    {formatCents(item.priceCents * item.quantity)}
+                  </span>
+                </div>
+              ))
+            ),
+          )}
+        </div>
+        <div className="mt-3 space-y-1 border-t border-neutral-200 pt-3 text-sm">
+          {order.discountCents > 0 && (
+            <div className="flex items-center justify-between text-cherry">
+              <span>Pair bundle discount</span>
+              <span className="tabular-nums">
+                -{formatCents(order.discountCents)}
               </span>
             </div>
-          ))}
-        </div>
-        <div className="mt-3 flex items-center justify-between border-t border-neutral-200 pt-3 text-sm font-semibold">
-          <span>Total (Cash on Delivery)</span>
-          <span className="tabular-nums">{formatCents(order.totalCents)}</span>
+          )}
+          <div className="flex items-center justify-between font-semibold">
+            <span>Total (Cash on Delivery)</span>
+            <span className="tabular-nums">
+              {formatCents(order.totalCents)}
+            </span>
+          </div>
         </div>
       </div>
 

@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+:root {
+  --cherry: #c81846;
+}
+
+@theme inline {
+  --color-cherry: var(--cherry);
+}
+
+body {
+  font-family: system-ui, sans-serif;
+}
