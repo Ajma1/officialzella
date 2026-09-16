@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@zella/core/cart";
@@ -15,6 +16,7 @@ const NAV_LINKS = [
 export default function SiteHeader() {
   const pathname = usePathname();
   const { count } = useCart();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <header
@@ -31,6 +33,16 @@ export default function SiteHeader() {
         className="container"
         style={{ display: "flex", alignItems: "center", gap: 30, padding: "15px 28px" }}
       >
+        <button
+          type="button"
+          className="nav-toggle"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          {menuOpen ? "✕" : "☰"}
+        </button>
+
         <Link
           href="/"
           style={{
@@ -45,7 +57,7 @@ export default function SiteHeader() {
           Zella
         </Link>
 
-        <nav style={{ display: "flex", gap: 24, alignItems: "center" }}>
+        <nav className="nav-desktop" style={{ gap: 24, alignItems: "center" }}>
           {NAV_LINKS.map((link) => {
             const active = pathname === link.href;
             return (
@@ -71,6 +83,26 @@ export default function SiteHeader() {
           Bag {count > 0 ? `(${count})` : ""}
         </Link>
       </div>
+
+      {menuOpen && (
+        <div className="nav-mobile-panel">
+          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20 }}>
+            <button
+              type="button"
+              className="nav-toggle"
+              aria-label="Close menu"
+              onClick={() => setMenuOpen(false)}
+            >
+              ✕
+            </button>
+          </div>
+          {NAV_LINKS.map((link) => (
+            <Link key={link.href} href={link.href} onClick={() => setMenuOpen(false)}>
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      )}
     </header>
   );
 }
