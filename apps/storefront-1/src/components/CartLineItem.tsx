@@ -124,7 +124,7 @@ export default function CartLineItem({
               type="button"
               onClick={() => remove(item.productId, item.size, pairId)}
               data-cursor-label="Remove"
-              className="font-script text-base text-foreground/60 transition-colors hover:text-danger"
+              className="flex h-11 items-center font-script text-base text-foreground/60 transition-colors hover:text-danger"
             >
               remove
             </button>

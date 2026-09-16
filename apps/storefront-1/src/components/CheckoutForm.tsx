@@ -92,7 +92,7 @@ function EmailField({ errors }: { errors: Errors }) {
             type="submit"
             formAction={reqAction}
             disabled={reqPending || !email}
-            className="shrink-0 rounded-full border-2 border-cherry px-3 min-h-11 flex items-center justify-center text-xs font-bold text-cherry transition-opacity hover:opacity-80 disabled:opacity-50"
+            className="shrink-0 rounded-full border-2 border-cherry px-3 text-xs font-bold text-cherry transition-opacity hover:opacity-80 disabled:opacity-50"
           >
             {reqPending ? "Sending…" : showCode ? "Resend" : "Send code"}
           </button>
@@ -121,7 +121,7 @@ function EmailField({ errors }: { errors: Errors }) {
             type="submit"
             formAction={verAction}
             disabled={verPending}
-            className="shrink-0 rounded-full bg-cherry px-3 min-h-11 flex items-center justify-center text-xs font-bold text-surface transition-opacity hover:opacity-90 disabled:opacity-60"
+            className="shrink-0 rounded-full bg-cherry px-3 text-xs font-bold text-surface transition-opacity hover:opacity-90 disabled:opacity-60"
           >
             {verPending ? "Verifying…" : "Verify"}
           </button>

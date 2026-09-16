@@ -169,7 +169,7 @@ export default function ProductDetail({
                 type="button"
                 onClick={() => setGuideOpen(true)}
                 data-cursor-label="Open"
-                className="inline-flex items-center gap-1.5 rounded-full border-2 border-dashed border-cherry/50 px-3.5 py-1.5 text-sm font-bold text-cherry transition-colors hover:border-cherry hover:bg-cherry hover:text-surface"
+                className="inline-flex h-11 items-center gap-1.5 rounded-full border-2 border-dashed border-cherry/50 px-3.5 py-1.5 text-sm font-bold text-cherry transition-colors hover:border-cherry hover:bg-cherry hover:text-surface"
               >
                 <RulerIcon size={15} />
                 Size guide

@@ -91,7 +91,7 @@ export default function ConfirmationPage() {
           type="button"
           onClick={copy}
           data-cursor-label="Copy"
-          className="mt-2 font-script text-base text-foreground/60 underline decoration-dashed underline-offset-4 hover:text-cherry"
+          className="mt-2 flex h-11 items-center font-script text-base text-foreground/60 underline decoration-dashed underline-offset-4 hover:text-cherry"
         >
           {copied ? "copied ♥" : "copy"}
         </button>

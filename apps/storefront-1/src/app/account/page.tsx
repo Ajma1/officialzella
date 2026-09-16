@@ -93,7 +93,7 @@ export default async function AccountPage() {
                   <form action={cancelOrder.bind(null, order.id)}>
                     <button
                       type="submit"
-                      className="min-h-11 flex items-center text-xs font-semibold text-danger underline decoration-dashed underline-offset-2 hover:opacity-80"
+                      className="flex h-11 items-center text-xs font-semibold text-danger underline decoration-dashed underline-offset-2 hover:opacity-80"
                     >
                       Cancel order
                     </button>

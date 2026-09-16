@@ -43,7 +43,7 @@ export default function SizeGuideContent({ className = "" }: { className?: strin
               onClick={() => setUnit(u)}
               aria-pressed={unit === u}
               data-cursor-label={u.toUpperCase()}
-              className={`rounded-full px-3 py-1 min-h-11 flex items-center justify-center text-xs font-bold uppercase tracking-[0.1em] transition-colors ${
+              className={`flex h-11 min-w-11 items-center justify-center rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.1em] transition-colors ${
                 unit === u ? "bg-cherry text-surface" : "text-foreground/60 hover:text-cherry"
               }`}
             >

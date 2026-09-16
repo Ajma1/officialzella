@@ -49,7 +49,7 @@ export default async function SearchPage({
                 <Link
                   href={`/search?q=${encodeURIComponent(term)}`}
                   data-cursor-label="Search"
-                  className="inline-block rounded-full bg-surface-warm px-4 py-1.5 text-sm font-semibold text-foreground/80 transition-colors hover:bg-cherry hover:text-surface"
+                  className="flex h-11 min-w-11 items-center justify-center rounded-full bg-surface-warm px-4 text-sm font-semibold text-foreground/80 transition-colors hover:bg-cherry hover:text-surface"
                 >
                   {term}
                 </Link>
