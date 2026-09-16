@@ -25,7 +25,7 @@ export default function CartDrawer() {
           onClick={close}
           aria-label="Close bag"
           data-cursor-label="Close"
-          className="flex h-10 w-10 items-center justify-center rounded-full text-foreground/70 hover:bg-surface-warm hover:text-cherry"
+          className="flex h-11 w-11 items-center justify-center rounded-full text-foreground/70 hover:bg-surface-warm hover:text-cherry"
         >
           <CloseIcon />
         </button>

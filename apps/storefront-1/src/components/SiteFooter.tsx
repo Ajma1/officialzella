@@ -45,7 +45,7 @@ export default function SiteFooter() {
                 href="#"
                 aria-label="Instagram"
                 data-cursor-label="Follow"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-warm text-foreground/80 transition-colors hover:bg-cherry hover:text-surface"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-surface-warm text-foreground/80 transition-colors hover:bg-cherry hover:text-surface"
               >
                 <InstagramIcon size={18} />
               </a>
@@ -53,7 +53,7 @@ export default function SiteFooter() {
                 href="#"
                 aria-label="TikTok"
                 data-cursor-label="Follow"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-warm text-foreground/80 transition-colors hover:bg-cherry hover:text-surface"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-surface-warm text-foreground/80 transition-colors hover:bg-cherry hover:text-surface"
               >
                 <TikTokIcon size={18} />
               </a>

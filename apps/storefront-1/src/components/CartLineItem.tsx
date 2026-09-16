@@ -102,7 +102,7 @@ export default function CartLineItem({
                 disabled={item.qty <= 1}
                 aria-label="Decrease quantity"
                 data-cursor-label="Less"
-                className="flex h-8 w-8 items-center justify-center rounded-full text-foreground/70 disabled:opacity-40 hover:text-cherry"
+                className="flex h-11 w-11 items-center justify-center rounded-full text-foreground/70 disabled:opacity-40 hover:text-cherry"
               >
                 <MinusIcon />
               </button>
@@ -114,7 +114,7 @@ export default function CartLineItem({
                 onClick={() => setQty(item.productId, item.size, item.qty + 1, pairId)}
                 aria-label="Increase quantity"
                 data-cursor-label="More"
-                className="flex h-8 w-8 items-center justify-center rounded-full text-foreground/70 hover:text-cherry"
+                className="flex h-11 w-11 items-center justify-center rounded-full text-foreground/70 hover:text-cherry"
               >
                 <PlusIcon />
               </button>

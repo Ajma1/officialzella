@@ -291,7 +291,7 @@ export default function ProductDetail({
             onClick={() => setGuideOpen(false)}
             aria-label="Close size guide"
             data-cursor-label="Close"
-            className="flex h-10 w-10 items-center justify-center rounded-full text-foreground/70 hover:bg-surface-warm hover:text-cherry"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-foreground/70 hover:bg-surface-warm hover:text-cherry"
           >
             <CloseIcon />
           </button>

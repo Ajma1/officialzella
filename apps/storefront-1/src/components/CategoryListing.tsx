@@ -67,7 +67,7 @@ export default async function CategoryListing({
                     scroll={false}
                     aria-current={active ? "true" : undefined}
                     data-cursor-label="Sort"
-                    className={`rounded-full px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.12em] transition-colors ${
+                    className={`rounded-full px-3.5 py-1.5 min-h-11 flex items-center text-xs font-bold uppercase tracking-[0.12em] transition-colors ${
                       active
                         ? "bg-cherry text-surface"
                         : "bg-surface-warm text-foreground/70 hover:text-cherry"

@@ -81,7 +81,7 @@ export default function SiteHeader() {
               onClick={() => setSearchOpen(false)}
               aria-label="Close search"
               data-cursor-label="Close"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-foreground/70 hover:bg-surface-warm hover:text-cherry"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-foreground/70 hover:bg-surface-warm hover:text-cherry"
             >
               <CloseIcon size={18} />
             </button>
