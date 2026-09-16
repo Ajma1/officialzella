@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { motion, type Variants } from "motion/react";
 import type { Product } from "@zella/core/catalog-types";
@@ -144,14 +145,14 @@ export default function Hero({
                 <ArrowIcon className="h-4 w-4 transition-transform duration-300 ease-[cubic-bezier(0.2,0,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </MagneticLink>
 
-              <a
+              <Link
                 href="/lookbook"
                 data-cursor-label="Watch"
                 className="inline-flex items-center gap-1.5 rounded-full border-2 border-dashed border-foreground/40 px-4 py-2.5 font-script text-lg font-semibold text-foreground transition-colors duration-150 hover:border-cherry hover:text-cherry"
               >
                 see the lookbook
                 <HeartIcon size={14} />
-              </a>
+              </Link>
             </motion.div>
 
             {colorways.length > 0 && (
@@ -289,6 +290,8 @@ function Polaroid({
   );
 }
 
+const MotionLink = motion.create(Link);
+
 function MagneticLink({
   href,
   label,
@@ -313,7 +316,7 @@ function MagneticLink({
   };
 
   return (
-    <motion.a
+    <MotionLink
       ref={ref}
       href={href}
       data-cursor-label={label}
@@ -326,7 +329,7 @@ function MagneticLink({
       className={className}
     >
       {children}
-    </motion.a>
+    </MotionLink>
   );
 }
 

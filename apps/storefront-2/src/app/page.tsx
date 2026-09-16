@@ -28,14 +28,8 @@ export default async function HomePage() {
       {/* Hero */}
       <section style={{ borderBottom: "1px solid var(--color-divider)" }}>
         <div
-          className="container"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1.02fr) minmax(0, 1fr)",
-            gap: 52,
-            alignItems: "center",
-            padding: "72px 28px 86px",
-          }}
+          className="container grid-hero"
+          style={{ padding: "72px 28px 86px" }}
         >
           <div>
             <p className="kicker">The cotton edit</p>
@@ -113,7 +107,7 @@ export default async function HomePage() {
         <div className="container" style={{ padding: "80px 28px" }}>
           <p className="kicker">The cloth</p>
           <h2 style={{ fontSize: "clamp(30px, 4.2vw, 52px)", lineHeight: 1.04, margin: "0 0 30px" }}>Made to breathe.</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 30 }}>
+          <div className="grid-fabric">
             {FABRICS.map((f, i) => (
               <div key={f.name} style={{ borderTop: "1px solid var(--color-divider)", paddingTop: 22 }}>
                 <span style={{ fontFamily: "var(--font-heading)", fontSize: 13, color: "var(--color-accent-700)" }}>{`0${i + 1}`}</span>
