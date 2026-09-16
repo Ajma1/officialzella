@@ -81,11 +81,11 @@ export default function CheckoutForm({ errors }: { errors: Errors }) {
       <EmailField errors={errors} />
       <Field name="line1" label="Street address" errors={errors} />
       <Field name="line2" label="Apartment, suite (optional)" errors={errors} />
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+      <div className="grid-2">
         <Field name="city" label="City" errors={errors} />
         <Field name="state" label="State / region (optional)" errors={errors} />
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+      <div className="grid-2">
         <Field name="postalCode" label="Postal code (optional)" errors={errors} />
         <Field name="country" label="Country" errors={errors}>
           <select id="country" name="country" defaultValue={COUNTRIES[0]} className="input">

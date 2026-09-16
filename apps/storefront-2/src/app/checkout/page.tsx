@@ -75,7 +75,7 @@ export default function CheckoutPage() {
   return (
     <main className="container" style={{ padding: "50px 28px 76px" }}>
       <h1 style={{ fontSize: "clamp(34px, 5vw, 52px)", margin: "0 0 30px" }}>Checkout</h1>
-      <form action={formAction} style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 300px", gap: 40, alignItems: "start" }}>
+      <form action={formAction} className="grid-split">
         <input type="hidden" name="items" value={itemsJson} />
         <CheckoutForm errors={fieldErrors} />
 

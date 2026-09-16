@@ -104,7 +104,7 @@ export default function PairBuilder({ shirts, trousers }: { shirts: Product[]; t
   }
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 320px", gap: 46, alignItems: "start" }}>
+    <div className="grid-split" style={{ "--sidebar-w": "320px", gap: 46 } as React.CSSProperties}>
       <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
         <PickerRow label="The shirt" items={shirts} selectedId={shirt.id} onPick={setShirtId} ratio="3 / 4" />
         <PickerRow label="The trouser" items={trousers} selectedId={trouser.id} onPick={setTrouserId} ratio="5 / 8" />
@@ -148,7 +148,7 @@ export default function PairBuilder({ shirts, trousers }: { shirts: Product[]; t
           top: 104,
         }}
       >
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 22 }}>
+        <div className="grid-2" style={{ marginBottom: 22 }}>
           <ProductPlate src={shirt.images[0]?.url ?? null} alt={shirt.name} swatch={shirt.colorwaySwatch} ratio="3 / 4" />
           <ProductPlate src={trouser.images[0]?.url ?? null} alt={trouser.name} swatch={trouser.colorwaySwatch} ratio="5 / 8" />
         </div>

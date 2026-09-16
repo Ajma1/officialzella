@@ -17,13 +17,8 @@ export default function SiteFooter() {
   return (
     <footer style={{ borderTop: "1px solid var(--color-divider)", background: "var(--color-surface)", marginTop: "auto" }}>
       <div
-        className="container"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "minmax(0, 1.4fr) repeat(2, minmax(0, 1fr))",
-          gap: 36,
-          padding: "50px 28px 42px",
-        }}
+        className="container grid-footer"
+        style={{ padding: "50px 28px 42px" }}
       >
         <div>
           <p

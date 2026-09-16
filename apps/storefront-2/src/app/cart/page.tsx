@@ -21,7 +21,7 @@ export default function CartPage() {
           </Link>
         </div>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 300px", gap: 40, alignItems: "start" }}>
+        <div className="grid-split">
           <div>
             {items.map((item) => (
               <CartLine key={`${item.productId}-${item.size}-${item.pair?.productId ?? ""}`} item={item} />

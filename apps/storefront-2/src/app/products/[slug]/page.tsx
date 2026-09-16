@@ -10,7 +10,7 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
 
   return (
     <section className="container" style={{ padding: "32px 28px 76px" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.15fr) minmax(0, 1fr)", gap: 54, alignItems: "start" }}>
+      <div className="grid-pdp">
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 16 }}>
           {product.images.length > 0 ? (
             product.images.map((img, i) => (
