@@ -6,8 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { BagIcon, BowIcon, CloseIcon, SearchIcon } from "@/components/icons";
 import Drawer from "@/components/Drawer";
-import { useCart } from "@/lib/cart/useCart";
-import { useCartUi } from "@/lib/cart/cart-ui";
+import { useCart } from "@zella/core/cart";
+import { useCartUi } from "@zella/core/cart";
 
 const NAV_LINKS = [
   { label: "Shirts", href: "/shirts" },

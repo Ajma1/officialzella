@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { formatPrice } from "@/lib/format";
+import { formatPrice } from "@zella/core/format";
 import { coinFor } from "@/lib/coins";
 
 function discountPct(price: number, was: number) {

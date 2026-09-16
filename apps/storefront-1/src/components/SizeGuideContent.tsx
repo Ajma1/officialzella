@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { toDisplayUnits } from "@/lib/units";
-import type { Size } from "@/data/catalog.seed";
+import { toDisplayUnits } from "@zella/core/units";
+import type { Size } from "@zella/core/catalog-types";
 
 // PLACEHOLDER measurements — generic relaxed-fit womenswear. See PLACEHOLDER_DATA.md.
 const COLS = ["Chest", "Waist", "Hip", "Length"] as const;

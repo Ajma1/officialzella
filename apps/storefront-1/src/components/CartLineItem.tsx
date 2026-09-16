@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useCart, type CartItem } from "@/lib/cart/useCart";
-import { formatPrice } from "@/lib/format";
+import { useCart, type CartItem } from "@zella/core/cart";
+import { formatPrice } from "@zella/core/format";
 import { MinusIcon, PlusIcon } from "@/components/icons";
 
 function Thumb({ item }: { item: CartItem }) {

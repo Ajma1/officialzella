@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useActionState } from "react";
 import type { FormState } from "./actions";
 import { deleteProductImage } from "./actions";
-import { formatCents } from "@/lib/format";
+import { formatCents } from "@zella/core/format";
 
 type ExistingImage = { id: string; url: string };
 // The current catalog only carries S/M — see packages/db/prisma/seed.ts.

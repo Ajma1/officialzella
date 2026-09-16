@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { useRef, useState } from "react";
-import type { Product, Size } from "@/data/catalog.seed";
-import { canAddToCart, isSoldOut, variantStock } from "@/lib/catalog.helpers";
+import type { Product, Size } from "@zella/core/catalog-types";
+import { canAddToCart, isSoldOut, variantStock } from "@zella/core/catalog-helpers";
 import { categoryMeta } from "@/lib/categories";
-import { useCart } from "@/lib/cart/useCart";
-import { useCartUi } from "@/lib/cart/cart-ui";
+import { useCart } from "@zella/core/cart";
+import { useCartUi } from "@zella/core/cart";
 import Polaroid from "@/components/Polaroid";
 import PriceTag from "@/components/PriceTag";
 import SiteButton from "@/components/SiteButton";

@@ -1,8 +1,8 @@
 "use client";
 
-import { useCart } from "@/lib/cart/useCart";
-import { formatPrice } from "@/lib/format";
-import { SHIPPING_CENTS, orderTotalCents } from "@/lib/checkout/shipping";
+import { useCart } from "@zella/core/cart";
+import { formatPrice } from "@zella/core/format";
+import { SHIPPING_CENTS, orderTotalCents } from "@zella/core/checkout";
 import PageHeading from "@/components/PageHeading";
 import CartLineItem from "@/components/CartLineItem";
 import EmptyState from "@/components/EmptyState";

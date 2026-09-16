@@ -1,7 +1,7 @@
 import Link from "next/link";
-import type { Category } from "@/data/catalog.seed";
-import { getProductsByCategory } from "@/lib/catalog";
-import { sortProducts, type SortKey } from "@/lib/catalog.helpers";
+import type { Category } from "@zella/core/catalog-types";
+import { getProductsByCategory } from "@zella/core/catalog";
+import { sortProducts, type SortKey } from "@zella/core/catalog-helpers";
 import { categoryMeta } from "@/lib/categories";
 import PageHeading from "@/components/PageHeading";
 import ProductGrid from "@/components/ProductGrid";

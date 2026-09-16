@@ -1,4 +1,4 @@
-import type { Category } from "@/data/catalog.seed";
+import type { Category } from "@zella/core/catalog-types";
 
 /** Display metadata for the three shop categories — shared by the listing
  *  pages, the footer, CategoryRows, and empty states. Blurbs are the confirmed

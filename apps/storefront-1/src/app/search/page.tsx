@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { searchProducts } from "@/lib/catalog";
+import { searchProducts } from "@zella/core/catalog";
 import PageHeading from "@/components/PageHeading";
 import ProductGrid from "@/components/ProductGrid";
 import EmptyState from "@/components/EmptyState";

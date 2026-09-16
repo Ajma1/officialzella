@@ -4,7 +4,7 @@ import {
   getAllProducts,
   getProductBySlug,
   getRelatedProducts,
-} from "@/lib/catalog";
+} from "@zella/core/catalog";
 import ProductDetail from "@/components/ProductDetail";
 
 export async function generateStaticParams() {

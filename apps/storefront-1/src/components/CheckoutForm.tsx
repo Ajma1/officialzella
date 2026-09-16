@@ -1,8 +1,8 @@
 "use client";
 
 import { useActionState, useState, type KeyboardEvent, type ReactNode } from "react";
-import { COUNTRIES } from "@/lib/checkout/schema";
-import { requestPin, verifyPin } from "@/app/actions/customer-auth";
+import { COUNTRIES } from "@zella/core/checkout";
+import { requestPin, verifyPin } from "@zella/core/actions";
 
 type Errors = Record<string, string> | undefined;
 

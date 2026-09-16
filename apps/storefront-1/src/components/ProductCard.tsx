@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Product } from "@/data/catalog.seed";
-import { isSoldOut } from "@/lib/catalog.helpers";
-import { formatPrice } from "@/lib/format";
+import type { Product } from "@zella/core/catalog-types";
+import { isSoldOut } from "@zella/core/catalog-helpers";
+import { formatPrice } from "@zella/core/format";
 import { coinFor } from "@/lib/coins";
 import Polaroid from "@/components/Polaroid";
 

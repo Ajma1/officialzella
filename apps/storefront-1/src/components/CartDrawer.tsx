@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useCart } from "@/lib/cart/useCart";
-import { useCartUi } from "@/lib/cart/cart-ui";
-import { formatPrice } from "@/lib/format";
+import { useCart } from "@zella/core/cart";
+import { useCartUi } from "@zella/core/cart";
+import { formatPrice } from "@zella/core/format";
 import Drawer from "@/components/Drawer";
 import CartLineItem from "@/components/CartLineItem";
 import EmptyState from "@/components/EmptyState";

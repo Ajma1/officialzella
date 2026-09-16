@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { CartItem } from "@/lib/cart/useCart";
-import { formatPrice } from "@/lib/format";
-import { SHIPPING_CENTS } from "@/lib/checkout/shipping";
+import type { CartItem } from "@zella/core/cart";
+import { formatPrice } from "@zella/core/format";
+import { SHIPPING_CENTS } from "@zella/core/checkout";
 import PageHeading from "@/components/PageHeading";
 import EmptyState from "@/components/EmptyState";
 import SiteButton from "@/components/SiteButton";

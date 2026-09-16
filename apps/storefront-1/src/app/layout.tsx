@@ -6,7 +6,7 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Ticker from "@/components/Ticker";
 import CartDrawer from "@/components/CartDrawer";
-import { CartUiProvider } from "@/lib/cart/cart-ui";
+import { CartUiProvider } from "@zella/core/cart";
 import "./globals.css";
 
 const bagel = Bagel_Fat_One({

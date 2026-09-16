@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import type { Product } from "@/data/catalog.seed";
+import type { Product } from "@zella/core/catalog-types";
 import ProductCard from "@/components/ProductCard";
 
 export default function ProductGrid({ products }: { products: Product[] }) {

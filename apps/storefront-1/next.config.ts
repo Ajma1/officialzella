@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@zella/db"],
+  transpilePackages: ["@zella/db", "@zella/core"],
   experimental: {
     serverActions: {
       bodySizeLimit: "20mb",

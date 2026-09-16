@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { requestPin, verifyPin } from "@/app/actions/customer-auth";
+import { requestPin, verifyPin } from "@zella/core/actions";
 import PageHeading from "@/components/PageHeading";
 
 export default function AccountLoginPage() {

@@ -4,7 +4,7 @@ import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
-import { toSlug, parsePriceCents } from "@/lib/format";
+import { toSlug, parsePriceCents } from "@zella/core/format";
 import { prisma } from "@zella/db";
 import {
   ensureProductImagesBucket,

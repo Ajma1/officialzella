@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@zella/db";
-import { formatCents } from "@/lib/format";
+import { formatCents } from "@zella/core/format";
 import { updateOrderStatus } from "../actions";
 import { OrderStatus } from "@zella/db";
 

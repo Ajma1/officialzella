@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { prisma } from "@zella/db";
-import { formatCents } from "@/lib/format";
+import { formatCents } from "@zella/core/format";
 
 export default async function ProductsPage() {
   const products = await prisma.product.findMany({

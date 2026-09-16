@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@zella/db";
-import { formatCents } from "@/lib/format";
+import { formatCents } from "@zella/core/format";
 
 const STATUS_STYLES: Record<string, string> = {
   PENDING: "bg-amber-100 text-amber-700",
