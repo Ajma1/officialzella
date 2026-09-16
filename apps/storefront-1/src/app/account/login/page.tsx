@@ -91,7 +91,7 @@ export default function AccountLoginPage() {
           <button
             type="submit"
             formAction={reqAction}
-            className="w-full text-center text-xs font-semibold text-foreground/60 underline decoration-dashed underline-offset-2 hover:text-cherry"
+            className="w-full min-h-11 flex items-center justify-center text-center text-xs font-semibold text-foreground/60 underline decoration-dashed underline-offset-2 hover:text-cherry"
           >
             Resend code
           </button>
