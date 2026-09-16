@@ -26,7 +26,7 @@ export default function OrderSummary({
       <div className="mt-3 divide-y divide-foreground/10">
         {items.map((item) => (
           <CartLineItem
-            key={`${item.productId}-${item.size}`}
+            key={`${item.productId}-${item.size}-${item.pair?.productId ?? ""}`}
             item={item}
             variant="compact"
           />

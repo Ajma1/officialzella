@@ -48,7 +48,7 @@ export default function CartDrawer() {
         <>
           <div className="flex-1 divide-y divide-foreground/10 overflow-y-auto px-5">
             {items.map((item) => (
-              <CartLineItem key={`${item.productId}-${item.size}`} item={item} />
+              <CartLineItem key={`${item.productId}-${item.size}-${item.pair?.productId ?? ""}`} item={item} />
             ))}
           </div>
 

@@ -6,12 +6,15 @@ import { useCart, type CartItem } from "@zella/core/cart";
 import { formatPrice } from "@zella/core/format";
 import { MinusIcon, PlusIcon } from "@/components/icons";
 
-function Thumb({ item }: { item: CartItem }) {
+function Thumb({ image, rotate = -3 }: { image: string | null; rotate?: number }) {
   return (
-    <div className="relative h-20 w-16 shrink-0 -rotate-3 rounded-[10px] bg-surface p-1 shadow-md shadow-background-deep/20">
+    <div
+      className="relative h-20 w-16 shrink-0 rounded-[10px] bg-surface p-1 shadow-md shadow-background-deep/20"
+      style={{ transform: `rotate(${rotate}deg)` }}
+    >
       <div className="image-outline relative h-full w-full overflow-hidden rounded-[6px] bg-surface-warm">
-        {item.image ? (
-          <Image src={item.image} alt="" fill sizes="64px" className="object-cover" />
+        {image ? (
+          <Image src={image} alt="" fill sizes="64px" className="object-cover" />
         ) : (
           <span
             className="absolute left-1/2 top-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full"
@@ -35,15 +38,20 @@ export default function CartLineItem({
 }) {
   const { setQty, remove } = useCart();
   const lineTotal = formatPrice(item.priceCents * item.qty);
+  const pairId = item.pair?.productId;
+  const displayName = item.pair ? `${item.name} + ${item.pair.name}` : item.name;
 
   if (variant === "compact") {
     return (
       <div className="flex items-center gap-3 py-3">
-        <Thumb item={item} />
+        <div className="flex shrink-0">
+          <Thumb image={item.image} rotate={item.pair ? -4 : -3} />
+          {item.pair && <Thumb image={item.pair.image} rotate={4} />}
+        </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold text-foreground">{item.name}</p>
+          <p className="truncate text-sm font-semibold text-foreground">{displayName}</p>
           <p className="text-xs text-foreground/60">
-            {item.colorway ? `${item.colorway} · ` : ""}Size {item.size} · ×{item.qty}
+            {item.pair ? "Pair · " : item.colorway ? `${item.colorway} · ` : ""}Size {item.size} · ×{item.qty}
           </p>
         </div>
         <p className="text-sm tabular-nums text-foreground/80">{lineTotal}</p>
@@ -56,19 +64,26 @@ export default function CartLineItem({
       className={`flex gap-4 py-4 ${disabled ? "opacity-60" : ""}`}
       aria-disabled={disabled || undefined}
     >
-      <Thumb item={item} />
+      <div className="flex shrink-0">
+        <Thumb image={item.image} rotate={item.pair ? -4 : -3} />
+        {item.pair && <Thumb image={item.pair.image} rotate={4} />}
+      </div>
 
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <Link
-              href={`/products/${item.slug}`}
-              className="text-sm font-semibold text-foreground hover:text-cherry"
-            >
-              {item.name}
-            </Link>
+            {item.pair ? (
+              <p className="text-sm font-semibold text-foreground">{displayName}</p>
+            ) : (
+              <Link
+                href={`/products/${item.slug}`}
+                className="text-sm font-semibold text-foreground hover:text-cherry"
+              >
+                {item.name}
+              </Link>
+            )}
             <p className="mt-0.5 text-xs text-foreground/60">
-              {item.colorway ? `${item.colorway} · ` : ""}Size {item.size}
+              {item.pair ? "Pair · " : item.colorway ? `${item.colorway} · ` : ""}Size {item.size}
             </p>
           </div>
           <p className="shrink-0 text-sm tabular-nums text-foreground/80">{lineTotal}</p>
@@ -83,7 +98,7 @@ export default function CartLineItem({
             <div className="flex items-center rounded-full bg-surface-warm">
               <button
                 type="button"
-                onClick={() => setQty(item.productId, item.size, item.qty - 1)}
+                onClick={() => setQty(item.productId, item.size, item.qty - 1, pairId)}
                 disabled={item.qty <= 1}
                 aria-label="Decrease quantity"
                 data-cursor-label="Less"
@@ -96,7 +111,7 @@ export default function CartLineItem({
               </span>
               <button
                 type="button"
-                onClick={() => setQty(item.productId, item.size, item.qty + 1)}
+                onClick={() => setQty(item.productId, item.size, item.qty + 1, pairId)}
                 aria-label="Increase quantity"
                 data-cursor-label="More"
                 className="flex h-8 w-8 items-center justify-center rounded-full text-foreground/70 hover:text-cherry"
@@ -107,7 +122,7 @@ export default function CartLineItem({
 
             <button
               type="button"
-              onClick={() => remove(item.productId, item.size)}
+              onClick={() => remove(item.productId, item.size, pairId)}
               data-cursor-label="Remove"
               className="font-script text-base text-foreground/60 transition-colors hover:text-danger"
             >

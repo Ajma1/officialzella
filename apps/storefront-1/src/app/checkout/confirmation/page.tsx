@@ -113,7 +113,7 @@ export default function ConfirmationPage() {
         <div className="divide-y divide-foreground/10">
           {order.items.map((item) => (
             <CartLineItem
-              key={`${item.productId}-${item.size}`}
+              key={`${item.productId}-${item.size}-${item.pair?.productId ?? ""}`}
               item={item}
               variant="compact"
             />
