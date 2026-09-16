@@ -45,3 +45,6 @@ next-env.d.ts
 
 # staged source photos, uploaded to Supabase Storage then no longer needed
 packages/db/media-staging
+
+.vercel
+.env*
