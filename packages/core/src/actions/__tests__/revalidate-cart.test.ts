@@ -1,11 +1,12 @@
 import { describe, it, expect } from "vitest";
 import { revalidateCart } from "../revalidate-cart";
+import { PAIR_PRICE_CENTS } from "../../checkout/pairing";
 import type { CartItem } from "../../cart/store";
 
-// Real catalog product (packages/db/prisma/seed.ts) — Powder Blue Stripe
-// shirt, flat Rs 2,850.
+// Real catalog products (packages/db/prisma/seed.ts).
 const SHIRT_SLUG = "powder-blue-stripe-shirt";
 const SHIRT_PRICE_CENTS = 285000;
+const TROUSER_SLUG = "ivory-wide-leg-trouser";
 
 const line = (over: Partial<CartItem> = {}): CartItem => ({
   productId: "test-fixture",
@@ -42,6 +43,25 @@ describe("revalidateCart", () => {
 
   it("flags a line that exceeds stock as unavailable", async () => {
     const r = await revalidateCart([line({ qty: 999 })]);
+    expect(r.lines[0].unavailable).toBe(true);
+  });
+
+  it("prices a pair line at the flat bundle price, not the sum of parts", async () => {
+    const pairLine = line({
+      priceCents: PAIR_PRICE_CENTS,
+      pair: { productId: "test-fixture-trouser", slug: TROUSER_SLUG, name: "Ivory Wide-Leg", image: null },
+    });
+    const r = await revalidateCart([pairLine]);
+    expect(r.lines[0].ok).toBe(true);
+    expect(r.lines[0].priceChanged).toBeUndefined();
+    expect(r.subtotalCents).toBe(PAIR_PRICE_CENTS);
+  });
+
+  it("flags a pair as unavailable when the trouser side doesn't exist, even though the shirt is fine", async () => {
+    const pairLine = line({
+      pair: { productId: "test-fixture-trouser", slug: "ghost-trouser", name: "Ghost", image: null },
+    });
+    const r = await revalidateCart([pairLine]);
     expect(r.lines[0].unavailable).toBe(true);
   });
 });

@@ -3,17 +3,20 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 vi.mock("next/headers", () => import("../../test/cookie-jar"));
 vi.mock("../../email", () => ({ sendLoginPin: vi.fn() }));
 
+import { prisma } from "@zella/db";
 import { placeOrder } from "../place-order";
 import { requestPin, verifyPin } from "../customer-auth";
 import { sendLoginPin } from "../../email";
 import { SHIPPING_CENTS } from "../../checkout/shipping";
+import { PAIR_PRICE_CENTS } from "../../checkout/pairing";
 import type { CartItem } from "../../cart/store";
 import { __resetCookieJar } from "../../test/cookie-jar";
 
-// Real catalog product (packages/db/prisma/seed.ts) — Powder Blue Stripe
-// shirt, flat Rs 2,850.
+// Real catalog products (packages/db/prisma/seed.ts).
 const SHIRT_SLUG = "powder-blue-stripe-shirt";
 const SHIRT_PRICE_CENTS = 285000;
+const TROUSER_SLUG = "ivory-wide-leg-trouser";
+const TROUSER_PRICE_CENTS = 325000;
 
 const cartLine = (over: Partial<CartItem> = {}): CartItem => ({
   productId: "test-fixture",
@@ -108,5 +111,33 @@ describe("placeOrder", () => {
       expect(res.totalCents).toBe(SHIRT_PRICE_CENTS * 2 + SHIPPING_CENTS);
       expect(res.orderNumber).toMatch(/^ZELLA-[0-9A-HJKMNP-TV-Z]{5}$/);
     }
+  });
+
+  it("expands a pair line into two linked OrderItems and records the discount", async () => {
+    const email = uniqueEmail("pair");
+    await verifySession(email);
+    const pairLine = cartLine({
+      priceCents: PAIR_PRICE_CENTS,
+      qty: 1,
+      pair: { productId: "test-fixture-trouser", slug: TROUSER_SLUG, name: "Ivory Wide-Leg", image: null },
+    });
+    const res = await placeOrder(
+      undefined,
+      form({ ...fields(email), items: JSON.stringify([pairLine]) }),
+    );
+    expect(res?.ok).toBe(true);
+    if (!res?.ok) return;
+
+    expect(res.totalCents).toBe(PAIR_PRICE_CENTS + SHIPPING_CENTS);
+
+    const order = await prisma.order.findUniqueOrThrow({
+      where: { orderNumber: res.orderNumber },
+      include: { items: true },
+    });
+    expect(order.discountCents).toBe(SHIRT_PRICE_CENTS + TROUSER_PRICE_CENTS - PAIR_PRICE_CENTS);
+    expect(order.items).toHaveLength(2);
+    const [shirtLine, trouserLine] = order.items;
+    expect(shirtLine.pairGroupId).toBe(trouserLine.pairGroupId);
+    expect(shirtLine.priceCents + trouserLine.priceCents).toBe(PAIR_PRICE_CENTS);
   });
 });

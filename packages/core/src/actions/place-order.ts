@@ -1,8 +1,10 @@
 "use server";
 
+import crypto from "node:crypto";
 import { checkoutSchema } from "../checkout/schema";
 import { generateOrderNumber } from "../checkout/order-number";
 import { orderTotalCents } from "../checkout/shipping";
+import { PAIR_PRICE_CENTS } from "../checkout/pairing";
 import { revalidateCart } from "./revalidate-cart";
 import { getProductBySlug } from "../catalog";
 import { prisma } from "@zella/db";
@@ -80,18 +82,51 @@ export async function placeOrder(
   const totalCents = orderTotalCents(revalidated.subtotalCents);
 
   // Resolve each line to its DB-source product + price (never the client's).
-  const resolvedItems = await Promise.all(
+  // A pair line expands into two OrderItem rows sharing a pairGroupId — the
+  // shirt at its real price, the trouser absorbing the whole bundle discount
+  // so the two rows sum to the flat pair price.
+  let discountCents = 0;
+  const resolvedItemGroups = await Promise.all(
     items.map(async (item) => {
       const product = await getProductBySlug(item.slug);
       if (!product) throw new Error(`Product vanished mid-order: ${item.slug}`);
-      return {
-        productId: product.id,
-        size: item.size,
-        quantity: item.qty,
-        priceCents: product.priceCents,
-      };
+
+      if (!item.pair) {
+        return [
+          {
+            productId: product.id,
+            size: item.size,
+            quantity: item.qty,
+            priceCents: product.priceCents,
+          },
+        ];
+      }
+
+      const trouser = await getProductBySlug(item.pair.slug);
+      if (!trouser) throw new Error(`Product vanished mid-order: ${item.pair.slug}`);
+
+      discountCents += (product.priceCents + trouser.priceCents - PAIR_PRICE_CENTS) * item.qty;
+      const pairGroupId = crypto.randomUUID();
+
+      return [
+        {
+          productId: product.id,
+          size: item.size,
+          quantity: item.qty,
+          priceCents: product.priceCents,
+          pairGroupId,
+        },
+        {
+          productId: trouser.id,
+          size: item.size,
+          quantity: item.qty,
+          priceCents: PAIR_PRICE_CENTS - product.priceCents,
+          pairGroupId,
+        },
+      ];
     }),
   );
+  const resolvedItems = resolvedItemGroups.flat();
 
   const address = {
     fullName: parsed.data.recipientName || parsed.data.fullName,
@@ -124,6 +159,7 @@ export async function placeOrder(
           status: "PENDING",
           paymentMethod: "COD",
           totalCents,
+          discountCents,
           customerName: parsed.data.fullName,
           customerPhone: parsed.data.phone,
           customerEmail: parsed.data.email,

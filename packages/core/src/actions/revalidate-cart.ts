@@ -3,6 +3,7 @@
 import type { CartItem } from "../cart/store";
 import { getProductBySlug } from "../catalog";
 import { variantStock } from "../catalog-helpers";
+import { PAIR_PRICE_CENTS } from "../checkout/pairing";
 
 export interface RevalidatedLine {
   productId: string;
@@ -30,7 +31,13 @@ export async function revalidateCart(
 
   for (const item of items) {
     const product = await getProductBySlug(item.slug);
-    if (!product || variantStock(product, item.size) < item.qty) {
+    const pairProduct = item.pair ? await getProductBySlug(item.pair.slug) : null;
+    const unavailable =
+      !product ||
+      variantStock(product, item.size) < item.qty ||
+      (item.pair && (!pairProduct || variantStock(pairProduct, item.size) < item.qty));
+
+    if (unavailable) {
       lines.push({
         productId: item.productId,
         size: item.size,
@@ -40,9 +47,12 @@ export async function revalidateCart(
       continue;
     }
 
+    // A pair line's source price is the flat bundle price, not either
+    // product's own priceCents.
+    const sourcePriceCents = item.pair ? PAIR_PRICE_CENTS : product.priceCents;
     const priceChanged =
-      product.priceCents !== item.priceCents
-        ? { from: item.priceCents, to: product.priceCents }
+      sourcePriceCents !== item.priceCents
+        ? { from: item.priceCents, to: sourcePriceCents }
         : undefined;
 
     lines.push({
@@ -51,7 +61,7 @@ export async function revalidateCart(
       ok: true,
       priceChanged,
     });
-    subtotalCents += product.priceCents * item.qty;
+    subtotalCents += sourcePriceCents * item.qty;
   }
 
   return {

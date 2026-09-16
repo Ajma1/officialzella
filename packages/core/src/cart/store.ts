@@ -15,6 +15,16 @@ export interface CartItem {
   size: Size;
   priceCents: number;
   qty: number;
+  /** Pair bundle (optional): this line is a shirt+trouser pair at a
+   *  discounted bundle price — `priceCents` above is already that
+   *  discounted total, not the shirt's price alone. `pair` carries the
+   *  trouser side so the cart/order can display and later persist both. */
+  pair?: {
+    productId: string;
+    slug: string;
+    name: string;
+    image: string | null;
+  };
 }
 
 const KEY = "zella-cart";
@@ -99,12 +109,16 @@ export function subscribe(cb: () => void): () => void {
   };
 }
 
+/** Two pair lines can share the same shirt+size with a different trouser —
+ *  `pair.productId` disambiguates them from each other and from a plain
+ *  single-product line. */
+const sameLine = (i: CartItem, productId: string, size: Size, pairProductId?: string) =>
+  i.productId === productId && i.size === size && i.pair?.productId === pairProductId;
+
 export function addItem(input: Omit<CartItem, "qty">, qty = 1): void {
   ensureHydrated();
   const add = clampQty(qty);
-  const existing = memory.find(
-    (i) => i.productId === input.productId && i.size === input.size,
-  );
+  const existing = memory.find((i) => sameLine(i, input.productId, input.size, input.pair?.productId));
   const next = existing
     ? memory.map((i) =>
         i === existing ? { ...i, qty: Math.min(i.qty + add, MAX_QTY) } : i,
@@ -113,19 +127,22 @@ export function addItem(input: Omit<CartItem, "qty">, qty = 1): void {
   commit(next);
 }
 
-export function setItemQty(productId: string, size: Size, qty: number): void {
+export function setItemQty(
+  productId: string,
+  size: Size,
+  qty: number,
+  pairProductId?: string,
+): void {
   ensureHydrated();
   const clamped = clampQty(qty);
   commit(
-    memory.map((i) =>
-      i.productId === productId && i.size === size ? { ...i, qty: clamped } : i,
-    ),
+    memory.map((i) => (sameLine(i, productId, size, pairProductId) ? { ...i, qty: clamped } : i)),
   );
 }
 
-export function removeItem(productId: string, size: Size): void {
+export function removeItem(productId: string, size: Size, pairProductId?: string): void {
   ensureHydrated();
-  commit(memory.filter((i) => !(i.productId === productId && i.size === size)));
+  commit(memory.filter((i) => !sameLine(i, productId, size, pairProductId)));
 }
 
 export function clearCart(): void {
