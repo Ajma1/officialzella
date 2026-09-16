@@ -179,38 +179,37 @@ textarea.input { min-height: 90px; resize: vertical; }
 }
 .grid-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
-  gap: 52px;
-  align-items: center;
+  grid-template-columns: 1fr;
+  gap: 32px;
 }
 .grid-fabric {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 30px;
+  grid-template-columns: 1fr;
+  gap: 36px;
 }
 /* Main content + fixed sidebar (cart, checkout, pair builder) — sidebar
    width is per-usage via --sidebar-w, default matches cart/checkout's 300px. */
 .grid-split {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--sidebar-w, 300px);
-  gap: 40px;
+  grid-template-columns: 1fr;
+  gap: 32px;
   align-items: start;
 }
 .grid-pdp {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-  gap: 54px;
+  grid-template-columns: 1fr;
+  gap: 32px;
   align-items: start;
 }
 .grid-2 {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 16px;
 }
 .grid-footer {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr));
-  gap: 36px;
+  grid-template-columns: 1fr;
+  gap: 32px;
 }
 /* — mobile nav (the one approved nav-pattern exception, see spec) — */
 .nav-desktop {
@@ -265,22 +264,32 @@ textarea.input { min-height: 90px; resize: vertical; }
     display: none;
   }
 }
-@media (max-width: 760px) {
-  .grid-hero,
-  .grid-split,
-  .grid-pdp,
-  .grid-footer {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-  .grid-fabric {
-    grid-template-columns: 1fr;
-    gap: 36px;
+@media (min-width: 480px) {
+  .grid-2 {
+    grid-template-columns: 1fr 1fr;
   }
 }
-@media (max-width: 480px) {
-  .grid-2 {
-    grid-template-columns: 1fr;
+@media (min-width: 768px) {
+  .grid-hero {
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+    gap: 52px;
+    align-items: center;
+  }
+  .grid-fabric {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 30px;
+  }
+  .grid-split {
+    grid-template-columns: minmax(0, 1fr) var(--sidebar-w, 300px);
+    gap: 40px;
+  }
+  .grid-pdp {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 54px;
+  }
+  .grid-footer {
+    grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr));
+    gap: 36px;
   }
 }
 .fade-in {
