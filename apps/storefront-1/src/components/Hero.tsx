@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { motion, type Variants } from "motion/react";
+import type { Product } from "@zella/core/catalog-types";
 import {
   ArrowIcon,
   BowIcon,
@@ -10,15 +11,6 @@ import {
   HeartIcon,
   SparkleIcon,
 } from "@/components/icons";
-
-const swatches = [
-  { name: "Burgundy", className: "bg-burgundy" },
-  { name: "Lilac", className: "bg-lilac" },
-  { name: "Mocha stripe", className: "bg-mocha" },
-  { name: "Sky stripe", className: "bg-sky" },
-  { name: "Yellow stripe", className: "bg-butter" },
-  { name: "Blue stripe", className: "bg-denim" },
-];
 
 const stickers = [
   { Icon: BowIcon, top: "14%", left: "44%", size: 34, delay: 0, rotate: -8 },
@@ -46,7 +38,13 @@ const fadeUp: Variants = {
   },
 };
 
-export default function Hero() {
+export default function Hero({
+  polaroids,
+  colorways,
+}: {
+  polaroids: { product: Product; label: string }[];
+  colorways: { name: string; swatch: string }[];
+}) {
   return (
     <section className="relative flex min-h-[calc(100svh-5rem)] flex-col overflow-hidden bg-background">
         <div
@@ -156,20 +154,23 @@ export default function Hero() {
               </a>
             </motion.div>
 
-            <motion.div variants={fadeUp} className="mt-12 flex items-center gap-4">
-              <span className="text-xs font-bold uppercase tracking-[0.2em] text-foreground">
-                Colorways
-              </span>
-              <div className="flex -space-x-2">
-                {swatches.map((swatch) => (
-                  <span
-                    key={swatch.name}
-                    data-cursor-label={swatch.name}
-                    className={`h-7 w-7 rounded-full ring-2 ring-surface transition-transform duration-200 ease-out hover:-translate-y-1 hover:scale-110 ${swatch.className}`}
-                  />
-                ))}
-              </div>
-            </motion.div>
+            {colorways.length > 0 && (
+              <motion.div variants={fadeUp} className="mt-12 flex items-center gap-4">
+                <span className="text-xs font-bold uppercase tracking-[0.2em] text-foreground">
+                  Colorways
+                </span>
+                <div className="flex -space-x-2">
+                  {colorways.map((swatch) => (
+                    <span
+                      key={swatch.name}
+                      data-cursor-label={swatch.name}
+                      style={{ background: swatch.swatch }}
+                      className="h-7 w-7 rounded-full ring-2 ring-surface transition-transform duration-200 ease-out hover:-translate-y-1 hover:scale-110"
+                    />
+                  ))}
+                </div>
+              </motion.div>
+            )}
           </motion.div>
 
           <motion.div
@@ -178,37 +179,43 @@ export default function Hero() {
             transition={{ duration: 0.9, delay: 0.35, ease: [0.2, 0, 0, 1] }}
             className="relative mx-auto aspect-[4/5] w-full max-w-md lg:max-w-none"
           >
-            <Polaroid
-              src="/shirt-burgundy.jpg"
-              alt="Zella burgundy relaxed-fit cotton shirt, flat lay"
-              label="Shirts"
-              tag="Burgundy"
-              className="absolute left-0 top-2 h-[58%] w-[52%]"
-              rotate={-7}
-              delay={0.5}
-              sizes="(min-width: 1024px) 20rem, 50vw"
-            />
-            <Polaroid
-              src="/shirt-lilac.jpg"
-              alt="Zella lilac relaxed-fit cotton shirt, flat lay"
-              label="Shirts"
-              tag="Lilac"
-              className="absolute right-0 top-0 h-[54%] w-[50%]"
-              rotate={6}
-              delay={0.65}
-              priority
-              sizes="(min-width: 1024px) 19rem, 48vw"
-            />
-            <Polaroid
-              src="/shirt-yellow-stripe.jpg"
-              alt="Zella yellow-stripe relaxed-fit cotton shirt, flat lay"
-              label="Trousers"
-              tag="Yellow stripe"
-              className="absolute bottom-0 right-2 h-[52%] w-[56%]"
-              rotate={-3}
-              delay={0.8}
-              sizes="(min-width: 1024px) 21rem, 52vw"
-            />
+            {polaroids[0] && (
+              <Polaroid
+                src={polaroids[0].product.images[0]?.url}
+                alt={polaroids[0].product.images[0]?.alt || polaroids[0].product.name}
+                label={polaroids[0].label}
+                tag={polaroids[0].product.colorway ?? polaroids[0].product.name}
+                className="absolute left-0 top-2 h-[58%] w-[52%]"
+                rotate={-7}
+                delay={0.5}
+                sizes="(min-width: 1024px) 20rem, 50vw"
+              />
+            )}
+            {polaroids[1] && (
+              <Polaroid
+                src={polaroids[1].product.images[0]?.url}
+                alt={polaroids[1].product.images[0]?.alt || polaroids[1].product.name}
+                label={polaroids[1].label}
+                tag={polaroids[1].product.colorway ?? polaroids[1].product.name}
+                className="absolute right-0 top-0 h-[54%] w-[50%]"
+                rotate={6}
+                delay={0.65}
+                priority
+                sizes="(min-width: 1024px) 19rem, 48vw"
+              />
+            )}
+            {polaroids[2] && (
+              <Polaroid
+                src={polaroids[2].product.images[0]?.url}
+                alt={polaroids[2].product.images[0]?.alt || polaroids[2].product.name}
+                label={polaroids[2].label}
+                tag={polaroids[2].product.colorway ?? polaroids[2].product.name}
+                className="absolute bottom-0 right-2 h-[52%] w-[56%]"
+                rotate={-3}
+                delay={0.8}
+                sizes="(min-width: 1024px) 21rem, 52vw"
+              />
+            )}
 
             <motion.div
               initial={{ opacity: 0, scale: 0.6, rotate: -18 }}
@@ -245,7 +252,7 @@ function Polaroid({
   priority,
   sizes,
 }: {
-  src: string;
+  src?: string;
   alt: string;
   label: string;
   tag: string;
@@ -255,6 +262,7 @@ function Polaroid({
   priority?: boolean;
   sizes: string;
 }) {
+  if (!src) return null;
   return (
     <motion.div
       data-cursor-label={label}

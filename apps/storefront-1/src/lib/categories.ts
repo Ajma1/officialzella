@@ -20,7 +20,7 @@ export const CATEGORIES: CategoryMeta[] = [
     blurb:
       "Relaxed shirts, cut from breathable cotton — soft against the skin, roomy where it counts.",
     swatch: "#9cc6e8",
-    sampleImage: "/shirt-sky-stripe.jpg",
+    sampleImage: null,
   },
   {
     category: "TROUSER",
