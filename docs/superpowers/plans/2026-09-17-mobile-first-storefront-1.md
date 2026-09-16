@@ -99,7 +99,7 @@ In `apps/storefront-1/src/components/CategoryListing.tsx`, the `Link` inside the
 ```tsx
 className={`rounded-full px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.12em] transition-colors ${
 ```
-Change `px-3.5 py-1.5` to `px-3.5 py-1.5 min-h-11 flex items-center` so the pill's visible padding stays the same (preserving the current compact look) while its actual hit area grows to 44px tall via `min-h-11` and the text stays vertically centered via `flex items-center`. Read the surrounding lines first (`sed -n '55,75p' apps/storefront-1/src/components/CategoryListing.tsx`) to get the exact current template-literal string before editing, since the closing backtick and ternary continue past this line.
+Change `px-3.5 py-1.5` to `px-3.5 py-1.5 min-h-11 flex items-center` so the visible padding value stays the same while the actual hit area grows to 44px tall via `min-h-11` and the text stays vertically centered via `flex items-center`. Note this does visibly grow any element with a background/border (like this pill's `bg-cherry`/`bg-surface-warm`) — that's an accepted, correct consequence of the touch-target law, not a bug; don't try to keep the visible box the old size while only growing an invisible hit area. Read the surrounding lines first (`sed -n '55,75p' apps/storefront-1/src/components/CategoryListing.tsx`) to get the exact current template-literal string before editing, since the closing backtick and ternary continue past this line.
 
 - [ ] **Step 8: Re-run the pre-fix check to confirm all six are gone**
 
@@ -164,7 +164,7 @@ This finds any grid that jumps straight to 3+ columns with no responsive prefix 
 ```bash
 grep -rn "text-xs.*px-2\b\|text-xs.*py-1\b" apps/storefront-1/src --include="*.tsx"
 ```
-For each hit inside a `<Link>`, `<button>`, or `<a>`: if there's no `min-h-11` (or equivalent already-tall wrapping element) making the real hit area 44px, add `min-h-11 flex items-center` the same way as Task 1 Step 7 — matching visible padding, growing only the invisible hit area.
+For each hit inside a `<Link>`, `<button>`, or `<a>`: if there's no `min-h-11` (or equivalent already-tall wrapping element) making the real hit area 44px, add `min-h-11 flex items-center` the same way as Task 1 Step 7. Prefer matching this app's existing full idiom for this exact problem shape (see `ProductDetail.tsx`'s size-picker buttons: `flex h-11 min-w-11 items-center justify-center rounded-full px-3 text-sm font-bold`, i.e. sizing/display utilities first, `justify-center` included, and `min-w-11` too if the label is short) over inventing a new ad-hoc ordering — a differently-ordered variant of the same fix is itself a new inconsistency.
 
 - [ ] **Step 4: Check fixed-width containers that could overflow at 375px**
 
