@@ -227,6 +227,17 @@ textarea.input { min-height: 90px; resize: vertical; }
   cursor: pointer;
   color: var(--color-text);
 }
+.nav-panel-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--color-text);
+}
 .nav-mobile-panel {
   position: fixed;
   inset: 0;

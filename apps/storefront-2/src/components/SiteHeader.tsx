@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@zella/core/cart";
@@ -17,6 +17,24 @@ export default function SiteHeader() {
   const pathname = usePathname();
   const { count } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMenuOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen]);
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+    toggleRef.current?.focus();
+  };
 
   return (
     <header
@@ -34,6 +52,7 @@ export default function SiteHeader() {
         style={{ display: "flex", alignItems: "center", gap: 30, padding: "15px 28px" }}
       >
         <button
+          ref={toggleRef}
           type="button"
           className="nav-toggle"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -89,15 +108,15 @@ export default function SiteHeader() {
           <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20 }}>
             <button
               type="button"
-              className="nav-toggle"
+              className="nav-panel-close"
               aria-label="Close menu"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMenu}
             >
               ✕
             </button>
           </div>
           {NAV_LINKS.map((link) => (
-            <Link key={link.href} href={link.href} onClick={() => setMenuOpen(false)}>
+            <Link key={link.href} href={link.href} onClick={closeMenu}>
               {link.label}
             </Link>
           ))}
