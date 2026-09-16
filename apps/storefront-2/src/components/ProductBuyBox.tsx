@@ -68,7 +68,7 @@ export default function ProductBuyBox({ product }: { product: Product }) {
           );
         })}
       </div>
-      <Link href="/size-guide" style={{ display: "block", marginBottom: 24, fontSize: 12 }}>
+      <Link href="/size-guide" style={{ display: "flex", alignItems: "center", minHeight: 44, marginBottom: 24, fontSize: 12 }}>
         Size chart
       </Link>
 

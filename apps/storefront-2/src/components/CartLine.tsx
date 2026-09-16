@@ -45,7 +45,7 @@ export default function CartLine({ item }: { item: CartItem }) {
           <button
             type="button"
             onClick={() => removeItem(item.productId, item.size, pairId)}
-            style={{ background: "none", border: 0, padding: "0 0 0 8px", cursor: "pointer", fontSize: 12, color: "color-mix(in srgb, var(--color-text) 58%, transparent)", textDecoration: "underline" }}
+            style={{ background: "none", border: 0, padding: "0 0 0 8px", display: "flex", alignItems: "center", minHeight: 44, cursor: "pointer", fontSize: 12, color: "color-mix(in srgb, var(--color-text) 58%, transparent)", textDecoration: "underline" }}
           >
             Remove
           </button>

@@ -70,7 +70,7 @@ export default async function AccountPage() {
                 <span style={{ fontFamily: "var(--font-heading)", fontSize: 18, color: "var(--color-accent-700)" }}>{formatPrice(order.totalCents)}</span>
                 {order.status === "PENDING" && (
                   <form action={cancelOrder.bind(null, order.id)}>
-                    <button type="submit" style={{ background: "none", border: 0, padding: 0, cursor: "pointer", fontSize: 12, textDecoration: "underline", color: "var(--color-accent-800)" }}>
+                    <button type="submit" style={{ background: "none", border: 0, padding: 0, display: "flex", alignItems: "center", minHeight: 44, cursor: "pointer", fontSize: 12, textDecoration: "underline", color: "var(--color-accent-800)" }}>
                       Cancel order
                     </button>
                   </form>
