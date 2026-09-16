@@ -18,6 +18,16 @@ changing what any page says or does.
   reordering, no new mobile-only components. This is a **responsive-CSS
   pass**: existing layout, copy, and behavior stay as-is; only how they adapt
   across viewport width changes.
+  - **Amendment (2026-09-17, during storefront-2 planning):** storefront-2's
+    `SiteHeader.tsx` has no responsive handling at all — logo, all 5 nav
+    links, and the bag button sit in one unbroken flex row with no
+    breakpoint, overflowing horizontally on every phone, on every page. A
+    CSS-only fix (shrink/wrap) can't actually solve this without becoming
+    unusable. User approved a one-off exception: below the breakpoint, nav
+    links collapse behind a hamburger button into a slide-out panel — same
+    links, same content, only the disclosure pattern changes. This is the
+    only nav-pattern exception in this spec; the non-goal still holds
+    everywhere else, including storefront-1 and admin.
 - No visual-identity unification between storefront-1 (Coquette Dream Board)
   and storefront-2 (Classical) — they stay deliberately distinct for the A/B
   test. Each becomes independently mobile-first in its own visual language.
