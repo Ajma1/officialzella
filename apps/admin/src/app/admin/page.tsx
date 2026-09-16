@@ -2,14 +2,14 @@ import Link from "next/link";
 import { prisma } from "@zella/db";
 
 export default async function AdminHome() {
-  const [productCount, pendingOrders, totalOrders] = await Promise.all([
-    prisma.product.count(),
+  const [activeProductCount, pendingOrders, totalOrders] = await Promise.all([
+    prisma.product.count({ where: { active: true } }),
     prisma.order.count({ where: { status: "PENDING" } }),
     prisma.order.count(),
   ]);
 
   const cards = [
-    { label: "Products", value: productCount, href: "/admin/products" },
+    { label: "Products", value: activeProductCount, href: "/admin/products" },
     { label: "Pending orders", value: pendingOrders, href: "/admin/orders" },
     { label: "Total orders", value: totalOrders, href: "/admin/orders" },
   ];
