@@ -1,7 +1,22 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
+const CANONICAL_HOST = "admin.officialzella.com";
+
 export async function proxy(request: NextRequest) {
+  // Same reasoning as storefront-1's proxy.ts: don't let the raw *.vercel.app
+  // alias serve the admin dashboard outside its real domain in production.
+  if (
+    process.env.VERCEL_ENV === "production" &&
+    request.nextUrl.hostname !== CANONICAL_HOST
+  ) {
+    const url = request.nextUrl.clone();
+    url.protocol = "https:";
+    url.hostname = CANONICAL_HOST;
+    url.port = "";
+    return NextResponse.redirect(url, 308);
+  }
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
