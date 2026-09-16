@@ -107,6 +107,7 @@ figcaption {
   align-items: center;
   justify-content: center;
   gap: 6px;
+  min-height: 44px;
   cursor: pointer;
   text-decoration: none;
   font-family: var(--font-heading);
@@ -139,7 +140,7 @@ figcaption {
 }
 .input {
   width: 100%;
-  min-height: 36px;
+  min-height: 44px;
   padding: 6px 10px;
   font: inherit;
   font-size: 14px;
