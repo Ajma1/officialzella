@@ -29,14 +29,15 @@ describe("catalog", () => {
     expect(one?.id).toBe(all[0].id);
   });
 
-  it("search matches name / colorway case-insensitively", async () => {
-    const results = await searchProducts("SKY");
+  it("search matches name / colorway / description case-insensitively", async () => {
+    const results = await searchProducts("BURGUNDY");
     expect(results.length).toBeGreaterThan(0);
     expect(
       results.every(
         (p) =>
-          p.name.toLowerCase().includes("sky") ||
-          (p.colorway?.toLowerCase().includes("sky") ?? false),
+          p.name.toLowerCase().includes("burgundy") ||
+          p.description.toLowerCase().includes("burgundy") ||
+          (p.colorway?.toLowerCase().includes("burgundy") ?? false),
       ),
     ).toBe(true);
   });

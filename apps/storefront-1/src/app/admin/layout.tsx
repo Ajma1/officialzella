@@ -36,6 +36,12 @@ export default async function AdminLayout({
             >
               Orders
             </Link>
+            <Link
+              href="/admin/inventory"
+              className="rounded-md px-3 py-1.5 hover:bg-neutral-100 hover:text-neutral-900"
+            >
+              Inventory
+            </Link>
             <span className="mx-2 h-4 w-px bg-neutral-200" />
             <span className="px-2 text-neutral-400">{user.email}</span>
             <form action={signOut}>

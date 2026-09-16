@@ -7,10 +7,12 @@ import { deleteProductImage } from "./actions";
 import { formatCents } from "@/lib/format";
 
 type ExistingImage = { id: string; url: string };
-const SIZES = ["XS", "S", "M", "L", "XL"] as const;
+// The current catalog only carries S/M — see packages/db/prisma/seed.ts.
+const SIZES = ["S", "M"] as const;
 
 export type ProductFormValues = {
   id?: string;
+  sku: string;
   name: string;
   description: string;
   category: "SHIRT" | "TROUSER" | "BUNDLE";
@@ -42,6 +44,23 @@ export default function ProductForm({
 
   return (
     <form action={formAction} className="max-w-2xl space-y-6">
+      <div>
+        <label htmlFor="sku" className="block text-sm font-medium">
+          SKU
+        </label>
+        <input
+          id="sku"
+          name="sku"
+          defaultValue={initial?.sku}
+          placeholder="e.g. SH-PBS"
+          required
+          className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm uppercase outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
+        />
+        <p className="mt-1 text-xs text-neutral-500">
+          The inventory code — shown on /admin/inventory, distinct from the name and URL slug.
+        </p>
+      </div>
+
       <div>
         <label htmlFor="name" className="block text-sm font-medium">
           Name

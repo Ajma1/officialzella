@@ -7,20 +7,22 @@ import { placeOrder } from "@/app/actions/place-order";
 import { requestPin, verifyPin } from "@/app/actions/customer-auth";
 import { sendLoginPin } from "@/lib/email";
 import { SHIPPING_CENTS } from "@/lib/checkout/shipping";
-import { SEED_PRODUCTS } from "@/data/catalog.seed";
 import type { CartItem } from "@/lib/cart/store";
 import { __resetCookieJar } from "@/test/cookie-jar";
 
-const shirt = SEED_PRODUCTS.find((p) => p.slug === "sky-stripe-shirt")!;
+// Real catalog product (packages/db/prisma/seed.ts) — Powder Blue Stripe
+// shirt, flat Rs 2,850.
+const SHIRT_SLUG = "powder-blue-stripe-shirt";
+const SHIRT_PRICE_CENTS = 285000;
 
 const cartLine = (over: Partial<CartItem> = {}): CartItem => ({
-  productId: shirt.id,
-  slug: shirt.slug,
-  name: shirt.name,
-  colorway: shirt.colorway,
+  productId: "test-fixture",
+  slug: SHIRT_SLUG,
+  name: "Powder Blue Stripe",
+  colorway: "Powder Blue Stripe",
   image: null,
   size: "M",
-  priceCents: shirt.priceCents,
+  priceCents: SHIRT_PRICE_CENTS,
   qty: 2,
   ...over,
 });
@@ -103,7 +105,7 @@ describe("placeOrder", () => {
     expect(res?.ok).toBe(true);
     if (res?.ok) {
       // source price (not the client's 1) × 2, plus flat delivery
-      expect(res.totalCents).toBe(shirt.priceCents * 2 + SHIPPING_CENTS);
+      expect(res.totalCents).toBe(SHIRT_PRICE_CENTS * 2 + SHIPPING_CENTS);
       expect(res.orderNumber).toMatch(/^ZELLA-[0-9A-HJKMNP-TV-Z]{5}$/);
     }
   });

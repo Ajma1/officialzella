@@ -10,13 +10,15 @@ export const metadata: Metadata = {
   description: "The current cotton edit — shirts and trousers, shot on the day.",
 };
 
+const CATALOG_IMG = "https://pwrvuvvxhwxeipluqnsk.supabase.co/storage/v1/object/public/product-images/catalog";
+
 const SHOTS = [
-  { src: "/shirt-sky-stripe.jpg", tag: "Sky stripe", slug: "sky-stripe-shirt", rotate: -3, aspect: "4 / 5" },
-  { src: "/shirt-burgundy.jpg", tag: "Burgundy", slug: "burgundy-shirt", rotate: 3, aspect: "1 / 1" },
-  { src: "/shirt-lilac.jpg", tag: "Lilac", slug: "lilac-shirt", rotate: -2, aspect: "3 / 4" },
-  { src: "/shirt-mocha-stripe.jpg", tag: "Mocha stripe", slug: "mocha-stripe-shirt", rotate: 2.5, aspect: "4 / 5" },
-  { src: "/shirt-yellow-stripe.jpg", tag: "Butter stripe", slug: "butter-stripe-shirt", rotate: -3.5, aspect: "1 / 1" },
-  { src: "/shirt-blue-stripe.jpg", tag: "Denim stripe", slug: "denim-stripe-shirt", rotate: 3, aspect: "3 / 4" },
+  { src: `${CATALOG_IMG}/b01.jpeg`, tag: "Powder blue stripe", slug: "powder-blue-stripe-shirt", rotate: -3, aspect: "4 / 5" },
+  { src: `${CATALOG_IMG}/b09.jpeg`, tag: "Burgundy button-down", slug: "burgundy-button-down-shirt", rotate: 3, aspect: "1 / 1" },
+  { src: `${CATALOG_IMG}/e10.jpeg`, tag: "Pink stripe", slug: "pink-stripe-shirt", rotate: -2, aspect: "3 / 4" },
+  { src: `${CATALOG_IMG}/f01.jpeg`, tag: "Chocolate stripe", slug: "chocolate-stripe-shirt", rotate: 2.5, aspect: "4 / 5" },
+  { src: `${CATALOG_IMG}/c01.jpeg`, tag: "Butter check", slug: "butter-check-shirt", rotate: -3.5, aspect: "1 / 1" },
+  { src: `${CATALOG_IMG}/a01.jpeg`, tag: "Charcoal pinstripe", slug: "charcoal-pinstripe-shirt", rotate: 3, aspect: "3 / 4" },
 ];
 
 export default function LookbookPage() {

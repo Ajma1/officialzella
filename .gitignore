@@ -42,3 +42,6 @@ next-env.d.ts
 
 # prisma generated client
 **/generated/prisma
+
+# staged source photos, uploaded to Supabase Storage then no longer needed
+packages/db/media-staging

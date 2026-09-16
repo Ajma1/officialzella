@@ -42,6 +42,7 @@ export default async function EditProductPage({
           submitLabel="Save changes"
           initial={{
             id: product.id,
+            sku: product.sku,
             name: product.name,
             description: product.description,
             category: product.category,
@@ -54,10 +55,9 @@ export default async function EditProductPage({
               id: img.id,
               url: img.url,
             })),
-            variants: product.variants.map((v) => ({
-              size: v.size,
-              stock: v.stock,
-            })),
+            variants: product.variants
+              .filter((v): v is typeof v & { size: "S" | "M" } => v.size === "S" || v.size === "M")
+              .map((v) => ({ size: v.size, stock: v.stock })),
           }}
         />
       </div>

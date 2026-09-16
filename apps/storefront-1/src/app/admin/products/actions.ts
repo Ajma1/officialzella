@@ -15,7 +15,8 @@ import { ProductCategory, Size } from "@zella/db";
 export type FormState = { error?: string } | undefined;
 
 const CATEGORIES = Object.values(ProductCategory);
-const SIZES = Object.values(Size);
+// The current catalog only carries S/M — see packages/db/prisma/seed.ts.
+const SIZES: Size[] = ["S", "M"];
 
 async function uploadImages(files: File[]) {
   const realFiles = files.filter((f) => f.size > 0);
@@ -42,6 +43,13 @@ async function uploadImages(files: File[]) {
   return uploaded;
 }
 
+async function skuInUse(sku: string, ignoreId?: string) {
+  const existing = await prisma.product.findFirst({
+    where: { sku, ...(ignoreId ? { id: { not: ignoreId } } : {}) },
+  });
+  return existing !== null;
+}
+
 async function uniqueSlug(name: string, ignoreId?: string) {
   const base = toSlug(name) || "product";
   let slug = base;
@@ -58,6 +66,7 @@ async function uniqueSlug(name: string, ignoreId?: string) {
 }
 
 function readProductFields(formData: FormData) {
+  const sku = String(formData.get("sku") ?? "").trim().toUpperCase();
   const name = String(formData.get("name") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
   const category = String(formData.get("category") ?? "");
@@ -72,6 +81,7 @@ function readProductFields(formData: FormData) {
     stock: Math.max(0, Math.floor(Number(formData.get(`stock_${size}`)) || 0)),
   }));
 
+  if (!sku) return { error: "SKU is required." } as const;
   if (!name) return { error: "Name is required." } as const;
   if (!description) return { error: "Description is required." } as const;
   if (!CATEGORIES.includes(category as ProductCategory))
@@ -81,6 +91,7 @@ function readProductFields(formData: FormData) {
     return { error: "Compare-at price must be greater than the price." } as const;
 
   return {
+    sku,
     name,
     description,
     category: category as ProductCategory,
@@ -101,6 +112,7 @@ export async function createProduct(
 
   const fields = readProductFields(formData);
   if ("error" in fields) return fields;
+  if (await skuInUse(fields.sku)) return { error: "That SKU is already in use." };
 
   const files = formData
     .getAll("images")
@@ -140,6 +152,7 @@ export async function updateProduct(
 
   const fields = readProductFields(formData);
   if ("error" in fields) return fields;
+  if (await skuInUse(fields.sku, productId)) return { error: "That SKU is already in use." };
 
   const files = formData
     .getAll("images")

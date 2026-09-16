@@ -45,7 +45,10 @@ export default async function ProductsPage() {
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium">{product.name}</p>
+                <p className="truncate text-sm font-medium">
+                  {product.name}{" "}
+                  <span className="font-normal text-neutral-400">{product.sku}</span>
+                </p>
                 <p className="text-xs text-neutral-500">
                   {product.category.toLowerCase()}
                   {product.colorway ? ` · ${product.colorway}` : ""}
