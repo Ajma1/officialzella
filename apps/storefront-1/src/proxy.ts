@@ -14,8 +14,17 @@ const STOREFRONT_2_ORIGIN =
   process.env.STOREFRONT_2_ORIGIN ??
   "https://storefront-2-ajmals-projects-648d0d21.vercel.app";
 const ONE_YEAR = 60 * 60 * 24 * 365;
+const CANONICAL_HOSTS = new Set(["officialzella.com", "www.officialzella.com"]);
 
 export function proxy(request: NextRequest) {
+  // Only split traffic on the real public domain. Hit directly — the raw
+  // *.vercel.app alias, a preview deployment, localhost — this must always
+  // serve storefront-1 itself; a coin flip there means "test storefront-1"
+  // has a 50% chance of silently showing storefront-2 instead.
+  if (!CANONICAL_HOSTS.has(request.nextUrl.hostname)) {
+    return NextResponse.next();
+  }
+
   const existing = request.cookies.get(VARIANT_COOKIE)?.value;
   const variant: "a" | "b" =
     existing === "a" || existing === "b"
