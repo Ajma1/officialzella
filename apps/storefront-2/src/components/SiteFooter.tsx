@@ -43,7 +43,7 @@ export default function SiteFooter() {
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: 9, alignItems: "flex-start" }}>
             {SHOP_LINKS.map((l) => (
-              <Link key={l.href} href={l.href} style={{ fontSize: 13, color: "var(--color-text)" }}>
+              <Link key={l.href} href={l.href} style={{ display: "flex", alignItems: "center", minHeight: 44, fontSize: 13, color: "var(--color-text)" }}>
                 {l.label}
               </Link>
             ))}

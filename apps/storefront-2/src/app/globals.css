@@ -108,6 +108,7 @@ figcaption {
   justify-content: center;
   gap: 6px;
   min-height: 44px;
+  min-width: 44px;
   cursor: pointer;
   text-decoration: none;
   font-family: var(--font-heading);
