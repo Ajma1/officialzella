@@ -29,7 +29,7 @@ export default async function EditProductPage({
         >
           <button
             type="submit"
-            className="rounded-lg border border-red-200 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50"
+            className="flex min-h-11 items-center rounded-lg border border-red-200 px-3 text-sm font-medium text-red-600 hover:bg-red-50"
           >
             Delete product
           </button>

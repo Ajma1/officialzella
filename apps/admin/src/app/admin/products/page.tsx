@@ -15,7 +15,7 @@ export default async function ProductsPage() {
         <h1 className="text-xl font-semibold">Products</h1>
         <Link
           href="/admin/products/new"
-          className="rounded-lg bg-cherry px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+          className="flex min-h-11 items-center rounded-lg bg-cherry px-4 text-sm font-semibold text-white hover:opacity-90"
         >
           New product
         </Link>
@@ -31,7 +31,7 @@ export default async function ProductsPage() {
             <Link
               key={product.id}
               href={`/admin/products/${product.id}/edit`}
-              className="flex items-center gap-4 px-4 py-3 hover:bg-neutral-50"
+              className="flex flex-wrap items-center gap-4 px-4 py-3 hover:bg-neutral-50"
             >
               <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-md bg-neutral-100">
                 {product.images[0] && (

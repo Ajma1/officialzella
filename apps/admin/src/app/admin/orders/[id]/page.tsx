@@ -157,7 +157,7 @@ export default async function OrderDetailPage({
         </div>
       )}
 
-      <form action={boundUpdate} className="mt-6 flex items-center gap-3">
+      <form action={boundUpdate} className="mt-6 flex flex-wrap items-center gap-3">
         <label htmlFor="status" className="text-sm font-medium">
           Status
         </label>
@@ -165,7 +165,7 @@ export default async function OrderDetailPage({
           id="status"
           name="status"
           defaultValue={order.status}
-          className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
+          className="min-h-11 rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
         >
           {STATUS_OPTIONS.map((s) => (
             <option key={s} value={s}>
@@ -175,7 +175,7 @@ export default async function OrderDetailPage({
         </select>
         <button
           type="submit"
-          className="rounded-lg bg-cherry px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+          className="flex min-h-11 items-center rounded-lg bg-cherry px-4 text-sm font-semibold text-white hover:opacity-90"
         >
           Update
         </button>
