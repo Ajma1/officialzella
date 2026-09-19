@@ -100,6 +100,9 @@ model Order {
   customerName  String
   customerPhone String
   customerEmail String?
+  /// Optional, +923xxxxxxxxx format — collected for delivery-coordination
+  /// WhatsApp messages, separate from customerPhone (which may be a landline).
+  customerWhatsapp String?
   notes         String?
   address       Address       @relation(fields: [addressId], references: [id])
   addressId     String        @unique

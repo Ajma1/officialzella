@@ -66,6 +66,9 @@ export default async function OrderDetailPage({
           {order.customerEmail && (
             <p className="text-sm text-neutral-600">{order.customerEmail}</p>
           )}
+          {order.customerWhatsapp && (
+            <p className="text-sm text-neutral-600">WhatsApp: {order.customerWhatsapp}</p>
+          )}
         </div>
 
         <div className="rounded-xl border border-neutral-200 bg-white p-5">

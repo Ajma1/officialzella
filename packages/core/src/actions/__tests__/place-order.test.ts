@@ -1,16 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-
-vi.mock("next/headers", () => import("../../test/cookie-jar"));
-vi.mock("../../email", () => ({ sendLoginPin: vi.fn() }));
+import { describe, it, expect } from "vitest";
 
 import { prisma } from "@zella/db";
 import { placeOrder } from "../place-order";
-import { requestPin, verifyPin } from "../customer-auth";
-import { sendLoginPin } from "../../email";
 import { SHIPPING_CENTS } from "../../checkout/shipping";
 import { PAIR_PRICE_CENTS } from "../../checkout/pairing";
 import type { CartItem } from "../../cart/store";
-import { __resetCookieJar } from "../../test/cookie-jar";
 
 // Real catalog products (packages/db/prisma/seed.ts).
 const SHIRT_SLUG = "powder-blue-stripe-shirt";
@@ -48,30 +42,21 @@ const fields = (email: string) => ({
   country: "Pakistan",
 });
 
-async function verifySession(email: string) {
-  await requestPin(undefined, form({ email }));
-  const calls = vi.mocked(sendLoginPin).mock.calls;
-  const pin = calls[calls.length - 1][1];
-  const res = await verifyPin(undefined, form({ email, code: pin }));
-  if (!res?.ok) throw new Error("test setup: pin verification failed");
-}
-
-beforeEach(() => {
-  __resetCookieJar();
-  vi.mocked(sendLoginPin).mockClear();
-});
-
 describe("placeOrder", () => {
-  it("rejects an order with no verified session", async () => {
-    const email = uniqueEmail("unverified");
-    const res = await placeOrder(undefined, form({ ...fields(email), items: "[]" }));
-    expect(res?.ok).toBe(false);
-    expect(res && !res.ok && res.fieldErrors?.email).toBeTruthy();
+  it("places an order with no verified session, unlinked to any customer", async () => {
+    const email = uniqueEmail("guest");
+    const res = await placeOrder(
+      undefined,
+      form({ ...fields(email), items: JSON.stringify([cartLine()]) }),
+    );
+    expect(res?.ok).toBe(true);
+    if (!res?.ok) return;
+    const order = await prisma.order.findUniqueOrThrow({ where: { orderNumber: res.orderNumber } });
+    expect(order.customerId).toBeNull();
   });
 
   it("returns field errors for an invalid form", async () => {
     const email = uniqueEmail("invalid-form");
-    await verifySession(email);
     const res = await placeOrder(undefined, form({ ...fields(email), fullName: "" }));
     expect(res?.ok).toBe(false);
     expect(res && !res.ok && res.fieldErrors?.fullName).toBeTruthy();
@@ -79,14 +64,12 @@ describe("placeOrder", () => {
 
   it("rejects an empty bag", async () => {
     const email = uniqueEmail("empty-bag");
-    await verifySession(email);
     const res = await placeOrder(undefined, form({ ...fields(email), items: "[]" }));
     expect(res).toEqual({ ok: false, error: "Your bag is empty." });
   });
 
   it("rejects an unavailable line", async () => {
     const email = uniqueEmail("unavailable");
-    await verifySession(email);
     const res = await placeOrder(
       undefined,
       form({ ...fields(email), items: JSON.stringify([cartLine({ slug: "ghost" })]) }),
@@ -97,7 +80,6 @@ describe("placeOrder", () => {
 
   it("places a valid order with a source-priced total and a well-formed number", async () => {
     const email = uniqueEmail("valid");
-    await verifySession(email);
     const res = await placeOrder(
       undefined,
       form({
@@ -115,7 +97,6 @@ describe("placeOrder", () => {
 
   it("expands a pair line into two linked OrderItems and records the discount", async () => {
     const email = uniqueEmail("pair");
-    await verifySession(email);
     const pairLine = cartLine({
       priceCents: PAIR_PRICE_CENTS,
       qty: 1,

@@ -39,6 +39,26 @@ describe("checkoutSchema", () => {
     expect(checkoutSchema.safeParse({ ...valid, country: "Narnia" }).success).toBe(false);
   });
 
+  it("accepts a missing or empty WhatsApp number (optional)", () => {
+    expect(checkoutSchema.safeParse(valid).success).toBe(true);
+    expect(checkoutSchema.safeParse({ ...valid, whatsapp: "" }).success).toBe(true);
+  });
+
+  it("accepts a well-formed WhatsApp number", () => {
+    expect(
+      checkoutSchema.safeParse({ ...valid, whatsapp: "+923001234567" }).success,
+    ).toBe(true);
+  });
+
+  it("rejects a malformed WhatsApp number", () => {
+    expect(
+      checkoutSchema.safeParse({ ...valid, whatsapp: "03001234567" }).success,
+    ).toBe(false);
+    expect(
+      checkoutSchema.safeParse({ ...valid, whatsapp: "+92300123456" }).success,
+    ).toBe(false);
+  });
+
   it("requires a recipient name when shipping to someone else", () => {
     expect(
       checkoutSchema.safeParse({ ...valid, shipToDifferent: true }).success,

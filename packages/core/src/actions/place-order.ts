@@ -10,7 +10,6 @@ import { getProductBySlug } from "../catalog";
 import { prisma } from "@zella/db";
 import { Prisma } from "@zella/db";
 import type { CartItem } from "../cart/store";
-import { getSessionCustomer } from "../customer/session";
 
 export type PlaceOrderState =
   | { ok: true; orderNumber: string; totalCents: number; email: string }
@@ -24,6 +23,7 @@ export async function placeOrder(
   const raw = {
     fullName: formData.get("fullName") ?? "",
     phone: formData.get("phone") ?? "",
+    whatsapp: formData.get("whatsapp") ?? "",
     email: formData.get("email") ?? "",
     line1: formData.get("line1") ?? "",
     line2: formData.get("line2") ?? "",
@@ -46,16 +46,6 @@ export async function placeOrder(
       }
     }
     return { ok: false, fieldErrors };
-  }
-
-  // The email must be PIN-verified in this session before an order can be
-  // placed under it — never trust the submitted email on its own.
-  const customer = await getSessionCustomer();
-  if (!customer || customer.email !== parsed.data.email) {
-    return {
-      ok: false,
-      fieldErrors: { email: "Verify your email with the code we sent before placing the order." },
-    };
   }
 
   let items: CartItem[] = [];
@@ -141,15 +131,6 @@ export async function placeOrder(
 
   // Order numbers are random 5-char codes (32^5 space) — collisions are rare
   // but the unique constraint can still hit one; a couple of retries absorbs it.
-  // Keep the customer's name current — it may have been unset (created via
-  // the standalone login page) or have changed since their last order.
-  if (customer.name !== parsed.data.fullName) {
-    await prisma.customer.update({
-      where: { id: customer.id },
-      data: { name: parsed.data.fullName },
-    });
-  }
-
   for (let attempt = 0; attempt < 3; attempt++) {
     const orderNumber = generateOrderNumber();
     try {
@@ -162,8 +143,8 @@ export async function placeOrder(
           discountCents,
           customerName: parsed.data.fullName,
           customerPhone: parsed.data.phone,
+          customerWhatsapp: parsed.data.whatsapp || null,
           customerEmail: parsed.data.email,
-          customer: { connect: { id: customer.id } },
           notes: parsed.data.notes || null,
           address: { create: address },
           items: { create: resolvedItems },
