@@ -230,9 +230,11 @@ export default function ProductForm({
                 />
                 <button
                   type="button"
-                  onClick={() =>
-                    deleteProductImage(img.id, initial.id!)
-                  }
+                  onClick={() => {
+                    if (confirm("Remove this image?")) {
+                      deleteProductImage(img.id, initial.id!);
+                    }
+                  }}
                   className="absolute -right-2 -top-2 flex h-11 w-11 items-center justify-center rounded-full bg-red-600 text-sm text-white opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
                   aria-label="Remove image"
                 >
@@ -267,7 +269,7 @@ export default function ProductForm({
       <button
         type="submit"
         disabled={pending}
-        className="flex min-h-11 items-center rounded-lg bg-cherry px-5 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60"
+        className="inline-flex min-h-11 items-center rounded-lg bg-cherry px-5 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60"
       >
         {pending ? "Saving…" : submitLabel}
       </button>

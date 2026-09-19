@@ -62,7 +62,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={pending}
-          className="mt-6 flex min-h-11 w-full items-center justify-center rounded-lg bg-cherry py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+          className="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-cherry py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
         >
           {pending ? "Signing in…" : "Sign in"}
         </button>

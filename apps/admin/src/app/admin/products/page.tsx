@@ -15,7 +15,7 @@ export default async function ProductsPage() {
         <h1 className="text-xl font-semibold">Products</h1>
         <Link
           href="/admin/products/new"
-          className="flex min-h-11 items-center rounded-lg bg-cherry px-4 text-sm font-semibold text-white hover:opacity-90"
+          className="inline-flex min-h-11 items-center rounded-lg bg-cherry px-4 text-sm font-semibold text-white hover:opacity-90"
         >
           New product
         </Link>

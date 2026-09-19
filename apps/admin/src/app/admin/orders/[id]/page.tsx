@@ -175,7 +175,7 @@ export default async function OrderDetailPage({
         </select>
         <button
           type="submit"
-          className="flex min-h-11 items-center rounded-lg bg-cherry px-4 text-sm font-semibold text-white hover:opacity-90"
+          className="inline-flex min-h-11 items-center rounded-lg bg-cherry px-4 text-sm font-semibold text-white hover:opacity-90"
         >
           Update
         </button>

@@ -20,25 +20,25 @@ export default async function AdminLayout({
     <div className="min-h-svh bg-neutral-50 text-neutral-900">
       <header className="border-b border-neutral-200 bg-white">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-4 gap-y-2 px-6 py-4">
-          <Link href="/admin" className="flex min-h-11 items-center font-display text-lg">
+          <Link href="/admin" className="inline-flex min-h-11 items-center font-display text-lg">
             Zella Admin
           </Link>
           <nav className="flex flex-wrap items-center gap-1 text-sm font-medium text-neutral-600 sm:ml-auto">
             <Link
               href="/admin/products"
-              className="flex min-h-11 items-center rounded-md px-3 hover:bg-neutral-100 hover:text-neutral-900"
+              className="inline-flex min-h-11 items-center rounded-md px-3 hover:bg-neutral-100 hover:text-neutral-900"
             >
               Products
             </Link>
             <Link
               href="/admin/orders"
-              className="flex min-h-11 items-center rounded-md px-3 hover:bg-neutral-100 hover:text-neutral-900"
+              className="inline-flex min-h-11 items-center rounded-md px-3 hover:bg-neutral-100 hover:text-neutral-900"
             >
               Orders
             </Link>
             <Link
               href="/admin/inventory"
-              className="flex min-h-11 items-center rounded-md px-3 hover:bg-neutral-100 hover:text-neutral-900"
+              className="inline-flex min-h-11 items-center rounded-md px-3 hover:bg-neutral-100 hover:text-neutral-900"
             >
               Inventory
             </Link>
@@ -47,7 +47,7 @@ export default async function AdminLayout({
             <form action={signOut}>
               <button
                 type="submit"
-                className="flex min-h-11 items-center rounded-md px-3 hover:bg-neutral-100 hover:text-neutral-900"
+                className="inline-flex min-h-11 items-center rounded-md px-3 hover:bg-neutral-100 hover:text-neutral-900"
               >
                 Sign out
               </button>

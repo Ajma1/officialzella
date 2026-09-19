@@ -92,7 +92,7 @@ export default function InventoryForm({ products }: { products: Row[] }) {
         <button
           type="submit"
           disabled={pending}
-          className="flex min-h-11 items-center rounded-lg bg-cherry px-5 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60"
+          className="inline-flex min-h-11 items-center rounded-lg bg-cherry px-5 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60"
         >
           {pending ? "Saving…" : "Save inventory"}
         </button>
