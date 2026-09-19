@@ -19,35 +19,35 @@ export default async function AdminLayout({
   return (
     <div className="min-h-svh bg-neutral-50 text-neutral-900">
       <header className="border-b border-neutral-200 bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-4 gap-y-2 px-6 py-4">
           <Link href="/admin" className="font-display text-lg">
             Zella Admin
           </Link>
-          <nav className="flex items-center gap-1 text-sm font-medium text-neutral-600">
+          <nav className="flex flex-wrap items-center gap-1 text-sm font-medium text-neutral-600 sm:ml-auto">
             <Link
               href="/admin/products"
-              className="rounded-md px-3 py-1.5 hover:bg-neutral-100 hover:text-neutral-900"
+              className="flex min-h-11 items-center rounded-md px-3 hover:bg-neutral-100 hover:text-neutral-900"
             >
               Products
             </Link>
             <Link
               href="/admin/orders"
-              className="rounded-md px-3 py-1.5 hover:bg-neutral-100 hover:text-neutral-900"
+              className="flex min-h-11 items-center rounded-md px-3 hover:bg-neutral-100 hover:text-neutral-900"
             >
               Orders
             </Link>
             <Link
               href="/admin/inventory"
-              className="rounded-md px-3 py-1.5 hover:bg-neutral-100 hover:text-neutral-900"
+              className="flex min-h-11 items-center rounded-md px-3 hover:bg-neutral-100 hover:text-neutral-900"
             >
               Inventory
             </Link>
-            <span className="mx-2 h-4 w-px bg-neutral-200" />
-            <span className="px-2 text-neutral-400">{user.email}</span>
+            <span className="mx-1 hidden h-4 w-px bg-neutral-200 sm:block" />
+            <span className="hidden px-2 text-neutral-400 sm:inline">{user.email}</span>
             <form action={signOut}>
               <button
                 type="submit"
-                className="rounded-md px-3 py-1.5 hover:bg-neutral-100 hover:text-neutral-900"
+                className="flex min-h-11 items-center rounded-md px-3 hover:bg-neutral-100 hover:text-neutral-900"
               >
                 Sign out
               </button>
