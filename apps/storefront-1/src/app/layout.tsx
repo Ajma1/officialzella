@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Bagel_Fat_One, Caveat, Fredoka } from "next/font/google";
 import { MotionConfig } from "motion/react";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import CustomCursor from "@/components/CustomCursor";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
@@ -69,6 +71,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <SiteFooter />
             <CartDrawer />
           </CartUiProvider>
+          <Analytics />
+          <SpeedInsights />
         </MotionConfig>
       </body>
     </html>

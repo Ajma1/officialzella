@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Lora } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { CartUiProvider } from "@zella/core/cart";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
@@ -51,6 +53,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <div style={{ flex: 1 }}>{children}</div>
           <SiteFooter />
         </CartUiProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
