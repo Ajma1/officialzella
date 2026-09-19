@@ -71,7 +71,7 @@ export default function InventoryForm({ products }: { products: Row[] }) {
                         defaultValue={v.stock}
                         min="0"
                         step="1"
-                        className="w-20 rounded-lg border border-neutral-300 px-2 py-1.5 text-center text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
+                        className="min-h-11 w-20 rounded-lg border border-neutral-300 px-2 py-1.5 text-center text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
                       />
                     </td>
                   ))}
@@ -92,7 +92,7 @@ export default function InventoryForm({ products }: { products: Row[] }) {
         <button
           type="submit"
           disabled={pending}
-          className="rounded-lg bg-cherry px-5 py-2.5 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60"
+          className="flex min-h-11 items-center rounded-lg bg-cherry px-5 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60"
         >
           {pending ? "Saving…" : "Save inventory"}
         </button>
