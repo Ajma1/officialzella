@@ -1,24 +1,27 @@
 import type { Metadata } from "next";
-import { toDisplayUnits } from "@zella/core/units";
 
 export const metadata: Metadata = { title: "Size chart — Zella" };
 
-// Same measurements as storefront-1's cm chart (PLACEHOLDER — generic
-// relaxed-fit womenswear, see PLACEHOLDER_DATA.md), shown in inches per this
-// design's own "Inches" convention, S/M only.
-const SHIRT_CM = {
-  Chest: { S: 96, M: 100 },
-  Waist: { S: 78, M: 82 },
-  Hip: { S: 102, M: 106 },
-  Length: { S: 67, M: 68 },
+// Real Zella garment-spec measurements (inches), S/M only — matches the
+// brand's own size chart reference exactly.
+const SHIRT_IN: Record<string, { S: string; M: string }> = {
+  "Front Length": { S: "28", M: "28" },
+  "Back Length": { S: "29", M: "29" },
+  Shoulder: { S: "19", M: "21" },
+  Chest: { S: "21", M: "23" },
+  "Arm Hole": { S: "9", M: "10.5" },
+  "Sleeve Length (Including Cuffs)": { S: "22", M: "22" },
+  "Cuff Breadth": { S: "3", M: "3" },
+  "Cuff Length": { S: "10.5", M: "11.5" },
+  Collar: { S: "16", M: "17" },
 };
-const TROUSER_CM = {
-  Waist: { S: 78, M: 82 },
-  Hip: { S: 102, M: 106 },
-  Inseam: { S: 74, M: 75 },
+const TROUSER_IN: Record<string, { S: string; M: string }> = {
+  Waist: { S: "29–31", M: "31–33" },
+  Length: { S: "37", M: "37" },
+  "Bottom Width": { S: "11", M: "11" },
 };
 
-function Table({ rows }: { rows: Record<string, { S: number; M: number }> }) {
+function Table({ rows }: { rows: Record<string, { S: string; M: string }> }) {
   return (
     <table className="table" style={{ marginBottom: 46 }}>
       <thead>
@@ -32,8 +35,8 @@ function Table({ rows }: { rows: Record<string, { S: number; M: number }> }) {
         {Object.entries(rows).map(([label, { S, M }]) => (
           <tr key={label}>
             <td>{label}</td>
-            <td style={{ textAlign: "right" }}>{toDisplayUnits(S, "in")}&Prime;</td>
-            <td style={{ textAlign: "right" }}>{toDisplayUnits(M, "in")}&Prime;</td>
+            <td style={{ textAlign: "right" }}>{S}&Prime;</td>
+            <td style={{ textAlign: "right" }}>{M}&Prime;</td>
           </tr>
         ))}
       </tbody>
@@ -50,9 +53,9 @@ export default function SizeGuidePage() {
         Small and Medium. Measurements may vary slightly by &plusmn;0.5 inch.
       </p>
       <h2 style={{ fontSize: 22, margin: "0 0 14px" }}>Shirt</h2>
-      <Table rows={SHIRT_CM} />
+      <Table rows={SHIRT_IN} />
       <h2 style={{ fontSize: 22, margin: "0 0 14px" }}>Trouser</h2>
-      <Table rows={TROUSER_CM} />
+      <Table rows={TROUSER_IN} />
     </section>
   );
 }

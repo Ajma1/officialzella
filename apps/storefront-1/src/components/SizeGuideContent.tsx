@@ -2,28 +2,91 @@
 
 import { useState } from "react";
 import { toDisplayUnits } from "@zella/core/units";
-import type { Size } from "@zella/core/catalog-types";
 
-// PLACEHOLDER measurements — generic relaxed-fit womenswear. See PLACEHOLDER_DATA.md.
-const COLS = ["Chest", "Waist", "Hip", "Length"] as const;
-const SIZE_CHART_CM: Record<Size, Record<(typeof COLS)[number], number>> = {
-  XS: { Chest: 92, Waist: 74, Hip: 98, Length: 66 },
-  S: { Chest: 96, Waist: 78, Hip: 102, Length: 67 },
-  M: { Chest: 100, Waist: 82, Hip: 106, Length: 68 },
-  L: { Chest: 105, Waist: 87, Hip: 111, Length: 69 },
-  XL: { Chest: 110, Waist: 92, Hip: 116, Length: 70 },
-};
-const SIZES = Object.keys(SIZE_CHART_CM) as Size[];
+/** Real Zella garment-spec measurements (inches), S/M only — matches the
+ *  brand's own size chart reference exactly. Stored here as inches (the
+ *  source unit) and converted to cm on demand for the unit toggle, via the
+ *  shared cm-based `toDisplayUnits` helper (inches -> cm once, so both
+ *  toggle states stay exact). */
+type Value = number | [number, number];
 
-const STEPS = [
-  ["Chest", "Measure around the fullest part, keeping the tape level."],
-  ["Waist", "Measure around your natural waistline — the narrowest point."],
-  ["Hip", "Stand feet together and measure around the fullest part."],
-  ["Length", "From the highest point of the shoulder straight down."],
+/** toDisplayUnits always shows one decimal in inches (e.g. "28.0") — trim a
+ *  trailing ".0" so whole numbers match the brand's own size chart exactly
+ *  (28, not 28.0), while real decimals like 10.5 are left untouched. */
+const trimTrailingZero = (s: string) => s.replace(/\.0$/, "");
+
+function formatValue(value: Value, unit: "cm" | "in"): string {
+  if (Array.isArray(value)) {
+    const [lo, hi] = value;
+    return `${trimTrailingZero(toDisplayUnits(lo * 2.54, unit))}–${trimTrailingZero(toDisplayUnits(hi * 2.54, unit))}`;
+  }
+  return trimTrailingZero(toDisplayUnits(value * 2.54, unit));
+}
+
+const SHIRT_IN: { label: string; S: Value; M: Value }[] = [
+  { label: "Front Length", S: 28, M: 28 },
+  { label: "Back Length", S: 29, M: 29 },
+  { label: "Shoulder", S: 19, M: 21 },
+  { label: "Chest", S: 21, M: 23 },
+  { label: "Arm Hole", S: 9, M: 10.5 },
+  { label: "Sleeve Length (Including Cuffs)", S: 22, M: 22 },
+  { label: "Cuff Breadth", S: 3, M: 3 },
+  { label: "Cuff Length", S: 10.5, M: 11.5 },
+  { label: "Collar", S: 16, M: 17 },
 ];
 
+const TROUSER_IN: { label: string; S: Value; M: Value }[] = [
+  { label: "Waist", S: [29, 31], M: [31, 33] },
+  { label: "Length", S: 37, M: 37 },
+  { label: "Bottom Width", S: 11, M: 11 },
+];
+
+function SizeTable({
+  title,
+  rows,
+  unit,
+}: {
+  title: string;
+  rows: { label: string; S: Value; M: Value }[];
+  unit: "cm" | "in";
+}) {
+  return (
+    <div className="mt-6 first:mt-0">
+      <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground">{title}</h3>
+      <div className="mt-3 overflow-x-auto rounded-[14px] bg-surface-warm">
+        <table className="w-full text-sm tabular-nums">
+          <thead>
+            <tr className="text-left text-xs font-bold uppercase tracking-[0.1em] text-foreground/60">
+              <th scope="col" className="px-4 py-3">Measurement</th>
+              <th scope="col" className="px-4 py-3 text-right">Small</th>
+              <th scope="col" className="px-4 py-3 text-right">Medium</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.label} className="border-t border-foreground/10">
+                <th scope="row" className="px-4 py-3 text-left font-bold text-foreground">
+                  {row.label}
+                </th>
+                <td className="px-4 py-3 text-right text-foreground/80">
+                  {formatValue(row.S, unit)}
+                  {unit === "in" ? "″" : ""}
+                </td>
+                <td className="px-4 py-3 text-right text-foreground/80">
+                  {formatValue(row.M, unit)}
+                  {unit === "in" ? "″" : ""}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 export default function SizeGuideContent({ className = "" }: { className?: string }) {
-  const [unit, setUnit] = useState<"cm" | "in">("cm");
+  const [unit, setUnit] = useState<"cm" | "in">("in");
 
   return (
     <div className={className}>
@@ -36,7 +99,7 @@ export default function SizeGuideContent({ className = "" }: { className?: strin
           Units
         </span>
         <div className="flex rounded-full bg-surface-warm p-0.5">
-          {(["cm", "in"] as const).map((u) => (
+          {(["in", "cm"] as const).map((u) => (
             <button
               key={u}
               type="button"
@@ -53,65 +116,12 @@ export default function SizeGuideContent({ className = "" }: { className?: strin
         </div>
       </div>
 
-      <div className="mt-4 overflow-x-auto rounded-[14px] bg-surface-warm">
-        <table className="w-full text-sm tabular-nums">
-          <thead>
-            <tr className="text-left text-xs font-bold uppercase tracking-[0.1em] text-foreground/60">
-              <th scope="col" className="px-4 py-3">Size</th>
-              {COLS.map((c) => (
-                <th key={c} scope="col" className="px-4 py-3">{c}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {SIZES.map((size) => (
-              <tr key={size} className="border-t border-foreground/10">
-                <th scope="row" className="px-4 py-3 text-left font-bold text-foreground">
-                  {size}
-                </th>
-                {COLS.map((c) => (
-                  <td key={c} className="px-4 py-3 text-foreground/80">
-                    {toDisplayUnits(SIZE_CHART_CM[size][c], unit)}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p className="mt-2 text-xs text-foreground/50">
-        Measurements are a guide and will be confirmed with real garment specs.
-      </p>
+      <SizeTable title="Shirt" rows={SHIRT_IN} unit={unit} />
+      <SizeTable title="Trouser" rows={TROUSER_IN} unit={unit} />
 
-      <h3 className="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-foreground">
-        How to measure
-      </h3>
-      <div className="mt-4 flex flex-col gap-5 sm:flex-row sm:items-start">
-        <svg
-          viewBox="0 0 80 120"
-          className="h-40 w-28 shrink-0 text-foreground/70"
-          aria-hidden
-        >
-          <path
-            d="M40 8a7 7 0 100 14 7 7 0 000-14zM26 26h28l6 24-8 3-2-14v34H30V39l-2 14-8-3 6-24zM31 73h18l3 39H28l3-39z"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinejoin="round"
-          />
-          <line x1="16" y1="34" x2="64" y2="34" stroke="var(--cherry)" strokeWidth={2} strokeDasharray="3 3" />
-          <line x1="20" y1="50" x2="60" y2="50" stroke="var(--cherry)" strokeWidth={2} strokeDasharray="3 3" />
-          <line x1="18" y1="70" x2="62" y2="70" stroke="var(--cherry)" strokeWidth={2} strokeDasharray="3 3" />
-        </svg>
-        <ol className="flex-1 space-y-3">
-          {STEPS.map(([label, text]) => (
-            <li key={label} className="text-sm text-foreground/80">
-              <span className="font-bold text-foreground">{label}. </span>
-              {text}
-            </li>
-          ))}
-        </ol>
-      </div>
+      <p className="mt-3 text-xs text-foreground/50">
+        Small and Medium only. Measurements may vary slightly by ±0.5 inch.
+      </p>
     </div>
   );
 }

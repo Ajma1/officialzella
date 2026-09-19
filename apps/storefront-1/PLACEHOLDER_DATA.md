@@ -48,17 +48,12 @@ better-cut-out / transparent versions if desired.
 Placeholder allow-list: a single entry, `"United States"`. Replace with the real
 shipping destinations (likely `"Pakistan"` + cities).
 
-## Size chart (`src/components/SizeGuideContent.tsx` → `SIZE_CHART_CM`)
+## Size chart — resolved
 
-All measurements are placeholders (generic relaxed-fit womenswear, cm):
-
-| Size | Chest | Waist | Hip | Length |
-|---|---|---|---|---|
-| XS | 92 | 74 | 98 | 66 |
-| S | 96 | 78 | 102 | 67 |
-| M | 100 | 82 | 106 | 68 |
-| L | 105 | 87 | 111 | 69 |
-| XL | 110 | 92 | 116 | 70 |
+Both storefronts' size guides (`apps/storefront-1/src/components/SizeGuideContent.tsx`,
+`apps/storefront-2/src/app/size-guide/page.tsx`) now use the real Zella
+garment-spec measurements (inches, S/M only) instead of placeholder body
+measurements. No longer a placeholder.
 
 ## Care instructions (PDP "Details" line)
 
