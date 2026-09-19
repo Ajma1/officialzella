@@ -202,13 +202,13 @@ export default function ProductForm({
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex min-h-11 items-center gap-2">
         <input
           id="active"
           name="active"
           type="checkbox"
           defaultChecked={initial?.active ?? true}
-          className="min-h-11 min-w-11 rounded border-neutral-300 text-cherry focus:ring-cherry"
+          className="h-4 w-4 rounded border-neutral-300 text-cherry focus:ring-cherry"
         />
         <label htmlFor="active" className="text-sm">
           Visible on the storefront
