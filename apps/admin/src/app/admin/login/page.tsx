@@ -31,7 +31,7 @@ export default function LoginPage() {
               type="email"
               required
               autoComplete="email"
-              className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
+              className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
             />
           </div>
 
@@ -48,7 +48,7 @@ export default function LoginPage() {
               type="password"
               required
               autoComplete="current-password"
-              className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
+              className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
             />
           </div>
         </div>
@@ -62,7 +62,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={pending}
-          className="mt-6 w-full rounded-lg bg-cherry py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+          className="mt-6 flex min-h-11 w-full items-center justify-center rounded-lg bg-cherry py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
         >
           {pending ? "Signing in…" : "Sign in"}
         </button>
