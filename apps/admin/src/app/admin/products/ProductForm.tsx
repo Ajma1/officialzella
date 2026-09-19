@@ -168,7 +168,7 @@ export default function ProductForm({
             name="colorwaySwatch"
             type="color"
             defaultValue={initial?.colorwaySwatch || "#e8ded1"}
-            className="h-9 w-14 rounded-md border border-neutral-300"
+            className="min-h-11 w-14 rounded-md border border-neutral-300"
           />
           <span className="text-xs text-neutral-500">
             Fills the placeholder photo frame when no image is uploaded.
@@ -208,7 +208,7 @@ export default function ProductForm({
           name="active"
           type="checkbox"
           defaultChecked={initial?.active ?? true}
-          className="h-4 w-4 rounded border-neutral-300 text-cherry focus:ring-cherry"
+          className="min-h-11 min-w-11 rounded border-neutral-300 text-cherry focus:ring-cherry"
         />
         <label htmlFor="active" className="text-sm">
           Visible on the storefront
@@ -254,7 +254,7 @@ export default function ProductForm({
           type="file"
           accept="image/*"
           multiple
-          className="mt-1 block w-full text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-neutral-100 file:px-3 file:py-2 file:text-sm file:font-medium hover:file:bg-neutral-200"
+          className="mt-1 block w-full text-sm file:mr-4 file:min-h-11 file:rounded-lg file:border-0 file:bg-neutral-100 file:px-3 file:py-2 file:text-sm file:font-medium hover:file:bg-neutral-200"
         />
       </div>
 
