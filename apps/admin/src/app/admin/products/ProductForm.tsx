@@ -54,7 +54,7 @@ export default function ProductForm({
           defaultValue={initial?.sku}
           placeholder="e.g. SH-PBS"
           required
-          className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm uppercase outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
+          className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 px-3 py-2 text-sm uppercase outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
         />
         <p className="mt-1 text-xs text-neutral-500">
           The inventory code — shown on /admin/inventory, distinct from the name and URL slug.
@@ -70,7 +70,7 @@ export default function ProductForm({
           name="name"
           defaultValue={initial?.name}
           required
-          className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
+          className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
         />
       </div>
 
@@ -88,7 +88,7 @@ export default function ProductForm({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="category" className="block text-sm font-medium">
             Category
@@ -97,7 +97,7 @@ export default function ProductForm({
             id="category"
             name="category"
             defaultValue={initial?.category ?? "SHIRT"}
-            className="mt-1 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
+            className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
           >
             {CATEGORY_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -121,12 +121,12 @@ export default function ProductForm({
               initial ? formatCents(initial.priceCents) : undefined
             }
             required
-            className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
+            className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="colorway" className="block text-sm font-medium">
             Colorway (optional)
@@ -136,7 +136,7 @@ export default function ProductForm({
             name="colorway"
             defaultValue={initial?.colorway}
             placeholder="e.g. Burgundy"
-            className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
+            className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
           />
         </div>
 
@@ -153,7 +153,7 @@ export default function ProductForm({
             defaultValue={
               initial?.compareAtCents ? formatCents(initial.compareAtCents) : undefined
             }
-            className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
+            className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
           />
         </div>
       </div>
@@ -178,7 +178,7 @@ export default function ProductForm({
 
       <div>
         <p className="block text-sm font-medium">Stock per size</p>
-        <div className="mt-1 grid grid-cols-5 gap-2">
+        <div className="mt-1 grid grid-cols-2 gap-2">
           {SIZES.map((size) => {
             const stock =
               initial?.variants.find((v) => v.size === size)?.stock ?? 0;
@@ -194,7 +194,7 @@ export default function ProductForm({
                   min="0"
                   step="1"
                   defaultValue={stock}
-                  className="mt-1 w-full rounded-lg border border-neutral-300 px-2 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
+                  className="mt-1 w-full min-h-11 rounded-lg border border-neutral-300 px-2 py-2 text-sm outline-none focus:border-cherry focus:ring-1 focus:ring-cherry"
                 />
               </div>
             );
@@ -233,7 +233,7 @@ export default function ProductForm({
                   onClick={() =>
                     deleteProductImage(img.id, initial.id!)
                   }
-                  className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100"
+                  className="absolute -right-2 -top-2 flex h-11 w-11 items-center justify-center rounded-full bg-red-600 text-sm text-white opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
                   aria-label="Remove image"
                 >
                   ×
@@ -267,7 +267,7 @@ export default function ProductForm({
       <button
         type="submit"
         disabled={pending}
-        className="rounded-lg bg-cherry px-5 py-2.5 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60"
+        className="flex min-h-11 items-center rounded-lg bg-cherry px-5 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60"
       >
         {pending ? "Saving…" : submitLabel}
       </button>
