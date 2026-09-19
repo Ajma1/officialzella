@@ -59,7 +59,18 @@
   --font-sans: var(--font-fredoka);
 }
 
+/* Rotated Polaroids/stickers are load-bearing to this design (see
+   Polaroid.tsx, Hero.tsx, StickerBadge.tsx) — any `rotate()` transform
+   makes an element's visual bounding box wider than its layout box, and
+   with no clip here that bleeds past the viewport edge as page-level
+   horizontal scroll on narrow phones. Clip it at the root instead of
+   chasing every rotated element's own bounds. */
+html {
+  overflow-x: hidden;
+}
+
 body {
+  overflow-x: hidden;
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), ui-rounded, "Segoe UI", system-ui, sans-serif;
