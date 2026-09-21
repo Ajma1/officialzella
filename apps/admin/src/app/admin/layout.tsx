@@ -42,6 +42,12 @@ export default async function AdminLayout({
             >
               Inventory
             </Link>
+            <Link
+              href="/admin/feedback"
+              className="inline-flex min-h-11 items-center rounded-md px-3 hover:bg-neutral-100 hover:text-neutral-900"
+            >
+              Feedback
+            </Link>
             <span className="mx-1 hidden h-4 w-px bg-neutral-200 sm:block" />
             <span className="hidden px-2 text-neutral-400 sm:inline">{user.email}</span>
             <form action={signOut}>

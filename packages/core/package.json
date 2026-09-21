@@ -13,6 +13,7 @@
     "./checkout": "./src/checkout/index.ts",
     "./customer": "./src/customer/index.ts",
     "./email": "./src/email.ts",
+    "./feedback": "./src/feedback.ts",
     "./actions": "./src/actions/index.ts"
   },
   "scripts": {

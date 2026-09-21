@@ -26,16 +26,18 @@ export default async function AdminHome({
   const { start } = rangeToDates(range);
   const now = new Date();
 
-  const [activeProductCount, pendingOrders, totalOrders] = await Promise.all([
+  const [activeProductCount, pendingOrders, totalOrders, pendingFeedbackCount] = await Promise.all([
     prisma.product.count({ where: { active: true } }),
     prisma.order.count({ where: { status: "PENDING" } }),
     prisma.order.count(),
+    prisma.feedback.count({ where: { status: "PENDING" } }),
   ]);
 
   const cards = [
     { label: "Products", value: activeProductCount, href: "/admin/products" },
     { label: "Pending orders (all time)", value: pendingOrders, href: "/admin/orders?status=PENDING" },
     { label: "Total orders (all time)", value: totalOrders, href: "/admin/orders" },
+    { label: "Feedback awaiting review", value: pendingFeedbackCount, href: "/admin/feedback?status=PENDING" },
   ];
 
   // Revenue/orders/AOV + daily trend, scoped to the selected range.
@@ -161,7 +163,7 @@ export default async function AdminHome({
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-4">
         {cards.map((card) => (
           <Link
             key={card.label}
