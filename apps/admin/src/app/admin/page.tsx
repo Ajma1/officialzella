@@ -69,6 +69,34 @@ export default async function AdminHome({
         })();
   const maxDayRevenue = Math.max(0, ...dailyTrend.map(([, cents]) => cents));
 
+  // Best/worst sellers, scoped to the same range and non-cancelled orders.
+  const rangeItems = await prisma.orderItem.findMany({
+    where: {
+      order: {
+        status: { not: "CANCELLED" },
+        ...(start ? { createdAt: { gte: start } } : {}),
+      },
+    },
+    select: { productId: true, quantity: true, priceCents: true, product: { select: { name: true } } },
+  });
+
+  const sellerTotals = new Map<string, { name: string; units: number; revenueCents: number }>();
+  for (const item of rangeItems) {
+    const entry = sellerTotals.get(item.productId) ?? {
+      name: item.product.name,
+      units: 0,
+      revenueCents: 0,
+    };
+    entry.units += item.quantity;
+    entry.revenueCents += item.priceCents * item.quantity;
+    sellerTotals.set(item.productId, entry);
+  }
+  const rankedSellers = [...sellerTotals.entries()]
+    .map(([productId, v]) => ({ productId, ...v }))
+    .sort((a, b) => b.units - a.units);
+  const topSellers = rankedSellers.slice(0, 5);
+  const worstSellers = [...rankedSellers].reverse().slice(0, 5);
+
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -144,6 +172,47 @@ export default async function AdminHome({
           </div>
         </div>
       )}
+
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="rounded-xl border border-neutral-200 bg-white p-5">
+          <h2 className="text-sm font-semibold text-neutral-500">Best sellers</h2>
+          {topSellers.length === 0 ? (
+            <p className="mt-3 text-sm text-neutral-500">No sales in this range.</p>
+          ) : (
+            <ol className="mt-3 space-y-2 text-sm">
+              {topSellers.map((s, i) => (
+                <li key={s.productId} className="flex items-center justify-between gap-3">
+                  <span className="truncate">
+                    {i + 1}. {s.name}
+                  </span>
+                  <span className="shrink-0 tabular-nums text-neutral-600">
+                    {s.units} units · {formatPrice(s.revenueCents)}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          )}
+        </div>
+        <div className="rounded-xl border border-neutral-200 bg-white p-5">
+          <h2 className="text-sm font-semibold text-neutral-500">Worst sellers</h2>
+          {worstSellers.length === 0 ? (
+            <p className="mt-3 text-sm text-neutral-500">No sales in this range.</p>
+          ) : (
+            <ol className="mt-3 space-y-2 text-sm">
+              {worstSellers.map((s, i) => (
+                <li key={s.productId} className="flex items-center justify-between gap-3">
+                  <span className="truncate">
+                    {i + 1}. {s.name}
+                  </span>
+                  <span className="shrink-0 tabular-nums text-neutral-600">
+                    {s.units} units · {formatPrice(s.revenueCents)}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
