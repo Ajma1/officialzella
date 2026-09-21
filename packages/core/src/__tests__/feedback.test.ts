@@ -1,6 +1,12 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, afterAll } from "vitest";
 import { prisma } from "@zella/db";
 import { getApprovedFeedback } from "../feedback";
+
+const TEST_MESSAGES = ["Approved and old.", "Approved and new.", "Still pending.", "Got rejected."];
+
+afterAll(async () => {
+  await prisma.feedback.deleteMany({ where: { message: { in: TEST_MESSAGES } } });
+});
 
 describe("getApprovedFeedback", () => {
   it("returns only APPROVED feedback, newest first, never the email field", async () => {

@@ -1,10 +1,14 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, afterAll } from "vitest";
 
 vi.mock("@/lib/auth", () => ({ requireAdmin: vi.fn().mockResolvedValue({ id: "test-admin" }) }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 
 import { prisma } from "@zella/db";
 import { updateFeedbackStatus } from "../actions";
+
+afterAll(async () => {
+  await prisma.feedback.deleteMany({ where: { message: "A pending piece of feedback to moderate." } });
+});
 
 function form(fields: Record<string, string>): FormData {
   const fd = new FormData();

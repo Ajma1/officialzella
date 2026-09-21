@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { headers } from "next/headers";
 import { prisma } from "@zella/db";
+import { isRateLimited } from "./rate-limit";
 
 // ponytail: process-local, per-instance rate limiting — resets on
 // redeploy/cold-start, and doesn't share state across serverless
@@ -53,7 +54,7 @@ export async function submitFeedback(
 
   const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   const lastSubmission = lastSubmissionByIp.get(ip);
-  if (lastSubmission !== undefined && Date.now() - lastSubmission < RATE_LIMIT_WINDOW_MS) {
+  if (isRateLimited(Date.now(), lastSubmission, RATE_LIMIT_WINDOW_MS)) {
     return generic;
   }
 

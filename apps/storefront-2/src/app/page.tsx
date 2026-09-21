@@ -162,7 +162,7 @@ export default async function HomePage() {
       {testimonials.length > 0 && (
         <section className="container" style={{ padding: "70px 28px" }}>
           <p className="kicker">What people are saying</p>
-          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
+          <div className="grid-fabric" style={{ marginTop: 24 }}>
             {testimonials.map((t) => (
               <div key={t.id} style={{ borderTop: "1px solid var(--color-divider)", paddingTop: 18 }}>
                 <p style={{ margin: "0 0 10px", fontSize: 15, letterSpacing: "0.05em" }}>

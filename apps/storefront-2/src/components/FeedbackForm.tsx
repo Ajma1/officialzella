@@ -76,6 +76,12 @@ export default function FeedbackForm() {
         )}
       </label>
 
+      {fieldErrors && Object.entries(fieldErrors).some(([k]) => k !== "email" && k !== "message") && (
+        <p role="alert" style={{ margin: 0, fontSize: 13, color: "var(--color-accent-800)" }}>
+          Please check your entries and try again.
+        </p>
+      )}
+
       <button type="submit" disabled={pending} className="btn btn-primary" style={{ letterSpacing: "0.16em", textTransform: "uppercase" }}>
         {pending ? "Sending…" : "Send feedback"}
       </button>

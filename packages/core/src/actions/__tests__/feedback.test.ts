@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, afterAll } from "vitest";
 
 const headersMock = vi.fn();
 vi.mock("next/headers", () => ({ headers: () => headersMock() }));
@@ -6,6 +6,16 @@ vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 
 import { prisma } from "@zella/db";
 import { submitFeedback } from "../feedback";
+
+const TEST_MESSAGES = [
+  "Loved the fit, will buy again for sure.",
+  "Nice fabric, true to size for once.",
+  "First submission from this IP address.",
+];
+
+afterAll(async () => {
+  await prisma.feedback.deleteMany({ where: { message: { in: TEST_MESSAGES } } });
+});
 
 function form(fields: Record<string, string>): FormData {
   const fd = new FormData();
