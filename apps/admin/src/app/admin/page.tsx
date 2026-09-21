@@ -3,6 +3,7 @@ import { prisma, OrderStatus } from "@zella/db";
 import { formatPrice } from "@zella/core/format";
 import { rangeToDates, type DashboardRange } from "./dashboard-range";
 import { shopDateKey } from "@/lib/shop-timezone";
+import { sumRevenue, averageOrderValue, rankSellers } from "./dashboard-metrics";
 
 const RANGES: { value: DashboardRange; label: string }[] = [
   { value: "today", label: "Today" },
@@ -23,6 +24,7 @@ export default async function AdminHome({
   const { range: rawRange } = await searchParams;
   const range: DashboardRange = isValidRange(rawRange) ? rawRange : "7d";
   const { start } = rangeToDates(range);
+  const now = new Date();
 
   const [activeProductCount, pendingOrders, totalOrders] = await Promise.all([
     prisma.product.count({ where: { active: true } }),
@@ -32,8 +34,8 @@ export default async function AdminHome({
 
   const cards = [
     { label: "Products", value: activeProductCount, href: "/admin/products" },
-    { label: "Pending orders", value: pendingOrders, href: "/admin/orders" },
-    { label: "Total orders", value: totalOrders, href: "/admin/orders" },
+    { label: "Pending orders (all time)", value: pendingOrders, href: "/admin/orders?status=PENDING" },
+    { label: "Total orders (all time)", value: totalOrders, href: "/admin/orders" },
   ];
 
   // Revenue/orders/AOV + daily trend, scoped to the selected range.
@@ -50,9 +52,9 @@ export default async function AdminHome({
     select: { totalCents: true, createdAt: true },
   });
 
-  const revenueCents = rangeOrders.reduce((sum, o) => sum + o.totalCents, 0);
+  const revenueCents = sumRevenue(rangeOrders);
   const orderCount = rangeOrders.length;
-  const aovCents = orderCount > 0 ? Math.round(revenueCents / orderCount) : 0;
+  const aovCents = averageOrderValue(revenueCents, orderCount);
 
   // Daily trend only makes sense for bounded ranges — an "all time" list of
   // daily bars could span years and isn't a meaningful visualization.
@@ -61,6 +63,19 @@ export default async function AdminHome({
       ? []
       : (() => {
           const buckets = new Map<string, number>();
+          // Seed every day in the range at 0 first, so a day with no sales
+          // still gets a bar (at 0) instead of silently vanishing — without
+          // this, three sale-days out of seven render as three adjacent
+          // bars, which reads as three consecutive days.
+          if (start) {
+            for (
+              let d = new Date(start);
+              d <= now;
+              d.setUTCDate(d.getUTCDate() + 1)
+            ) {
+              buckets.set(shopDateKey(d), 0);
+            }
+          }
           for (const o of rangeOrders) {
             const key = shopDateKey(o.createdAt);
             buckets.set(key, (buckets.get(key) ?? 0) + o.totalCents);
@@ -80,20 +95,14 @@ export default async function AdminHome({
     select: { productId: true, quantity: true, priceCents: true, product: { select: { name: true } } },
   });
 
-  const sellerTotals = new Map<string, { name: string; units: number; revenueCents: number }>();
-  for (const item of rangeItems) {
-    const entry = sellerTotals.get(item.productId) ?? {
-      name: item.product.name,
-      units: 0,
-      revenueCents: 0,
-    };
-    entry.units += item.quantity;
-    entry.revenueCents += item.priceCents * item.quantity;
-    sellerTotals.set(item.productId, entry);
-  }
-  const rankedSellers = [...sellerTotals.entries()]
-    .map(([productId, v]) => ({ productId, ...v }))
-    .sort((a, b) => b.units - a.units);
+  const rankedSellers = rankSellers(
+    rangeItems.map((item) => ({
+      productId: item.productId,
+      productName: item.product.name,
+      quantity: item.quantity,
+      priceCents: item.priceCents,
+    })),
+  );
   const topSellers = rankedSellers.slice(0, 5);
   const worstSellers = [...rankedSellers].reverse().slice(0, 5);
 
@@ -113,7 +122,7 @@ export default async function AdminHome({
     entry.variants.push({ size: v.size, stock: v.stock });
     lowStockByProduct.set(v.product.id, entry);
   }
-  const lowStockList = [...lowStockByProduct.values()];
+  const lowStockList = [...lowStockByProduct.entries()];
 
   // Status funnel — counts within the selected range (unlike stock, a time
   // breakdown here is meaningful), each linking into Phase 3's filtered list.
@@ -167,7 +176,7 @@ export default async function AdminHome({
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="rounded-xl border border-neutral-200 bg-white p-5">
-          <p className="text-sm text-neutral-500">Revenue</p>
+          <p className="text-sm text-neutral-500">Revenue (incl. delivery)</p>
           <p className="mt-1 text-3xl font-semibold">{formatPrice(revenueCents)}</p>
         </div>
         <div className="rounded-xl border border-neutral-200 bg-white p-5">
@@ -180,36 +189,42 @@ export default async function AdminHome({
         </div>
       </div>
 
-      {dailyTrend.length > 0 && (
+      {range !== "all" && (
         <div className="mt-6 rounded-xl border border-neutral-200 bg-white p-5">
           <h2 className="text-sm font-semibold text-neutral-500">Daily revenue</h2>
-          <div className="mt-4 space-y-2">
-            {dailyTrend.map(([date, cents]) => {
-              const pct = maxDayRevenue > 0 ? (cents / maxDayRevenue) * 100 : 0;
-              return (
-                <div key={date} className="flex items-center gap-3 text-sm">
-                  <span className="w-16 shrink-0 text-neutral-500 tabular-nums">
-                    {date.slice(5)}
-                  </span>
-                  <div className="h-2 flex-1 rounded-full bg-neutral-100">
-                    <div
-                      className="h-2 rounded-full bg-cherry"
-                      style={{ width: `${pct}%` }}
-                    />
+          {dailyTrend.length === 0 ? (
+            <p className="mt-3 text-sm text-neutral-500">No sales in this range.</p>
+          ) : (
+            <div className="mt-4 space-y-2">
+              {dailyTrend.map(([date, cents]) => {
+                const pct = maxDayRevenue > 0 ? (cents / maxDayRevenue) * 100 : 0;
+                return (
+                  <div key={date} className="flex items-center gap-3 text-sm">
+                    <span className="w-16 shrink-0 text-neutral-500 tabular-nums">
+                      {date.slice(5)}
+                    </span>
+                    <div className="h-2 flex-1 rounded-full bg-neutral-100">
+                      <div
+                        className="h-2 rounded-full bg-cherry"
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                    <span className="w-24 shrink-0 text-right tabular-nums">
+                      {formatPrice(cents)}
+                    </span>
                   </div>
-                  <span className="w-24 shrink-0 text-right tabular-nums">
-                    {formatPrice(cents)}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="rounded-xl border border-neutral-200 bg-white p-5">
-          <h2 className="text-sm font-semibold text-neutral-500">Best sellers</h2>
+          <h2 className="text-sm font-semibold text-neutral-500">
+            Best sellers <span className="font-normal">(product revenue)</span>
+          </h2>
           {topSellers.length === 0 ? (
             <p className="mt-3 text-sm text-neutral-500">No sales in this range.</p>
           ) : (
@@ -228,7 +243,9 @@ export default async function AdminHome({
           )}
         </div>
         <div className="rounded-xl border border-neutral-200 bg-white p-5">
-          <h2 className="text-sm font-semibold text-neutral-500">Worst sellers</h2>
+          <h2 className="text-sm font-semibold text-neutral-500">
+            Worst sellers <span className="font-normal">(product revenue)</span>
+          </h2>
           {worstSellers.length === 0 ? (
             <p className="mt-3 text-sm text-neutral-500">No sales in this range.</p>
           ) : (
@@ -254,8 +271,8 @@ export default async function AdminHome({
           <p className="mt-3 text-sm text-neutral-500">Nothing low on stock.</p>
         ) : (
           <div className="mt-3 space-y-3">
-            {lowStockList.map((p, i) => (
-              <div key={i}>
+            {lowStockList.map(([productId, p]) => (
+              <div key={productId}>
                 <p className="text-sm font-medium">{p.name}</p>
                 <div className="mt-1 flex flex-wrap gap-2">
                   {p.variants.map((v) => (
@@ -283,7 +300,7 @@ export default async function AdminHome({
           {STATUS_ORDER.map((status) => (
             <Link
               key={status}
-              href={`/admin/orders?status=${status}`}
+              href={`/admin/orders?status=${status}${start ? `&from=${shopDateKey(start)}` : ""}`}
               className="rounded-lg border border-neutral-200 p-3 text-center transition-colors hover:border-cherry/40"
             >
               <p className="text-2xl font-semibold">{funnelByStatus.get(status) ?? 0}</p>
