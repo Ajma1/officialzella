@@ -26,6 +26,15 @@ export const metadata: Metadata = {
     "Button-down shirts and wide-leg trousers, woven to breathe and cut with room to move.",
 };
 
+// ponytail: force-dynamic means every request hits Postgres for the catalog
+// read — fine at current traffic, and the only way admin edits show up
+// without a rebuild (two separate Vercel projects can't share a build-time
+// cache). If/when traffic makes this measurably slow, upgrade to
+// `"use cache"` + `cacheTag("catalog")` on packages/core/src/catalog.ts's
+// functions, plus a secret-signed revalidate webhook admin calls after
+// every product/inventory write.
+export const dynamic = "force-dynamic";
+
 /*
   THESIS: same brand, same catalog, same checkout — a second visual world for
   the A/B test, deliberately unlike storefront-1's coquette dream-board.
