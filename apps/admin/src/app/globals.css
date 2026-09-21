@@ -11,3 +11,13 @@
 body {
   font-family: system-ui, sans-serif;
 }
+
+/* Packing slip pages (apps/admin/src/app/admin/orders/[id]/slip) nest under
+   this app's shared header via admin/layout.tsx — hide it only when
+   printing, so the on-screen view keeps its nav but the printed slip
+   doesn't carry admin chrome. */
+@media print {
+  header {
+    display: none;
+  }
+}

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { prisma, type Prisma } from "@zella/db";
 import { formatCents } from "@zella/core/format";
 import { updateOrderStatus } from "../actions";
@@ -34,6 +35,27 @@ function groupOrderItems(items: OrderItemWithProduct[]) {
   return groups;
 }
 
+function OrderLineFields({ item }: { item: OrderItemWithProduct }) {
+  return (
+    <>
+      <span>
+        <Link
+          href={`/admin/products/${item.productId}/edit`}
+          className="font-medium text-neutral-900 hover:text-cherry hover:underline"
+        >
+          {item.product.name}
+        </Link>{" "}
+        <span className="text-neutral-500">
+          ({item.product.sku} · {item.size}) × {item.quantity}
+        </span>
+      </span>
+      <span className="tabular-nums text-neutral-600">
+        {formatCents(item.priceCents * item.quantity)}
+      </span>
+    </>
+  );
+}
+
 export default async function OrderDetailPage({
   params,
 }: PageProps<"/admin/orders/[id]">) {
@@ -53,10 +75,21 @@ export default async function OrderDetailPage({
 
   return (
     <div className="max-w-2xl">
-      <h1 className="text-xl font-semibold">Order {order.orderNumber}</h1>
-      <p className="mt-1 text-sm text-neutral-500">
-        Placed {order.createdAt.toLocaleString()}
-      </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-xl font-semibold">Order {order.orderNumber}</h1>
+          <p className="mt-1 text-sm text-neutral-500">
+            Placed {order.createdAt.toLocaleString()}
+          </p>
+          <p className="mt-0.5 text-xs text-neutral-400">ID: {order.id}</p>
+        </div>
+        <Link
+          href={`/admin/orders/${order.id}/slip`}
+          className="inline-flex min-h-11 items-center rounded-lg border border-neutral-300 bg-white px-4 text-sm font-medium hover:bg-neutral-50"
+        >
+          Packing slip
+        </Link>
+      </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div className="rounded-xl border border-neutral-200 bg-white p-5">
@@ -108,12 +141,7 @@ export default async function OrderDetailPage({
                       key={item.id}
                       className="flex items-center justify-between py-1.5 text-sm"
                     >
-                      <span>
-                        {item.product.name} × {item.quantity}
-                      </span>
-                      <span className="tabular-nums text-neutral-600">
-                        {formatCents(item.priceCents * item.quantity)}
-                      </span>
+                      <OrderLineFields item={item} />
                     </div>
                   ))}
                 </div>
@@ -124,12 +152,7 @@ export default async function OrderDetailPage({
                   key={item.id}
                   className="flex items-center justify-between py-2 text-sm"
                 >
-                  <span>
-                    {item.product.name} × {item.quantity}
-                  </span>
-                  <span className="tabular-nums text-neutral-600">
-                    {formatCents(item.priceCents * item.quantity)}
-                  </span>
+                  <OrderLineFields item={item} />
                 </div>
               ))
             ),
