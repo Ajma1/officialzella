@@ -1,13 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("next/headers", () => import("../../test/cookie-jar"));
-vi.mock("../../email", () => ({ sendLoginPin: vi.fn() }));
+vi.mock("../../email", () => ({ sendLoginPin: vi.fn(), sendAdminOrderEmail: vi.fn() }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 
 import { prisma } from "@zella/db";
 import { requestPin, verifyPin } from "../customer-auth";
 import { cancelOrder } from "../account";
-import { sendLoginPin } from "../../email";
+import { sendLoginPin, sendAdminOrderEmail } from "../../email";
 import { __resetCookieJar } from "../../test/cookie-jar";
 
 function form(fields: Record<string, string>): FormData {
@@ -53,6 +53,7 @@ async function makeOrder(customerId: string, email: string, status: "PENDING" | 
 beforeEach(() => {
   __resetCookieJar();
   vi.mocked(sendLoginPin).mockClear();
+  vi.mocked(sendAdminOrderEmail).mockClear();
 });
 
 describe("cancelOrder", () => {
@@ -66,6 +67,31 @@ describe("cancelOrder", () => {
 
     const updated = await prisma.order.findUniqueOrThrow({ where: { id: order.id } });
     expect(updated.status).toBe("CANCELLED");
+  });
+
+  it("notifies admin when cancellation succeeds", async () => {
+    const email = uniqueEmail("notify-cancel");
+    await signInAs(email);
+    const customer = await prisma.customer.findUniqueOrThrow({ where: { email } });
+    const order = await makeOrder(customer.id, email);
+
+    await cancelOrder(order.id);
+
+    expect(sendAdminOrderEmail).toHaveBeenCalledWith(
+      "cancelled_by_customer",
+      expect.objectContaining({ orderNumber: order.orderNumber }),
+    );
+  });
+
+  it("does not notify admin when cancellation is a no-op", async () => {
+    const email = uniqueEmail("no-notify-cancel");
+    await signInAs(email);
+    const customer = await prisma.customer.findUniqueOrThrow({ where: { email } });
+    const order = await makeOrder(customer.id, email, "CANCELLED");
+
+    await cancelOrder(order.id);
+
+    expect(sendAdminOrderEmail).not.toHaveBeenCalled();
   });
 
   it("does not let a customer cancel another customer's order", async () => {
