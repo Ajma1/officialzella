@@ -166,3 +166,24 @@ model OrderItem {
   @@index([orderId])
   @@index([productId])
 }
+
+enum FeedbackStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Feedback {
+  id          String         @id @default(cuid())
+  rating      Int            // 1–5, validated at the action layer
+  name        String?
+  /// Admin-only — never rendered on any public page.
+  email       String?
+  orderNumber String?
+  message     String
+  status      FeedbackStatus @default(PENDING)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([status])
+}
