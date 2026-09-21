@@ -7,6 +7,7 @@ export default defineConfig({
     include: ["src/**/*.test.ts"],
     testTimeout: 15000,
     passWithNoTests: true,
+    globalSetup: ["./vitest.global-teardown.ts"],
   },
   resolve: {
     alias: {

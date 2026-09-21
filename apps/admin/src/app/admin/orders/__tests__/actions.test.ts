@@ -22,6 +22,7 @@ async function makeOrder(status: "PENDING" | "CANCELLED" = "PENDING") {
       totalCents: 5000,
       customerName: "Test Customer",
       customerPhone: "+1 555 0100",
+      customerEmail: `admin-actions-test-${Date.now()}-${Math.random().toString(36).slice(2)}@example.com`,
       address: {
         create: {
           fullName: "Test Customer",

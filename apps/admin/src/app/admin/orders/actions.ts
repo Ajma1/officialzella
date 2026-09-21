@@ -14,26 +14,29 @@ export async function updateOrderStatus(orderId: string, formData: FormData) {
   const status = String(formData.get("status") ?? "");
   if (!STATUSES.includes(status as OrderStatus)) return;
 
-  const existing = await prisma.order.findUnique({ where: { id: orderId } });
-  if (!existing) return;
-
-  const updated = await prisma.order.update({
-    where: { id: orderId },
+  // Guard is part of the atomic write itself (status: { not: ... }), not a
+  // separate read-then-write — two concurrent requests can't both pass a
+  // stale check and both fire a notification.
+  const result = await prisma.order.updateMany({
+    where: { id: orderId, status: { not: status as OrderStatus } },
     data: { status: status as OrderStatus },
   });
 
-  if (status === "CANCELLED" && existing.status !== "CANCELLED") {
-    try {
-      await sendAdminOrderEmail("cancelled_by_admin", {
-        orderNumber: updated.orderNumber,
-        customerName: updated.customerName,
-        totalCents: updated.totalCents,
-      });
-    } catch (e) {
-      console.error(
-        `[email] failed to send "cancelled_by_admin" notification for ${updated.orderNumber}`,
-        e,
-      );
+  if (result.count > 0 && status === "CANCELLED") {
+    const updated = await prisma.order.findUnique({ where: { id: orderId } });
+    if (updated) {
+      try {
+        await sendAdminOrderEmail("cancelled_by_admin", {
+          orderNumber: updated.orderNumber,
+          customerName: updated.customerName,
+          totalCents: updated.totalCents,
+        });
+      } catch (e) {
+        console.error(
+          `[email] failed to send "cancelled_by_admin" notification for ${updated.orderNumber}`,
+          e,
+        );
+      }
     }
   }
 
