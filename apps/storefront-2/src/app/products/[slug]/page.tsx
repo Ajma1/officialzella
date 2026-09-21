@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getProductBySlug } from "@zella/core/catalog";
 import ProductBuyBox from "@/components/ProductBuyBox";
 import ProductPlate from "@/components/ProductPlate";
+import Reveal from "@/components/motion/Reveal";
 
 export default async function ProductPage({ params }: PageProps<"/products/[slug]">) {
   const { slug } = await params;
@@ -12,7 +13,7 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
 
   return (
     <section className="container" style={{ padding: "32px 28px 76px" }}>
-      <div className="grid-pdp">
+      <Reveal className="grid-pdp" stagger={0.15} immediate>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 16 }}>
           {product.images.length > 0 ? (
             product.images.map((img, i) => (
@@ -35,7 +36,7 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
         <div style={{ position: "sticky", top: 104 }}>
           <ProductBuyBox product={product} />
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

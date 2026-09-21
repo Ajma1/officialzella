@@ -5,7 +5,7 @@ import type { Product } from "@zella/core/catalog-types";
 
 export default function ProductCard({ product }: { product: Product }) {
   return (
-    <Link href={`/products/${product.slug}`} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+    <Link href={`/products/${product.slug}`} className="product-card" style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       <ProductPlate
         src={product.images[0]?.url ?? null}
         alt={`Zella ${product.name}`}

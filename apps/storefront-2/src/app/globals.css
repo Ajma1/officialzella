@@ -96,6 +96,21 @@ figcaption {
   box-sizing: border-box;
   border: 6px solid var(--color-surface);
   outline: 1px solid var(--color-divider);
+  overflow: hidden;
+}
+.plate img {
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.product-card:hover .plate img {
+  transform: scale(1.045);
+}
+
+/* — chrome that gains presence once the page has scrolled — */
+.site-header {
+  transition: box-shadow 320ms ease;
+}
+.site-header--scrolled {
+  box-shadow: var(--shadow-sm);
 }
 
 .hr {
@@ -126,8 +141,26 @@ figcaption {
   border-radius: var(--radius-md);
 }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
-.btn-primary { color: var(--color-accent); border-color: var(--color-accent); }
-.btn-primary:hover { background: color-mix(in srgb, var(--color-accent) 12%, transparent); }
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  transition: color 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-primary:hover { color: var(--color-bg); }
+.btn-primary:hover::before { transform: scaleX(1); }
 .btn-primary:active { background: color-mix(in srgb, var(--color-accent) 22%, transparent); }
 .btn-secondary { border-color: var(--color-divider); }
 .btn-secondary:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
@@ -171,11 +204,21 @@ textarea.input { min-height: 90px; resize: vertical; }
   padding-inline: 28px;
 }
 .kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-size: 11px;
   letter-spacing: 0.32em;
   text-transform: uppercase;
   color: var(--color-accent-700);
   margin: 0 0 16px;
+}
+.kicker::before {
+  content: "";
+  display: inline-block;
+  width: 26px;
+  height: 1px;
+  background: var(--color-accent);
 }
 .grid-products {
   display: grid;
@@ -307,6 +350,17 @@ textarea.input { min-height: 90px; resize: vertical; }
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-33.333%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .plate img,
+  .btn-primary,
+  .btn-primary::before,
+  .site-header {
+    transition: none !important;
+  }
+  [style*="animation: marquee"] {
+    animation: none !important;
+  }
 }
 
 /* — tags — */
