@@ -48,3 +48,5 @@ packages/db/media-staging
 
 .vercel
 .env*
+
+.worktrees
