@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { prisma } from "@zella/db";
+import { prisma, OrderStatus } from "@zella/db";
 import { formatPrice } from "@zella/core/format";
 import { rangeToDates, type DashboardRange } from "./dashboard-range";
 import { shopDateKey } from "@/lib/shop-timezone";
@@ -114,6 +114,22 @@ export default async function AdminHome({
     lowStockByProduct.set(v.product.id, entry);
   }
   const lowStockList = [...lowStockByProduct.values()];
+
+  // Status funnel — counts within the selected range (unlike stock, a time
+  // breakdown here is meaningful), each linking into Phase 3's filtered list.
+  const funnelCounts = await prisma.order.groupBy({
+    by: ["status"],
+    where: start ? { createdAt: { gte: start } } : {},
+    _count: true,
+  });
+  const funnelByStatus = new Map(funnelCounts.map((f) => [f.status, f._count]));
+  const STATUS_ORDER: OrderStatus[] = [
+    "PENDING",
+    "CONFIRMED",
+    "OUT_FOR_DELIVERY",
+    "DELIVERED",
+    "CANCELLED",
+  ];
 
   return (
     <div>
@@ -259,6 +275,24 @@ export default async function AdminHome({
             ))}
           </div>
         )}
+      </div>
+
+      <div className="mt-6 rounded-xl border border-neutral-200 bg-white p-5">
+        <h2 className="text-sm font-semibold text-neutral-500">Order status</h2>
+        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-5">
+          {STATUS_ORDER.map((status) => (
+            <Link
+              key={status}
+              href={`/admin/orders?status=${status}`}
+              className="rounded-lg border border-neutral-200 p-3 text-center transition-colors hover:border-cherry/40"
+            >
+              <p className="text-2xl font-semibold">{funnelByStatus.get(status) ?? 0}</p>
+              <p className="mt-1 text-xs text-neutral-500">
+                {status.replaceAll("_", " ").toLowerCase()}
+              </p>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );
