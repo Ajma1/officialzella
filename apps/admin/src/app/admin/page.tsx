@@ -97,6 +97,24 @@ export default async function AdminHome({
   const topSellers = rankedSellers.slice(0, 5);
   const worstSellers = [...rankedSellers].reverse().slice(0, 5);
 
+  // Low stock / sold-out — a live snapshot, not scoped to the date range.
+  const lowStockVariants = await prisma.productVariant.findMany({
+    where: { stock: { lte: 3 } },
+    include: { product: { select: { id: true, name: true } } },
+    orderBy: { stock: "asc" },
+  });
+
+  const lowStockByProduct = new Map<
+    string,
+    { name: string; variants: { size: string; stock: number }[] }
+  >();
+  for (const v of lowStockVariants) {
+    const entry = lowStockByProduct.get(v.product.id) ?? { name: v.product.name, variants: [] };
+    entry.variants.push({ size: v.size, stock: v.stock });
+    lowStockByProduct.set(v.product.id, entry);
+  }
+  const lowStockList = [...lowStockByProduct.values()];
+
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -212,6 +230,35 @@ export default async function AdminHome({
             </ol>
           )}
         </div>
+      </div>
+
+      <div className="mt-6 rounded-xl border border-neutral-200 bg-white p-5">
+        <h2 className="text-sm font-semibold text-neutral-500">Low stock</h2>
+        {lowStockList.length === 0 ? (
+          <p className="mt-3 text-sm text-neutral-500">Nothing low on stock.</p>
+        ) : (
+          <div className="mt-3 space-y-3">
+            {lowStockList.map((p, i) => (
+              <div key={i}>
+                <p className="text-sm font-medium">{p.name}</p>
+                <div className="mt-1 flex flex-wrap gap-2">
+                  {p.variants.map((v) => (
+                    <span
+                      key={v.size}
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                        v.stock === 0
+                          ? "bg-red-100 text-red-700"
+                          : "bg-amber-100 text-amber-700"
+                      }`}
+                    >
+                      {v.size}: {v.stock === 0 ? "sold out" : `${v.stock} left`}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
