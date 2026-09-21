@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { getAllProducts } from "@zella/core/catalog";
 
+export const dynamic = "force-dynamic";
+
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://officialzella.com";
 
 const STATIC_ROUTES = [
