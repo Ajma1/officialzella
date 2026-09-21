@@ -1,5 +1,6 @@
 import type { Prisma } from "@zella/db";
 import { OrderStatus } from "@zella/db";
+import { SHOP_UTC_OFFSET } from "@/lib/shop-timezone";
 
 export interface OrderSearchParams {
   status?: string;
@@ -22,8 +23,8 @@ export function buildOrderWhere(params: OrderSearchParams): Prisma.OrderWhereInp
 
   if (params.from || params.to) {
     where.createdAt = {};
-    if (params.from) where.createdAt.gte = new Date(`${params.from}T00:00:00`);
-    if (params.to) where.createdAt.lte = new Date(`${params.to}T23:59:59`);
+    if (params.from) where.createdAt.gte = new Date(`${params.from}T00:00:00${SHOP_UTC_OFFSET}`);
+    if (params.to) where.createdAt.lte = new Date(`${params.to}T23:59:59${SHOP_UTC_OFFSET}`);
   }
 
   const q = params.q?.trim();
