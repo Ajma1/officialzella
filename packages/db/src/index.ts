@@ -14,4 +14,4 @@ if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
 }
 
-export { Prisma, OrderStatus, ProductCategory, Size } from "../generated/prisma";
+export { Prisma, OrderStatus, ProductCategory, Size, FeedbackStatus } from "../generated/prisma";
