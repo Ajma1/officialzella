@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getProductsByCategory } from "@zella/core/catalog";
 import { formatPrice } from "@zella/core/format";
 import { PAIR_PRICE_CENTS } from "@zella/core/checkout";
+import { getApprovedFeedback } from "@zella/core/feedback";
 import ProductCard from "@/components/ProductCard";
 import ProductPlate from "@/components/ProductPlate";
 
@@ -21,6 +22,7 @@ export default async function HomePage() {
   const heroA = shirts.find((p) => p.images[0])?.images[0] ?? null;
   const heroB = shirts.filter((p) => p.images[0])[1]?.images[0] ?? null;
   const lookbook = shirts.filter((p) => p.images[0]).slice(0, 6);
+  const testimonials = await getApprovedFeedback(3);
 
   return (
     <div>
@@ -152,6 +154,26 @@ export default async function HomePage() {
                   {p.name}
                 </figcaption>
               </figure>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {testimonials.length > 0 && (
+        <section className="container" style={{ padding: "70px 28px" }}>
+          <p className="kicker">What people are saying</p>
+          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
+            {testimonials.map((t) => (
+              <div key={t.id} style={{ borderTop: "1px solid var(--color-divider)", paddingTop: 18 }}>
+                <p style={{ margin: "0 0 10px", fontSize: 15, letterSpacing: "0.05em" }}>
+                  {"★".repeat(t.rating)}
+                  {"☆".repeat(5 - t.rating)}
+                </p>
+                <p style={{ margin: "0 0 10px", fontSize: 14, lineHeight: 1.6 }}>{t.message}</p>
+                <p style={{ margin: 0, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: "color-mix(in srgb, var(--color-text) 55%, transparent)" }}>
+                  {t.name || "Verified customer"}
+                </p>
+              </div>
             ))}
           </div>
         </section>
