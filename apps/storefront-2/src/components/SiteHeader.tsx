@@ -18,6 +18,7 @@ export default function SiteHeader() {
   const pathname = usePathname();
   const { count } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -32,6 +33,21 @@ export default function SiteHeader() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [menuOpen]);
 
+  useEffect(() => {
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 8);
+        ticking = false;
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const closeMenu = () => {
     setMenuOpen(false);
     toggleRef.current?.focus();
@@ -39,6 +55,7 @@ export default function SiteHeader() {
 
   return (
     <header
+      className={`site-header${scrolled ? " site-header--scrolled" : ""}`}
       style={{
         position: "sticky",
         top: 0,
