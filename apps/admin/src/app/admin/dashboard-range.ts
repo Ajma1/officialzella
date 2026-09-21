@@ -1,4 +1,4 @@
-import { SHOP_UTC_OFFSET } from "@/lib/shop-timezone";
+import { SHOP_UTC_OFFSET, shopDateKey } from "@/lib/shop-timezone";
 
 export type DashboardRange = "today" | "7d" | "30d" | "all";
 
@@ -19,8 +19,7 @@ export function rangeToDates(
 ): { start: Date | null; end: Date | null } {
   if (range === "all") return { start: null, end: null };
 
-  const shopUtcOffsetMs = 5 * 60 * 60 * 1000;
-  const shopToday = new Date(now.getTime() + shopUtcOffsetMs).toISOString().slice(0, 10);
+  const shopToday = shopDateKey(now);
 
   const start = new Date(`${shopToday}T00:00:00${SHOP_UTC_OFFSET}`);
   start.setUTCDate(start.getUTCDate() - DAYS_BACK[range]);
