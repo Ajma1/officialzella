@@ -1,7 +1,29 @@
 import Link from "next/link";
 import { prisma } from "@zella/db";
+import { formatPrice } from "@zella/core/format";
+import { rangeToDates, type DashboardRange } from "./dashboard-range";
+import { shopDateKey } from "@/lib/shop-timezone";
 
-export default async function AdminHome() {
+const RANGES: { value: DashboardRange; label: string }[] = [
+  { value: "today", label: "Today" },
+  { value: "7d", label: "7 days" },
+  { value: "30d", label: "30 days" },
+  { value: "all", label: "All time" },
+];
+
+function isValidRange(value: string | undefined): value is DashboardRange {
+  return RANGES.some((r) => r.value === value);
+}
+
+export default async function AdminHome({
+  searchParams,
+}: {
+  searchParams: Promise<{ range?: string }>;
+}) {
+  const { range: rawRange } = await searchParams;
+  const range: DashboardRange = isValidRange(rawRange) ? rawRange : "7d";
+  const { start } = rangeToDates(range);
+
   const [activeProductCount, pendingOrders, totalOrders] = await Promise.all([
     prisma.product.count({ where: { active: true } }),
     prisma.order.count({ where: { status: "PENDING" } }),
@@ -14,9 +36,60 @@ export default async function AdminHome() {
     { label: "Total orders", value: totalOrders, href: "/admin/orders" },
   ];
 
+  // Revenue/orders/AOV + daily trend, scoped to the selected range.
+  // ponytail: sequential Postgres reads over one small table — every query
+  // on this page could run in parallel via Promise.all, but at this order
+  // volume the latency difference is imperceptible, and sequential awaits
+  // keep each task's diff a plain insertion. Revisit if this page ever
+  // feels slow.
+  const rangeOrders = await prisma.order.findMany({
+    where: {
+      status: { not: "CANCELLED" },
+      ...(start ? { createdAt: { gte: start } } : {}),
+    },
+    select: { totalCents: true, createdAt: true },
+  });
+
+  const revenueCents = rangeOrders.reduce((sum, o) => sum + o.totalCents, 0);
+  const orderCount = rangeOrders.length;
+  const aovCents = orderCount > 0 ? Math.round(revenueCents / orderCount) : 0;
+
+  // Daily trend only makes sense for bounded ranges — an "all time" list of
+  // daily bars could span years and isn't a meaningful visualization.
+  const dailyTrend =
+    range === "all"
+      ? []
+      : (() => {
+          const buckets = new Map<string, number>();
+          for (const o of rangeOrders) {
+            const key = shopDateKey(o.createdAt);
+            buckets.set(key, (buckets.get(key) ?? 0) + o.totalCents);
+          }
+          return [...buckets.entries()].sort(([a], [b]) => a.localeCompare(b));
+        })();
+  const maxDayRevenue = Math.max(0, ...dailyTrend.map(([, cents]) => cents));
+
   return (
     <div>
-      <h1 className="text-xl font-semibold">Dashboard</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-xl font-semibold">Dashboard</h1>
+        <div className="flex gap-1 rounded-lg border border-neutral-200 bg-white p-1">
+          {RANGES.map((r) => (
+            <Link
+              key={r.value}
+              href={`/admin?range=${r.value}`}
+              className={`rounded-md px-3 py-1.5 text-sm font-medium ${
+                range === r.value
+                  ? "bg-cherry text-white"
+                  : "text-neutral-600 hover:bg-neutral-100"
+              }`}
+            >
+              {r.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
         {cards.map((card) => (
           <Link
@@ -29,6 +102,48 @@ export default async function AdminHome() {
           </Link>
         ))}
       </div>
+
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="rounded-xl border border-neutral-200 bg-white p-5">
+          <p className="text-sm text-neutral-500">Revenue</p>
+          <p className="mt-1 text-3xl font-semibold">{formatPrice(revenueCents)}</p>
+        </div>
+        <div className="rounded-xl border border-neutral-200 bg-white p-5">
+          <p className="text-sm text-neutral-500">Orders</p>
+          <p className="mt-1 text-3xl font-semibold">{orderCount}</p>
+        </div>
+        <div className="rounded-xl border border-neutral-200 bg-white p-5">
+          <p className="text-sm text-neutral-500">Average order value</p>
+          <p className="mt-1 text-3xl font-semibold">{formatPrice(aovCents)}</p>
+        </div>
+      </div>
+
+      {dailyTrend.length > 0 && (
+        <div className="mt-6 rounded-xl border border-neutral-200 bg-white p-5">
+          <h2 className="text-sm font-semibold text-neutral-500">Daily revenue</h2>
+          <div className="mt-4 space-y-2">
+            {dailyTrend.map(([date, cents]) => {
+              const pct = maxDayRevenue > 0 ? (cents / maxDayRevenue) * 100 : 0;
+              return (
+                <div key={date} className="flex items-center gap-3 text-sm">
+                  <span className="w-16 shrink-0 text-neutral-500 tabular-nums">
+                    {date.slice(5)}
+                  </span>
+                  <div className="h-2 flex-1 rounded-full bg-neutral-100">
+                    <div
+                      className="h-2 rounded-full bg-cherry"
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                  <span className="w-24 shrink-0 text-right tabular-nums">
+                    {formatPrice(cents)}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
