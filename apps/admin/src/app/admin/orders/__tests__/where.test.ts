@@ -17,14 +17,14 @@ describe("buildOrderWhere", () => {
   it("builds a date range from from/to", () => {
     const where = buildOrderWhere({ from: "2026-09-01", to: "2026-09-20" });
     expect(where.createdAt).toEqual({
-      gte: new Date("2026-09-01T00:00:00"),
-      lte: new Date("2026-09-20T23:59:59"),
+      gte: new Date("2026-09-01T00:00:00+05:00"),
+      lte: new Date("2026-09-20T23:59:59+05:00"),
     });
   });
 
   it("builds an open-ended range from just `from`", () => {
     const where = buildOrderWhere({ from: "2026-09-01" });
-    expect(where.createdAt).toEqual({ gte: new Date("2026-09-01T00:00:00") });
+    expect(where.createdAt).toEqual({ gte: new Date("2026-09-01T00:00:00+05:00") });
   });
 
   it("builds a case-insensitive OR search across order number, name, phone, email", () => {
@@ -44,7 +44,7 @@ describe("buildOrderWhere", () => {
   it("combines status, date range, and search together", () => {
     const where = buildOrderWhere({ status: "CONFIRMED", from: "2026-09-01", q: "test" });
     expect(where.status).toBe("CONFIRMED");
-    expect(where.createdAt).toEqual({ gte: new Date("2026-09-01T00:00:00") });
+    expect(where.createdAt).toEqual({ gte: new Date("2026-09-01T00:00:00+05:00") });
     expect(where.OR).toHaveLength(4);
   });
 });
