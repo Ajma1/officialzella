@@ -1,8 +1,13 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 
 /** The "book plate" photo treatment: sepia-toned, matted in a thin surface
  *  border — every real product photo goes through this, never a bare crop.
- *  Falls back to the colorway swatch fill when a product has no photo yet. */
+ *  Falls back to the colorway swatch fill when a product has no photo yet,
+ *  or when the photo fails to load client-side (flaky connection, dead
+ *  URL) — never the browser's bare broken-image icon. */
 export default function ProductPlate({
   src,
   alt,
@@ -16,7 +21,9 @@ export default function ProductPlate({
   ratio?: string;
   sizes?: string;
 }) {
-  if (!src) {
+  const [failed, setFailed] = useState(false);
+
+  if (!src || failed) {
     return (
       <div
         className="plate"
@@ -38,7 +45,14 @@ export default function ProductPlate({
 
   return (
     <div className="plate" style={{ position: "relative", width: "100%", aspectRatio: ratio }}>
-      <Image src={src} alt={alt} fill sizes={sizes} style={{ objectFit: "cover", objectPosition: "50% 22%" }} />
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes={sizes}
+        style={{ objectFit: "cover", objectPosition: "50% 22%" }}
+        onError={() => setFailed(true)}
+      />
     </div>
   );
 }

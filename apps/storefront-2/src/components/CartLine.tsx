@@ -1,14 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { setItemQty, removeItem, type CartItem } from "@zella/core/cart";
 import { formatPrice } from "@zella/core/format";
 
 function Thumb({ src, size }: { src: string | null; size: number }) {
-  if (!src) return <span style={{ width: size, aspectRatio: "3 / 4", display: "block", background: "var(--color-surface)" }} />;
+  const [failed, setFailed] = useState(false);
+  if (!src || failed) {
+    return <span style={{ width: size, aspectRatio: "3 / 4", display: "block", background: "var(--color-surface)" }} />;
+  }
   return (
     <div className="plate" style={{ position: "relative", width: size, aspectRatio: "3 / 4", flexShrink: 0 }}>
-      <Image src={src} alt="" fill sizes={`${size}px`} style={{ objectFit: "cover" }} />
+      <Image src={src} alt="" fill sizes={`${size}px`} style={{ objectFit: "cover" }} onError={() => setFailed(true)} />
     </div>
   );
 }
