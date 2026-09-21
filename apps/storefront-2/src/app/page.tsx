@@ -74,7 +74,7 @@ export default async function HomePage() {
 
       {/* Marquee */}
       <div style={{ background: "var(--color-neutral-900)", color: "var(--color-neutral-100)", overflow: "hidden", padding: "15px 0" }}>
-        <div style={{ display: "flex", width: "max-content", animation: "marquee 34s linear infinite" }}>
+        <div className="marquee-track" style={{ display: "flex", width: "max-content", animation: "marquee 34s linear infinite" }}>
           {[...MARQUEE, ...MARQUEE, ...MARQUEE].map((m, i) => (
             <span key={i} style={{ display: "flex", alignItems: "center", gap: 30, paddingRight: 30, fontSize: 11, letterSpacing: "0.26em", textTransform: "uppercase", whiteSpace: "nowrap" }}>
               {m}
@@ -203,7 +203,7 @@ export default async function HomePage() {
 
       {/* CTA */}
       <section className="container" style={{ padding: "86px 28px 96px", textAlign: "center" }}>
-        <Reveal stagger={0.12} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <Reveal stagger={0.12}>
           <p className="kicker">Small and medium</p>
           <h2 style={{ fontSize: "clamp(32px, 5vw, 62px)", lineHeight: 1.04, margin: "0 auto 30px", maxWidth: "22ch" }}>Your shirt is waiting.</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center" }}>
