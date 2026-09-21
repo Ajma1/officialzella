@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@zella/core/cart";
@@ -103,25 +104,27 @@ export default function SiteHeader() {
         </Link>
       </div>
 
-      {menuOpen && (
-        <div className="nav-mobile-panel">
-          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20 }}>
-            <button
-              type="button"
-              className="nav-panel-close"
-              aria-label="Close menu"
-              onClick={closeMenu}
-            >
-              ✕
-            </button>
-          </div>
-          {NAV_LINKS.map((link) => (
-            <Link key={link.href} href={link.href} onClick={closeMenu}>
-              {link.label}
-            </Link>
-          ))}
-        </div>
-      )}
+      {menuOpen &&
+        createPortal(
+          <div className="nav-mobile-panel">
+            <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20 }}>
+              <button
+                type="button"
+                className="nav-panel-close"
+                aria-label="Close menu"
+                onClick={closeMenu}
+              >
+                ✕
+              </button>
+            </div>
+            {NAV_LINKS.map((link) => (
+              <Link key={link.href} href={link.href} onClick={closeMenu}>
+                {link.label}
+              </Link>
+            ))}
+          </div>,
+          document.body,
+        )}
     </header>
   );
 }

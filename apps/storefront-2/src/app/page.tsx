@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { getProductsByCategory } from "@zella/core/catalog";
 import { formatPrice } from "@zella/core/format";
 import { PAIR_PRICE_CENTS } from "@zella/core/checkout";
@@ -143,9 +142,12 @@ export default async function HomePage() {
           <div style={{ display: "flex", gap: 22, overflowX: "auto", padding: "4px 28px 22px" }}>
             {lookbook.map((p) => (
               <figure key={p.id} style={{ margin: 0, flex: "0 0 260px", display: "flex", flexDirection: "column", gap: 12 }}>
-                <div className="plate" style={{ position: "relative", width: "100%", aspectRatio: "3 / 4" }}>
-                  <Image src={p.images[0]!.url} alt={p.images[0]!.alt ?? p.name} fill sizes="260px" style={{ objectFit: "cover" }} />
-                </div>
+                <ProductPlate
+                  src={p.images[0]!.url}
+                  alt={p.images[0]!.alt ?? p.name}
+                  swatch={p.colorwaySwatch}
+                  sizes="260px"
+                />
                 <figcaption style={{ fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", color: "color-mix(in srgb, var(--color-neutral-100) 62%, transparent)" }}>
                   {p.name}
                 </figcaption>
