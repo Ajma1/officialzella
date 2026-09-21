@@ -1,4 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
+
+vi.mock("../../email", () => ({ sendAdminOrderEmail: vi.fn() }));
 
 import { prisma } from "@zella/db";
 import { placeOrder } from "../place-order";
@@ -53,6 +55,22 @@ describe("placeOrder", () => {
     if (!res?.ok) return;
     const order = await prisma.order.findUniqueOrThrow({ where: { orderNumber: res.orderNumber } });
     expect(order.customerId).toBeNull();
+  });
+
+  it("notifies admin when an order is placed", async () => {
+    const email = uniqueEmail("notify-placed");
+    const res = await placeOrder(
+      undefined,
+      form({ ...fields(email), items: JSON.stringify([cartLine()]) }),
+    );
+    expect(res?.ok).toBe(true);
+    if (!res?.ok) return;
+
+    const { sendAdminOrderEmail } = await import("../../email");
+    expect(sendAdminOrderEmail).toHaveBeenCalledWith(
+      "placed",
+      expect.objectContaining({ orderNumber: res.orderNumber }),
+    );
   });
 
   it("returns field errors for an invalid form", async () => {

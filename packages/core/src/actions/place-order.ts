@@ -2,6 +2,7 @@
 
 import crypto from "node:crypto";
 import { checkoutSchema } from "../checkout/schema";
+import { sendAdminOrderEmail } from "../email";
 import { generateOrderNumber } from "../checkout/order-number";
 import { orderTotalCents } from "../checkout/shipping";
 import { PAIR_PRICE_CENTS } from "../checkout/pairing";
@@ -150,6 +151,16 @@ export async function placeOrder(
           items: { create: resolvedItems },
         },
       });
+
+      try {
+        await sendAdminOrderEmail("placed", {
+          orderNumber,
+          customerName: parsed.data.fullName,
+          totalCents,
+        });
+      } catch (e) {
+        console.error(`[email] failed to send "placed" notification for ${orderNumber}`, e);
+      }
 
       return {
         ok: true,
