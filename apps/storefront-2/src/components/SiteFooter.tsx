@@ -10,7 +10,7 @@ const SHOP_LINKS = [
 const GOOD_TO_KNOW = [
   "Cash on delivery, nationwide.",
   "Ships in 2–5 days.",
-  "100% cotton · relaxed fit · machine wash cold.",
+  "Considered fabrics · relaxed fit · machine wash cold.",
 ];
 
 const SOCIAL_LINKS = [
@@ -38,7 +38,7 @@ export default function SiteFooter() {
             Zella
           </p>
           <p style={{ margin: 0, maxWidth: "32ch", fontSize: 13, lineHeight: 1.65, color: "color-mix(in srgb, var(--color-text) 74%, transparent)" }}>
-            Relaxed cotton for girls who don&rsquo;t sit still.
+            Relaxed fits for girls who don&rsquo;t sit still.
           </p>
         </div>
 
