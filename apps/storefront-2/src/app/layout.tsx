@@ -21,9 +21,9 @@ const lora = Lora({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
-  title: "Zella — Loose cotton, cut for the way you move",
+  title: "Zella — Clothes for girls who move",
   description:
-    "Button-down shirts and wide-leg trousers, woven to breathe and cut with room to move.",
+    "Button-down shirts and wide-leg trousers, cut with room to move.",
 };
 
 // ponytail: force-dynamic means every request hits Postgres for the catalog
