@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getProductsByCategory } from "@zella/core/catalog";
 import { formatPrice } from "@zella/core/format";
 import { PAIR_PRICE_CENTS } from "@zella/core/checkout";
@@ -8,7 +9,7 @@ import ProductPlate from "@/components/ProductPlate";
 import Reveal from "@/components/motion/Reveal";
 import Parallax from "@/components/motion/Parallax";
 
-const MARQUEE = ["100% cotton", "Relaxed fit", "Shirts & trousers", "For girls who move", "New season"];
+const MARQUEE = ["Made to last", "Relaxed fit", "Shirts & trousers", "For girls who move", "New season"];
 
 const FABRICS = [
   { name: "Viscose-cotton", body: "The lightest of the edit — breathable, with a soft drape that catches air on warm days." },
@@ -28,25 +29,20 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* Hero */}
-      <section style={{ borderBottom: "1px solid var(--color-divider)" }}>
-        <Reveal
-          className="container grid-hero"
-          style={{ padding: "72px 28px 86px" }}
-          stagger={0.18}
-          immediate
-        >
-          <div>
-            <p className="kicker">The cotton edit</p>
-            <h1 style={{ fontSize: "clamp(46px, 7vw, 92px)", lineHeight: 0.98, letterSpacing: "-0.025em", margin: 0 }}>
-              Loose cotton,
+      {/* Hero — the photo bleeds to the viewport edge, the text keeps the
+          page's container rhythm. Near-full-viewport on desktop; the sticky
+          translucent nav floats over it. */}
+      <section style={{ borderBottom: "1px solid var(--color-divider)", position: "relative" }}>
+        <Reveal className="hero-bleed" stagger={0.18} immediate>
+          <div className="hero-bleed__text">
+            <p className="kicker">The edit</p>
+            <h1 style={{ fontSize: "clamp(46px, 7.4vw, 104px)", lineHeight: 0.96, letterSpacing: "-0.025em", margin: 0 }}>
+              Clothes for
               <br />
-              cut for the
-              <br />
-              <span style={{ fontStyle: "italic" }}>way you move.</span>
+              <span style={{ fontStyle: "italic" }}>girls who move.</span>
             </h1>
             <p style={{ maxWidth: "42ch", margin: "28px 0 0", fontSize: 16, lineHeight: 1.65 }}>
-              Button-down shirts and wide-leg trousers, woven to breathe and cut with room to move.
+              Button-down shirts and wide-leg trousers, cut with room to move.
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 34 }}>
               <Link href="/pair" className="btn btn-primary" style={{ padding: "14px 28px", letterSpacing: "0.16em", textTransform: "uppercase" }}>
@@ -57,14 +53,29 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, overflow: "hidden" }}>
-            {heroA && (
-              <Parallax speed={-8}>
-                <ProductPlate src={heroA.url} alt={heroA.alt ?? ""} swatch="#efeae1" />
-              </Parallax>
-            )}
+          <div className="hero-bleed__media">
+            <div className="hero-media-frame">
+              {heroA ? (
+                <Parallax speed={8} style={{ position: "absolute", inset: "-6% 0", height: "112%" }}>
+                  <Image
+                    src={heroA.url}
+                    alt={heroA.alt ?? ""}
+                    fill
+                    priority
+                    sizes="(min-width: 768px) 62vw, calc(100vw - 56px)"
+                    className="hero-media-full"
+                  />
+                </Parallax>
+              ) : (
+                <div style={{ position: "absolute", inset: 0, background: "#efeae1", display: "flex", alignItems: "flex-end", padding: 16 }}>
+                  <span style={{ fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--color-neutral-900)" }}>
+                    Photography coming soon
+                  </span>
+                </div>
+              )}
+            </div>
             {heroB && (
-              <Parallax speed={8} style={{ marginTop: 46 }}>
+              <Parallax speed={-14} className="hero-media-inset">
                 <ProductPlate src={heroB.url} alt={heroB.alt ?? ""} swatch="#efeae1" />
               </Parallax>
             )}

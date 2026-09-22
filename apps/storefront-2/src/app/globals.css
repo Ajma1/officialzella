@@ -232,6 +232,73 @@ textarea.input { min-height: 90px; resize: vertical; }
   grid-template-columns: 1fr;
   gap: 32px;
 }
+/* — hero: text sits in the container's rhythm, the photo bleeds to the
+   viewport edge. The section itself is full-width (no .container), so
+   .hero-bleed__text fakes the container's left gutter with the same
+   max(28px, ...) formula .container uses, keeping the headline's left edge
+   lined up with every section below it. */
+.hero-bleed {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 56px 28px 44px;
+}
+.hero-bleed__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.hero-bleed__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+}
+/* Clips only the full-bleed photo's oversized parallax layer — kept
+   separate from .hero-bleed__media itself so the inset accent plate can
+   bleed past this frame's edge without being clipped too. */
+.hero-media-frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.hero-media-full {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 22%;
+  filter: sepia(0.22) saturate(0.82) contrast(1.05);
+}
+.hero-media-inset {
+  position: absolute;
+  left: 24px;
+  bottom: -28px;
+  width: 46%;
+  box-shadow: var(--shadow-lg);
+  z-index: 1;
+}
+@media (min-width: 768px) {
+  .hero-bleed {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(340px, 38%) 1fr;
+    align-items: stretch;
+    gap: 0;
+    min-height: calc(100svh - 1px);
+    padding: 0;
+  }
+  .hero-bleed__text {
+    padding: 0 40px 64px max(28px, calc((100vw - 1240px) / 2 + 28px));
+  }
+  .hero-bleed__media {
+    aspect-ratio: auto;
+  }
+  .hero-media-inset {
+    left: -36px;
+    bottom: 64px;
+    width: 220px;
+  }
+}
 .grid-fabric {
   display: grid;
   grid-template-columns: 1fr;
