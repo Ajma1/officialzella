@@ -24,7 +24,6 @@ export default async function HomePage() {
   ]);
   const heroA = shirts.find((p) => p.images[0])?.images[0] ?? null;
   const heroB = shirts.filter((p) => p.images[0])[1]?.images[0] ?? null;
-  const lookbook = shirts.filter((p) => p.images[0]).slice(0, 6);
   const testimonials = await getApprovedFeedback(3);
 
   return (
@@ -168,54 +167,32 @@ export default async function HomePage() {
         </Reveal>
       </section>
 
-      {/* Worn together */}
-      {lookbook.length > 0 && (
-        <section style={{ background: "var(--color-neutral-900)", color: "var(--color-neutral-100)", padding: "78px 0 84px" }}>
-          <div className="container" style={{ padding: "0 28px 34px", display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 14 }}>
-            <h2 style={{ fontSize: "clamp(30px, 4vw, 48px)", margin: 0 }}>Worn together</h2>
-          </div>
-          <Reveal style={{ display: "flex", gap: 22, overflowX: "auto", padding: "4px 28px 22px" }} stagger={0.08}>
-            {lookbook.map((p) => (
-              <figure key={p.id} style={{ margin: 0, flex: "0 0 260px", display: "flex", flexDirection: "column", gap: 12 }}>
-                <ProductPlate
-                  src={p.images[0]!.url}
-                  alt={p.images[0]!.alt ?? p.name}
-                  swatch={p.colorwaySwatch}
-                  sizes="260px"
-                />
-                <figcaption style={{ fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", color: "color-mix(in srgb, var(--color-neutral-100) 62%, transparent)" }}>
-                  {p.name}
-                </figcaption>
-              </figure>
-            ))}
-          </Reveal>
-        </section>
-      )}
-
       {testimonials.length > 0 && (
-        <section className="container" style={{ padding: "70px 28px" }}>
-          <p className="kicker">What people are saying</p>
-          <Reveal className="grid-fabric" style={{ marginTop: 24 }} stagger={0.12}>
-            {testimonials.map((t) => (
-              <div key={t.id} style={{ borderTop: "1px solid var(--color-divider)", paddingTop: 18 }}>
-                <p style={{ margin: "0 0 10px", fontSize: 15, letterSpacing: "0.05em" }}>
-                  {"★".repeat(t.rating)}
-                  {"☆".repeat(5 - t.rating)}
-                </p>
-                <p style={{ margin: "0 0 10px", fontSize: 14, lineHeight: 1.6 }}>{t.message}</p>
-                <p style={{ margin: 0, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: "color-mix(in srgb, var(--color-text) 55%, transparent)" }}>
-                  {t.name || "Verified customer"}
-                </p>
-              </div>
-            ))}
-          </Reveal>
+        <section style={{ background: "var(--color-accent-100)", padding: "78px 0 84px" }}>
+          <div className="container" style={{ padding: "0 28px" }}>
+            <p className="kicker">What people are saying</p>
+            <h2 style={{ fontSize: "clamp(30px, 4vw, 48px)", margin: "0 0 34px" }}>Loved by our customers</h2>
+            <Reveal className="grid-fabric" stagger={0.12}>
+              {testimonials.map((t) => (
+                <div key={t.id} style={{ borderTop: "1px solid var(--color-divider)", paddingTop: 18 }}>
+                  <p style={{ margin: "0 0 10px", fontSize: 15, letterSpacing: "0.05em" }}>
+                    {"★".repeat(t.rating)}
+                    {"☆".repeat(5 - t.rating)}
+                  </p>
+                  <p style={{ margin: "0 0 10px", fontSize: 14, lineHeight: 1.6 }}>{t.message}</p>
+                  <p style={{ margin: 0, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: "color-mix(in srgb, var(--color-text) 55%, transparent)" }}>
+                    {t.name || "Verified customer"}
+                  </p>
+                </div>
+              ))}
+            </Reveal>
+          </div>
         </section>
       )}
 
       {/* CTA */}
       <section className="container" style={{ padding: "86px 28px 96px", textAlign: "center" }}>
         <Reveal stagger={0.12}>
-          <p className="kicker">Small and medium</p>
           <h2 style={{ fontSize: "clamp(32px, 5vw, 62px)", lineHeight: 1.04, margin: "0 auto 30px", maxWidth: "22ch" }}>Your shirt is waiting.</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center" }}>
             <Link href="/pair" className="btn btn-primary" style={{ padding: "14px 28px", letterSpacing: "0.16em", textTransform: "uppercase" }}>

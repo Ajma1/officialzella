@@ -21,7 +21,7 @@ const lora = Lora({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
-  title: "Zella — Clothes for girls who move",
+  title: "Zella",
   description:
     "Button-down shirts and wide-leg trousers, cut with room to move.",
 };
