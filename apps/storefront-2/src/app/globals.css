@@ -113,13 +113,9 @@ figcaption {
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   gap: 16px;
-  scrollbar-width: none;
-}
-.gallery-filmstrip::-webkit-scrollbar {
-  display: none;
 }
 .gallery-item {
-  flex: 0 0 100%;
+  flex: 0 0 calc(100% - 40px);
   scroll-snap-align: start;
   border: 0;
   padding: 0;
