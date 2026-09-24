@@ -14,12 +14,14 @@ export default function ProductPlate({
   swatch,
   ratio = "3 / 4",
   sizes = "(min-width: 768px) 33vw, 100vw",
+  quality = 90,
 }: {
   src: string | null;
   alt: string;
   swatch: string;
   ratio?: string;
   sizes?: string;
+  quality?: number;
 }) {
   const [failed, setFailed] = useState(false);
 
@@ -50,6 +52,7 @@ export default function ProductPlate({
         alt={alt}
         fill
         sizes={sizes}
+        quality={quality}
         style={{ objectFit: "cover", objectPosition: "50% 22%" }}
         onError={() => setFailed(true)}
       />

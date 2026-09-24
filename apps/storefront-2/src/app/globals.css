@@ -107,6 +107,43 @@ figcaption {
   transform: scale(1.045);
 }
 
+/* — product gallery: horizontal scroll-snap filmstrip + zoom lightbox — */
+.gallery-filmstrip {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 16px;
+  scrollbar-width: none;
+}
+.gallery-filmstrip::-webkit-scrollbar {
+  display: none;
+}
+.gallery-item {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: zoom-in;
+}
+.gallery-lightbox {
+  border: 0;
+  padding: 0;
+  background: var(--color-surface);
+  width: min(92vw, 1100px);
+  height: 92vh;
+  max-width: none;
+  max-height: none;
+}
+.gallery-lightbox::backdrop {
+  background: color-mix(in srgb, #000 78%, transparent);
+}
+.gallery-lightbox-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 /* — chrome that gains presence once the page has scrolled — */
 .site-header {
   transition: box-shadow 320ms ease;
@@ -424,7 +461,8 @@ textarea.input { min-height: 90px; resize: vertical; }
   .plate img,
   .btn-primary,
   .btn-primary::before,
-  .site-header {
+  .site-header,
+  .gallery-lightbox-frame img {
     transition: none !important;
   }
   .marquee-track {
